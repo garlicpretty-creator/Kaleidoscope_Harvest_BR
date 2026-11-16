@@ -160,6 +160,23 @@ if (!existsSync(join(BP, "blocks")) || !existsSync(join(RP, "textures", "terrain
         }
 }
 
+// --- Village chest overrides keep every vanilla pool -----------------------------------------------
+
+const vanillaDir = join(root, "tools", "vanilla", "loot_tables", "chests", "village");
+const villageDir = join(BP, "loot_tables", "chests", "village");
+if (existsSync(villageDir)) {
+  for (const file of readdirSync(villageDir)) {
+    if (!existsSync(join(vanillaDir, file))) {
+      fail(`village chest ${file}: no vanilla copy in tools/vanilla to build on`);
+      continue;
+    }
+    const vanilla = readJson(join(vanillaDir, file)).pools;
+    const ours = readJson(join(villageDir, file)).pools;
+    if (JSON.stringify(ours.slice(0, vanilla.length)) !== JSON.stringify(vanilla)) fail(`village chest ${file}: the vanilla pools were changed`);
+    if (ours.length !== vanilla.length + 1) fail(`village chest ${file}: expected exactly one Harvest pool`);
+  }
+}
+
 // --- 4. Manifests ---------------------------------------------------------------------------------
 
 const COOKERY_BP = "9944f731-cc4c-4299-bdd5-f8799c1d832e";

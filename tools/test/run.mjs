@@ -459,6 +459,20 @@ test("generated items: oils do not stack, drinks give their bottle or cup back, 
   for (const id of ["scallion_pancake", "pepper_bun", "roasted_sweet_potato", "juicer", "pickling_jar"]) assert(readdirSync("packs/BP/recipes").includes(`${id}.json`), `${id} recipe file`);
 });
 
+// --- Village chests ---------------------------------------------------------------------------------------------
+
+test("village house chests keep their vanilla loot and add onion seeds, sweet potatoes and mandarin saplings", () => {
+  const read = (dir, house) => JSON.parse(readFileSync(`${dir}/village_${house}_house.json`, "utf8")).pools;
+  const names = (pools) => pools.flatMap((pool) => pool.entries.map((e) => e.name)).filter(Boolean);
+  const want = { plains: ["onion_seeds", "mandarin_sapling"], taiga: ["onion_seeds"], snowy: ["onion_seeds"], savanna: ["sweet_potato", "mandarin_sapling"], desert: ["sweet_potato"] };
+  for (const [house, items] of Object.entries(want)) {
+    const vanilla = read("tools/vanilla/loot_tables/chests/village", house);
+    const ours = read("packs/BP/loot_tables/chests/village", house);
+    equal(JSON.stringify(ours.slice(0, vanilla.length)), JSON.stringify(vanilla), `${house}: vanilla pools untouched`);
+    for (const id of items) assert(names(ours.slice(vanilla.length)).includes(r(id)), `${house}: ${id}`);
+  }
+});
+
 // --- Cookery --------------------------------------------------------------------------------------------------
 
 test("recipes go to Cookery once it reports its capabilities; unknown kinds are skipped", () => {

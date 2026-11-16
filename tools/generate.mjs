@@ -8,7 +8,7 @@
 // (packs/BP/scripts/data/), not the JSON. Placeholder PNGs are only written where
 // no file exists yet; pass --art to redraw them all.
 
-import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import * as art from "./art.mjs";
@@ -25,6 +25,7 @@ const { TREES, FRUIT_LOG, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId } = a
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR } = await load("stations.js");
+const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
 const { toSimplified } = await load("zh_cn.js");
 
 const REDRAW = process.argv.includes("--art");
@@ -521,6 +522,28 @@ station(PICKLING_JAR, {
   recipe: { pattern: ["P", "C", "C"], key: { P: { item: "minecraft:oak_planks" }, C: { item: "minecraft:clay_ball" } }, unlock: [{ item: "minecraft:clay_ball" }] },
   sound: "stone",
 });
+
+// --- Village house chests: vanilla tables plus one Harvest pool (data/village.js) --------------------
+
+const VANILLA = join(root, "tools", "vanilla", "loot_tables", "chests", "village");
+rmSync(join(BP, "loot_tables", "chests"), { recursive: true, force: true });
+for (const house of VILLAGE_HOUSES) {
+  const rows = villageItems(house);
+  if (!rows.length) continue;
+  const file = `village_${house}_house.json`;
+  const table = JSON.parse(readFileSync(join(VANILLA, file), "utf8"));
+  // ## One roll: each Harvest item weighs 1 and "nothing" makes up the rest, so the
+  // ## chest holds one Harvest stack VILLAGE_CHANCE of the time.
+  const empty = Math.max(1, Math.round((rows.length * (1 - VILLAGE_CHANCE)) / VILLAGE_CHANCE));
+  table.pools.push({
+    rolls: 1,
+    entries: [
+      ...rows.map(({ item, count: [min, max] }) => ({ type: "item", name: rid(item), weight: 1, functions: [{ function: "minecraft:set_count", count: { min, max } }] })),
+      { type: "empty", weight: empty },
+    ],
+  });
+  writeJson(join(BP, "loot_tables", "chests", "village", file), table);
+}
 
 // --- Creative inventory groups -----------------------------------------------------------------------
 

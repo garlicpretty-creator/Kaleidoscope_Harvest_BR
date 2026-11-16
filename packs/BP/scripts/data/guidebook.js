@@ -12,6 +12,7 @@ import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
+import { VILLAGE_HOUSES, villageItems } from "./village.js";
 import { FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
 import { toSimplified } from "./zh_cn.js";
 
@@ -81,6 +82,21 @@ const BIOME_NAME = {
   taiga: ["針葉林", "taigas"],
 };
 
+const HOUSE_NAME = {
+  plains: ["平原", "plains"],
+  savanna: ["熱帶草原", "savanna"],
+  taiga: ["針葉林", "taiga"],
+  snowy: ["雪原", "snowy"],
+  desert: ["沙漠", "desert"],
+};
+
+/** Where village house chests hold an item, from data/village.js. */
+export function villageLine(id) {
+  const houses = VILLAGE_HOUSES.filter((house) => villageItems(house).some((row) => row.item === id)).map((h) => HOUSE_NAME[h]);
+  if (!houses.length) return [];
+  return [[`村莊：${houses.map((h) => h[0]).join("、")}村莊的民宅箱子裡有時找得到。`, `Villages: sometimes found in house chests of ${houses.map((h) => h[1]).join(", ")} villages.`]];
+}
+
 export function wildLine(wild) {
   const names = wild.biomes.map((b) => BIOME_NAME[b]);
   return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生的，打下來就有第一份。`, `In the wild: it grows now and then in ${names.map((n) => n[1]).join(" and ")}; break one for your first harvest.`];
@@ -109,7 +125,7 @@ function entry(id, category, lines, extra = {}) {
 export function guideEntries() {
   const rows = [];
   for (const crop of CROPS) {
-    const lines = [FORM_LINE[crop.form], climateLine(crop.climate), BONE_MEAL_LINE, wildLine(crop.wild), ...usesOf(crop.produce)];
+    const lines = [FORM_LINE[crop.form], climateLine(crop.climate), BONE_MEAL_LINE, wildLine(crop.wild), ...villageLine(crop.seed), ...usesOf(crop.produce)];
     rows.push(entry(crop.produce, "crops", lines));
     if (crop.seed !== crop.produce) rows.push(entry(crop.seed, "crops", [[`種下長成${ITEM_BY_ID.get(crop.produce).zh}。`, `Grows into ${ITEM_BY_ID.get(crop.produce).en}.`], FORM_LINE[crop.form]]));
   }
@@ -121,6 +137,7 @@ export function guideEntries() {
         ["種在草地或泥土上，長成一棵果樹。周圍要有空間，被擋住就會等到空出來。", "Plant it on grass or dirt and it grows into a fruit tree. It needs room; if something is in the way it waits."],
         climateLine(tree.climate),
         ["骨粉一次只推進一個階段。", "Bone meal moves it on one stage only."],
+        ...villageLine(saplingBlockId(tree)),
       ], { block: true })
     );
     rows.push(

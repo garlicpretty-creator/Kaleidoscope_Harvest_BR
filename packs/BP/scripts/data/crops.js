@@ -25,6 +25,9 @@
 // wild: where its first seed is found (企劃書「第一份來源」): Bedrock biome tags, and
 //   the soil the wild plant stands on (default: grass, dirt, podzol, coarse dirt).
 //   Breaking a wild plant gives the produce and, for seed crops, seeds.
+// village: village house chests that may hold its seed (plains, savanna, taiga, snowy,
+//   desert). tools/generate.mjs overrides those vanilla chest tables, keeping every
+//   vanilla entry and adding one Harvest pool (data/village.js).
 // look: placeholder art (tools/art.mjs) until the real textures are drawn:
 //   leaf / ripe colours as [r, g, b].
 
@@ -55,9 +58,8 @@ export const CROPS = [
   {
     id: "onion", zh: "洋蔥", en: "Onion", form: "once", climate: "temperate", ...GROWTH,
     seed: "onion_seeds", produce: "onion", drops: { produce: [1, 2], seed: [1, 2] },
-    // ## 企劃書: 村莊箱子. Until village chests are settled, onions also grow wild
-    // ## on plains so the G2 gate (每種作物在野外都找得到第一份來源) holds.
-    wild: { biomes: ["plains"] },
+    // ## 企劃書: 村莊箱子; also wild on plains for players who meet no village.
+    wild: { biomes: ["plains"] }, village: ["plains", "taiga", "snowy"],
     look: { leaf: [110, 170, 90], ripe: [200, 150, 90] },
   },
   {
@@ -99,8 +101,8 @@ export const CROPS = [
   {
     id: "sweet_potato", zh: "地瓜", en: "Sweet Potato", form: "underground", climate: "hot", ...GROWTH, hoeBonus: 1,
     seed: "sweet_potato", produce: "sweet_potato", drops: { produce: [1, 3], seed: [0, 0] },
-    // ## 企劃書: 村莊箱子; wild on savannas for now, as for onions.
-    wild: { biomes: ["savanna"] },
+    // ## 企劃書: 村莊箱子; also wild on savannas, as for onions.
+    wild: { biomes: ["savanna"] }, village: ["savanna", "desert"],
     look: { leaf: [96, 150, 70], ripe: [170, 80, 90] },
   },
   {
