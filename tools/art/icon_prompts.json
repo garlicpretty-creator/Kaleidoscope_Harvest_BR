@@ -1,0 +1,557 @@
+{
+  "_comment": "RetroDiffusion prompts for every Harvest item icon (tools/art/rd_icons.py). Prompts describe the subject only; the style handles the pixel-art look. `zh` is the Traditional Chinese name for review sheets.",
+  "style": "rd_plus__mc_item",
+  "size": 16,
+  "candidates": 3,
+  "seed": 20261117,
+  "items": {
+    "napa_cabbage": {
+      "zh": "大白菜",
+      "prompt": "whole napa cabbage, tall pale green and white crinkled leaves wrapped tightly"
+    },
+    "napa_cabbage_seeds": {
+      "zh": "大白菜種子",
+      "prompt": "small pile of tiny round dark brown seeds"
+    },
+    "bok_choy": {
+      "zh": "青江菜",
+      "prompt": "single bok choy, spoon shaped dark green leaves on thick pale green stems"
+    },
+    "bok_choy_seeds": {
+      "zh": "青江菜種子",
+      "prompt": "small pile of tiny round reddish brown seeds"
+    },
+    "spinach": {
+      "zh": "菠菜",
+      "prompt": "bunch of fresh spinach, dark green arrow shaped leaves with pink red roots"
+    },
+    "spinach_seeds": {
+      "zh": "菠菜種子",
+      "prompt": "small pile of spiky beige seeds"
+    },
+    "onion": {
+      "zh": "洋蔥",
+      "prompt": "single round yellow brown onion bulb with papery skin and a dry tip"
+    },
+    "daikon": {
+      "zh": "白蘿蔔",
+      "prompt": "long white daikon radish with a pale green top and leafy green stalks"
+    },
+    "daikon_seeds": {
+      "zh": "白蘿蔔種子",
+      "prompt": "small pile of round light brown seeds"
+    },
+    "eggplant": {
+      "zh": "茄子",
+      "prompt": "single long glossy purple chinese eggplant with a green cap"
+    },
+    "eggplant_seeds": {
+      "zh": "茄子種子",
+      "prompt": "small pile of flat pale cream seeds"
+    },
+    "cucumber": {
+      "zh": "小黃瓜",
+      "prompt": "single long bumpy green cucumber with a small yellow flower at the tip"
+    },
+    "cucumber_seeds": {
+      "zh": "小黃瓜種子",
+      "prompt": "small pile of flat oval white seeds"
+    },
+    "corn": {
+      "zh": "玉米",
+      "prompt": "ear of yellow corn half wrapped in green husk leaves with brown silk"
+    },
+    "corn_seeds": {
+      "zh": "玉米粒",
+      "prompt": "small pile of yellow corn kernels"
+    },
+    "soybean": {
+      "zh": "大豆",
+      "prompt": "small pile of round pale yellow soybeans"
+    },
+    "peanut": {
+      "zh": "花生",
+      "prompt": "two peanuts in beige wrinkled shells, one cracked open showing red skinned nuts"
+    },
+    "sweet_potato": {
+      "zh": "地瓜",
+      "prompt": "single sweet potato, reddish purple skin, tapered at both ends"
+    },
+    "taro": {
+      "zh": "芋頭",
+      "prompt": "single round taro root, brown hairy ringed skin, cut end showing white flesh with purple specks"
+    },
+    "scallion": {
+      "zh": "蔥",
+      "prompt": "bunch of green onions, long hollow green stalks with white ends and small roots"
+    },
+    "scallion_seeds": {
+      "zh": "蔥種子",
+      "prompt": "small pile of tiny angular black seeds"
+    },
+    "garlic": {
+      "zh": "大蒜",
+      "prompt": "whole white garlic bulb with purple streaks and one loose clove"
+    },
+    "ginger": {
+      "zh": "薑",
+      "prompt": "knobbly ginger root, light tan skin, branching"
+    },
+    "coriander": {
+      "zh": "香菜",
+      "prompt": "bunch of fresh coriander cilantro with bright green lacy leaves"
+    },
+    "coriander_seeds": {
+      "zh": "香菜種子",
+      "prompt": "small pile of round beige ridged coriander seeds"
+    },
+    "sesame": {
+      "zh": "芝麻",
+      "prompt": "small pile of white and black sesame seeds"
+    },
+    "black_peppercorns": {
+      "zh": "黑胡椒",
+      "prompt": "small pile of round wrinkled black peppercorns"
+    },
+    "black_pepper_seedling": {
+      "zh": "黑胡椒藤苗",
+      "prompt": "young vine cutting with heart shaped green leaves and a few small roots"
+    },
+    "cumin": {
+      "zh": "孜然",
+      "prompt": "small pile of thin elongated ridged brown cumin seeds"
+    },
+    "strawberry": {
+      "zh": "草莓",
+      "prompt": "single ripe red strawberry with yellow seeds and a green leafy cap"
+    },
+    "strawberry_seeds": {
+      "zh": "草莓苗",
+      "prompt": "small strawberry seedling plant: three serrated green leaves on thin stems and a few roots, no fruit"
+    },
+    "blueberry": {
+      "zh": "藍莓",
+      "prompt": "cluster of round dusty dark blue blueberries with a leaf"
+    },
+    "blueberry_seedling": {
+      "zh": "藍莓苗",
+      "prompt": "small woody shrub seedling with oval green leaves and roots"
+    },
+    "grape": {
+      "zh": "葡萄",
+      "prompt": "bunch of purple grapes with a green vine leaf on top"
+    },
+    "grape_cutting": {
+      "zh": "葡萄藤苗",
+      "prompt": "short woody grape vine cutting with one green lobed leaf and roots"
+    },
+    "passion_fruit": {
+      "zh": "百香果",
+      "prompt": "round dark purple passion fruit cut in half showing yellow pulp with black seeds"
+    },
+    "passion_fruit_seeds": {
+      "zh": "百香果種子",
+      "prompt": "small pile of flat black seeds with yellow pulp"
+    },
+    "pineapple": {
+      "zh": "鳳梨",
+      "prompt": "whole golden pineapple with spiky green crown"
+    },
+    "pineapple_crown": {
+      "zh": "鳳梨冠芽",
+      "prompt": "leafy green crown cut from the top of a pineapple, spiky leaves fanning upward, small brown cut base, no fruit"
+    },
+    "mandarin": {
+      "zh": "柑橘",
+      "prompt": "single small flat orange mandarin tangerine with a green leaf on the stem"
+    },
+    "mandarin_sapling": {
+      "zh": "柑橘樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of small glossy dark green oval leaves, no fruit, no pot"
+    },
+    "sweet_orange": {
+      "zh": "柳橙",
+      "prompt": "single round bright orange with dimpled skin, cut slice beside it"
+    },
+    "sweet_orange_sapling": {
+      "zh": "柳橙樹苗",
+      "prompt": "small tree sapling with oval dark green leaves and white blossoms"
+    },
+    "lemon": {
+      "zh": "檸檬",
+      "prompt": "single bright yellow lemon with a green leaf"
+    },
+    "lemon_sapling": {
+      "zh": "檸檬樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of pointed light green leaves, no fruit, no pot"
+    },
+    "peach": {
+      "zh": "桃子",
+      "prompt": "single round pink and yellow peach with a fuzzy blush and a green leaf"
+    },
+    "peach_sapling": {
+      "zh": "桃樹苗",
+      "prompt": "small tree sapling with thin brown branches, narrow leaves and pink blossoms"
+    },
+    "pear": {
+      "zh": "梨",
+      "prompt": "single pale yellow green asian pear with a brown stem"
+    },
+    "pear_sapling": {
+      "zh": "梨樹苗",
+      "prompt": "small tree sapling with round green leaves and white blossoms"
+    },
+    "persimmon": {
+      "zh": "柿子",
+      "prompt": "single flat round bright orange persimmon with a four leaf green calyx"
+    },
+    "persimmon_sapling": {
+      "zh": "柿子樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of broad round yellow green leaves, no fruit, no pot"
+    },
+    "lychee": {
+      "zh": "荔枝",
+      "prompt": "cluster of three red bumpy lychees, one peeled showing white translucent flesh"
+    },
+    "lychee_sapling": {
+      "zh": "荔枝樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long narrow glossy dark green leaves, no fruit, no pot"
+    },
+    "mango": {
+      "zh": "芒果",
+      "prompt": "single ripe mango, kidney shaped, yellow orange with a red blush"
+    },
+    "mango_sapling": {
+      "zh": "芒果樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long narrow dark green and reddish new leaves, no fruit, no pot"
+    },
+    "banana": {
+      "zh": "香蕉",
+      "prompt": "small bunch of three ripe yellow bananas"
+    },
+    "banana_sapling": {
+      "zh": "香蕉樹苗",
+      "prompt": "young banana plant pup with two large wide green leaves"
+    },
+    "star_anise": {
+      "zh": "八角",
+      "prompt": "single star anise pod seen from above, eight pointed boat shaped segments in a star, reddish brown with shiny seeds"
+    },
+    "star_anise_sapling": {
+      "zh": "八角樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of glossy elliptic deep green leaves, no fruit, no pot"
+    },
+    "cinnamon_bark": {
+      "zh": "肉桂皮",
+      "prompt": "three rolled cinnamon bark sticks, reddish brown, tied together"
+    },
+    "cinnamon_sapling": {
+      "zh": "肉桂樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of reddish young and green veined leaves, no fruit, no pot"
+    },
+    "chopped_scallion": {
+      "zh": "蔥花",
+      "prompt": "small heap of many tiny chopped green onion rings, bright green with a few white rings"
+    },
+    "minced_garlic": {
+      "zh": "蒜末",
+      "prompt": "small pile of finely minced white garlic"
+    },
+    "shredded_ginger": {
+      "zh": "薑絲",
+      "prompt": "small heap of thin pale yellow julienned ginger strips"
+    },
+    "sesame_powder": {
+      "zh": "芝麻粉",
+      "prompt": "small paper packet of ground black sesame powder, open at the top"
+    },
+    "sesame_oil": {
+      "zh": "芝麻油",
+      "prompt": "small glass bottle of dark amber sesame oil with a red cap"
+    },
+    "peanut_oil": {
+      "zh": "花生油",
+      "prompt": "small glass bottle of clear golden peanut oil with a yellow cap"
+    },
+    "five_spice_powder": {
+      "zh": "五香粉",
+      "prompt": "small round clay dish of reddish brown spice powder with a star anise on top"
+    },
+    "soy_milk": {
+      "zh": "豆漿",
+      "prompt": "glass of warm off white soy milk"
+    },
+    "tofu": {
+      "zh": "豆腐",
+      "prompt": "white block of tofu on a small wooden board"
+    },
+    "okara": {
+      "zh": "豆渣",
+      "prompt": "small heap of crumbly pale beige soybean pulp"
+    },
+    "soy_sauce": {
+      "zh": "醬油",
+      "prompt": "small glass bottle of dark brown soy sauce with a red cap and a label"
+    },
+    "peanut_butter": {
+      "zh": "花生醬",
+      "prompt": "small glass jar of brown peanut butter with a red lid"
+    },
+    "dried_persimmon": {
+      "zh": "柿餅",
+      "prompt": "flattened dried persimmon, orange brown with white sugar bloom and a green calyx"
+    },
+    "raisins": {
+      "zh": "葡萄乾",
+      "prompt": "small heap of dark purple brown raisins"
+    },
+    "dried_tangerine_peel": {
+      "zh": "陳皮",
+      "prompt": "few curled pieces of dried dark orange tangerine peel"
+    },
+    "pickled_napa_cabbage": {
+      "zh": "醃白菜",
+      "prompt": "small clay bowl of sour pickled napa cabbage, pale yellow shredded leaves"
+    },
+    "kimchi": {
+      "zh": "泡菜",
+      "prompt": "small glass jar of red spicy fermented cabbage kimchi"
+    },
+    "pickled_daikon": {
+      "zh": "醃蘿蔔",
+      "prompt": "small dish of bright yellow pickled radish slices"
+    },
+    "pickled_cucumber": {
+      "zh": "醃黃瓜",
+      "prompt": "small glass jar of green pickled cucumbers in brine with dill"
+    },
+    "strawberry_jam": {
+      "zh": "草莓果醬",
+      "prompt": "small glass jar of red strawberry jam with a checkered cloth lid"
+    },
+    "blueberry_jam": {
+      "zh": "藍莓果醬",
+      "prompt": "small glass jar of dark blue blueberry jam with a checkered cloth lid"
+    },
+    "orange_marmalade": {
+      "zh": "橙皮果醬",
+      "prompt": "small glass jar of bright orange marmalade with peel strips, checkered cloth lid"
+    },
+    "mandarin_juice": {
+      "zh": "橘子汁",
+      "prompt": "glass of orange tangerine juice with a slice on the rim"
+    },
+    "orange_juice": {
+      "zh": "柳橙汁",
+      "prompt": "tall glass of bright orange juice with an orange slice on the rim"
+    },
+    "grape_juice": {
+      "zh": "葡萄汁",
+      "prompt": "glass of dark purple grape juice with a small bunch of grapes beside it"
+    },
+    "mango_juice": {
+      "zh": "芒果汁",
+      "prompt": "glass of thick yellow mango juice with a mango cube on the rim"
+    },
+    "lemon_tea": {
+      "zh": "檸檬茶",
+      "prompt": "glass of iced amber tea with a lemon slice"
+    },
+    "passion_fruit_tea": {
+      "zh": "百香果茶",
+      "prompt": "glass of golden yellow passion fruit tea with black seeds floating"
+    },
+    "ginger_tea": {
+      "zh": "薑母茶",
+      "prompt": "brown clay cup of dark brown ginger tea with ginger slices, steam rising"
+    },
+    "lychee_wine": {
+      "zh": "荔枝酒",
+      "prompt": "round glass bottle with a cork, clear pale pink liquor with white lychees inside"
+    },
+    "peach_wine": {
+      "zh": "桃子酒",
+      "prompt": "round glass bottle with a cork, pale peach colored liquor with a pink peach label"
+    },
+    "cabbage_pork_stew": {
+      "zh": "白菜燉肉",
+      "prompt": "bowl of stewed napa cabbage with pork slices in clear broth"
+    },
+    "garlic_bok_choy": {
+      "zh": "蒜炒青菜",
+      "prompt": "plate of glossy stir fried bok choy with minced garlic"
+    },
+    "spinach_salad": {
+      "zh": "涼拌菠菜",
+      "prompt": "small plate of cold blanched spinach topped with sesame seeds"
+    },
+    "onion_omelette": {
+      "zh": "洋蔥炒蛋",
+      "prompt": "plate of scrambled yellow eggs with sliced onions"
+    },
+    "daikon_beef_brisket": {
+      "zh": "蘿蔔燉牛腩",
+      "prompt": "clay pot of braised beef brisket chunks with white radish pieces in brown sauce"
+    },
+    "yuxiang_eggplant": {
+      "zh": "魚香茄子",
+      "prompt": "plate of braised purple eggplant strips in glossy red brown garlic sauce"
+    },
+    "braised_eggplant": {
+      "zh": "紅燒茄子",
+      "prompt": "plate of soft braised eggplant pieces in dark soy sauce with green onion"
+    },
+    "smashed_cucumber": {
+      "zh": "拍黃瓜",
+      "prompt": "small plate of smashed cucumber chunks with garlic and red chili oil"
+    },
+    "steamed_corn": {
+      "zh": "蒸玉米",
+      "prompt": "two steamed yellow corn cobs on a small bamboo plate, steam rising"
+    },
+    "corn_chowder": {
+      "zh": "玉米濃湯",
+      "prompt": "bowl of creamy pale yellow corn soup with corn kernels"
+    },
+    "kung_pao_chicken": {
+      "zh": "宮保雞丁",
+      "prompt": "plate of diced chicken with peanuts, red dried chilies and scallion in glossy sauce"
+    },
+    "roasted_sweet_potato": {
+      "zh": "烤地瓜",
+      "prompt": "roasted sweet potato broken open showing steaming orange flesh, charred skin"
+    },
+    "sweet_potato_congee": {
+      "zh": "地瓜粥",
+      "prompt": "bowl of white rice porridge with orange sweet potato chunks"
+    },
+    "taro_spare_ribs": {
+      "zh": "芋頭蒸排骨",
+      "prompt": "small steamer plate of pork spare ribs with purple speckled taro cubes"
+    },
+    "taro_paste": {
+      "zh": "芋泥",
+      "prompt": "small bowl of smooth lavender purple mashed taro"
+    },
+    "scallion_pancake": {
+      "zh": "蔥油餅",
+      "prompt": "round golden flaky flatbread with green onion pieces, one wedge cut"
+    },
+    "garlic_pork_slices": {
+      "zh": "蒜泥白肉",
+      "prompt": "plate of thin rolled pork belly slices drizzled with red garlic chili sauce"
+    },
+    "cumin_lamb_skewers": {
+      "zh": "孜然羊肉串",
+      "prompt": "two metal skewers with chunks of grilled brown lamb meat dusted with red chili and cumin"
+    },
+    "black_pepper_steak": {
+      "zh": "黑胡椒牛排",
+      "prompt": "grilled beef steak with black pepper sauce on a cast iron plate"
+    },
+    "pepper_bun": {
+      "zh": "胡椒餅",
+      "prompt": "round golden baked bun with sesame seeds on top, torn open showing meat filling"
+    },
+    "sesame_tangyuan": {
+      "zh": "芝麻湯圓",
+      "prompt": "bowl of white glutinous rice balls in sweet soup, one cut showing black sesame filling"
+    },
+    "strawberry_daifuku": {
+      "zh": "草莓大福",
+      "prompt": "soft white mochi ball cut in half showing a red strawberry and red bean paste"
+    },
+    "blueberry_pie": {
+      "zh": "藍莓派",
+      "prompt": "round blueberry pie with a golden lattice crust"
+    },
+    "pineapple_cake": {
+      "zh": "鳳梨酥",
+      "prompt": "two small golden square shortbread pastries, one cut showing yellow pineapple filling"
+    },
+    "pineapple_fried_rice": {
+      "zh": "鳳梨炒飯",
+      "prompt": "fried rice served in a hollowed half pineapple with yellow pineapple chunks"
+    },
+    "lemon_chicken": {
+      "zh": "檸檬雞",
+      "prompt": "plate of crispy fried chicken pieces in yellow lemon sauce with lemon slices"
+    },
+    "peach_jelly": {
+      "zh": "蜜桃凍",
+      "prompt": "small glass cup of translucent pink peach jelly with peach pieces inside"
+    },
+    "rock_sugar_pear": {
+      "zh": "冰糖燉梨",
+      "prompt": "small white bowl with a whole stewed pear in clear syrup"
+    },
+    "mango_shaved_ice": {
+      "zh": "芒果冰",
+      "prompt": "bowl of shaved ice piled with orange mango cubes and syrup"
+    },
+    "mango_sticky_rice": {
+      "zh": "芒果糯米飯",
+      "prompt": "plate of white sticky rice with sliced yellow mango and coconut sauce"
+    },
+    "candied_banana": {
+      "zh": "拔絲香蕉",
+      "prompt": "plate of fried banana pieces coated in shiny amber caramel with thin sugar threads"
+    },
+    "orange_spare_ribs": {
+      "zh": "橙香排骨",
+      "prompt": "plate of glossy orange glazed pork ribs with orange slices"
+    },
+    "homestyle_tofu": {
+      "zh": "家常豆腐",
+      "prompt": "plate of golden fried tofu slices with green peppers in brown sauce"
+    },
+    "spinach_dumplings": {
+      "zh": "菠菜餃子",
+      "prompt": "plate of green tinted boiled dumplings"
+    },
+    "braised_pork_rice": {
+      "zh": "滷肉飯",
+      "prompt": "bowl of white rice topped with dark braised minced pork and a halved braised egg"
+    },
+    "five_spice_tea_egg": {
+      "zh": "五香茶葉蛋",
+      "prompt": "two marbled brown tea eggs, one peeled showing cracked pattern, with a star anise"
+    },
+    "tofu_vegetable_soup": {
+      "zh": "豆腐蔬菜湯",
+      "prompt": "bowl of clear soup with white tofu cubes, bok choy and scallion"
+    },
+    "soy_milk_pudding": {
+      "zh": "豆花",
+      "prompt": "bowl of silky white tofu pudding in brown ginger syrup with peanuts"
+    },
+    "eggplant_with_garlic": {
+      "zh": "蒜蓉蒸茄子",
+      "prompt": "steamed eggplant halves topped with minced garlic and chopped scallion"
+    },
+    "pear_honey_drink": {
+      "zh": "雪梨蜜",
+      "prompt": "glass cup of warm clear pear syrup drink with pear slices"
+    },
+    "lychee_jelly": {
+      "zh": "荔枝凍",
+      "prompt": "small glass cup of clear jelly with white lychees inside"
+    },
+    "banana_pancake": {
+      "zh": "香蕉煎餅",
+      "prompt": "stack of small pancakes topped with banana slices and honey"
+    },
+    "grape_raisin_bread": {
+      "zh": "葡萄乾麵包",
+      "prompt": "small round loaf of bread studded with dark raisins, one slice cut"
+    },
+    "fruit_platter": {
+      "zh": "水果拼盤",
+      "prompt": "round plate of mixed fruit: orange slices, grapes, strawberries and mango cubes"
+    },
+    "pickled_vegetable_noodles": {
+      "zh": "酸菜麵",
+      "prompt": "bowl of noodle soup with pale pickled cabbage and pork slices"
+    }
+  }
+}
