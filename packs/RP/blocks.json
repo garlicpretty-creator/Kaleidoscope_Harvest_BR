@@ -3,14 +3,116 @@
   "kaleidoscope_harvest:napa_cabbage_crop": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:scallion_crop": {
+  "kaleidoscope_harvest:wild_napa_cabbage": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:bok_choy_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_bok_choy": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:spinach_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_spinach": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:onion_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_onion": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:daikon_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_daikon": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:eggplant_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_eggplant": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:cucumber_crop": {
+    "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:wild_cucumber": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:corn_crop": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:cucumber_crop": {
+  "kaleidoscope_harvest:wild_corn": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:soybean_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_soybean": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:peanut_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_peanut": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:sweet_potato_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_sweet_potato": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:taro_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_taro": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:scallion_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_scallion": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:garlic_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_garlic": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:ginger_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_ginger": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:cilantro_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_cilantro": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:sesame_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_sesame": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:black_pepper_crop": {
     "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:wild_black_pepper": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:cumin_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_cumin": {
+    "sound": "grass"
   },
   "kaleidoscope_harvest:bamboo_trellis": {
     "sound": "bamboo"

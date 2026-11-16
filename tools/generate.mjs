@@ -1,6 +1,7 @@
 // Writes every generated pack file from the data tables (npm run generate):
 //
-//   BP  blocks/, items/, loot_tables/kaleidoscope_harvest/, recipes/, item_catalog/, texts/
+//   BP  blocks/, items/, loot_tables/kaleidoscope_harvest/, recipes/, item_catalog/, texts/,
+//       features/, feature_rules/ (wild plants)
 //   RP  blocks.json, models/blocks/, textures/*.json, texts/, placeholder textures
 //
 // Generated folders are wiped and rewritten, so edit the data tables
@@ -19,7 +20,7 @@ const RP = join(root, "packs", "RP");
 const load = (name) => import(pathToFileURL(join(BP, "scripts", "data", name)).href);
 
 const { NAMESPACE, rid, state } = await load("ns.js");
-const { CROPS, TRELLIS, cropBlockId } = await load("crops.js");
+const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
 const { TREES, FRUIT_LOG, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { toSimplified } = await load("zh_cn.js");
@@ -59,7 +60,7 @@ function wipe(dir) {
   mkdirSync(dir, { recursive: true });
 }
 
-for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(RP, "models", "blocks")]) wipe(dir);
+for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features"), join(BP, "feature_rules"), join(RP, "models", "blocks")]) wipe(dir);
 
 const terrain = {};
 const itemTextures = {};
@@ -80,6 +81,9 @@ function addIcon(id, img) {
 }
 
 // --- Shared block pieces ------------------------------------------------------------------
+
+/** How often a wild plant appears: tries per chunk and the chance of each. */
+const WILD_SPREAD = { iterations: 1, scatter_chance: 15 };
 
 const CROSS_GEO = `geometry.${NS}.cross`;
 const material = (texture) => ({ "*": { texture: `kh_${texture}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } });
@@ -122,7 +126,7 @@ for (const crop of CROPS) {
   for (let s = 0; s <= max; s++)
     for (const grey of [false, true]) {
       const suffix = `${s}${grey ? "_grey" : ""}`;
-      addTerrain(`${crop.id}_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, trellis }));
+      addTerrain(`${crop.id}_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, trellis, underground: crop.form === "underground" }));
       if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, top: true }));
     }
 
@@ -174,6 +178,79 @@ for (const crop of CROPS) {
     permutations,
   });
   blockSounds[rid(id)] = { sound: trellis ? "bamboo" : "grass" };
+  wildPlant(crop);
+}
+
+// --- Wild plants (企劃書「第一份來源」) ---------------------------------------------------------
+//
+// One block per crop that never grows, placed by world generation the way Herbal places
+// its wild herbs: a feature rule per biome tag → a search feature that finds the surface →
+// a single-block feature. Breaking it gives the produce, and seeds for seed crops.
+
+function wildPlant(crop) {
+  const id = wildBlockId(crop);
+  const soil = crop.wild.soil ?? WILD_SOIL;
+  names[`tile.${rid(id)}.name`] = [`野生${crop.zh}`, `Wild ${crop.en}`];
+  addTerrain(id, art.cropStage(crop.look, crop.maxGrowth, crop.maxGrowth, { underground: crop.form === "underground" }));
+  const pools = [countEntry(crop.produce, [1, 2])];
+  if (crop.seed !== crop.produce) pools.push(countEntry(crop.seed, [1, 2]));
+  block(id, {
+    components: {
+      "minecraft:geometry": CROSS_GEO,
+      "minecraft:material_instances": material(id),
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": { origin: [-6, 0, -6], size: [12, 12, 12] },
+      "minecraft:destructible_by_mining": { seconds_to_destroy: 0 },
+      "minecraft:destructible_by_explosion": { explosion_resistance: 0 },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": { movement_type: "popped" },
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: soil }] },
+      "minecraft:loot": lootTable(id, pools),
+    },
+  });
+  blockSounds[rid(id)] = { sound: "grass" };
+
+  const feature = `${id}_feature`;
+  const search = `${id}_search`;
+  writeJson(join(BP, "features", "wild", `${feature}.json`), {
+    format_version: "1.21.60",
+    "minecraft:single_block_feature": {
+      description: { identifier: rid(feature) },
+      places_block: { name: rid(id) },
+      enforce_placement_rules: false,
+      enforce_survivability_rules: false,
+      may_replace: ["minecraft:air", "minecraft:short_grass"],
+      may_attach_to: { bottom: soil },
+    },
+  });
+  writeJson(join(BP, "features", "wild", `${search}.json`), {
+    format_version: "1.21.60",
+    "minecraft:search_feature": {
+      description: { identifier: rid(search) },
+      places_feature: rid(feature),
+      search_volume: { min: [-1, -32, -1], max: [1, 0, 1] },
+      search_axis: "-y",
+      required_successes: 1,
+    },
+  });
+  for (const biome of crop.wild.biomes) {
+    writeJson(join(BP, "feature_rules", "wild", `${id}_${biome}.json`), {
+      format_version: "1.16.100",
+      "minecraft:feature_rules": {
+        description: { identifier: rid(`${id}_${biome}`), places_feature: rid(search) },
+        conditions: {
+          placement_pass: "after_surface_pass",
+          "minecraft:biome_filter": { any_of: [{ test: "has_biome_tag", operator: "==", value: biome }] },
+        },
+        distribution: {
+          ...WILD_SPREAD,
+          x: { distribution: "uniform", extent: [0, 16] },
+          y: "query.heightmap(variable.worldx, variable.worldz)",
+          z: { distribution: "uniform", extent: [0, 16] },
+        },
+      },
+    });
+  }
 }
 
 // --- Bamboo Trellis -------------------------------------------------------------------------------

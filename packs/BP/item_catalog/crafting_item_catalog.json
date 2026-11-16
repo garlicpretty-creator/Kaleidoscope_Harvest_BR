@@ -13,12 +13,33 @@
             "items": [
               "kaleidoscope_harvest:bamboo_trellis",
               "kaleidoscope_harvest:napa_cabbage_seeds",
-              "kaleidoscope_harvest:corn_seeds",
+              "kaleidoscope_harvest:bok_choy_seeds",
+              "kaleidoscope_harvest:spinach_seeds",
+              "kaleidoscope_harvest:onion_seeds",
+              "kaleidoscope_harvest:daikon_seeds",
+              "kaleidoscope_harvest:eggplant_seeds",
               "kaleidoscope_harvest:cucumber_seeds",
+              "kaleidoscope_harvest:corn_seeds",
+              "kaleidoscope_harvest:cilantro_seeds",
               "kaleidoscope_harvest:napa_cabbage",
-              "kaleidoscope_harvest:scallion",
+              "kaleidoscope_harvest:bok_choy",
+              "kaleidoscope_harvest:spinach",
+              "kaleidoscope_harvest:onion",
+              "kaleidoscope_harvest:daikon",
+              "kaleidoscope_harvest:eggplant",
+              "kaleidoscope_harvest:cucumber",
               "kaleidoscope_harvest:corn",
-              "kaleidoscope_harvest:cucumber"
+              "kaleidoscope_harvest:soybean",
+              "kaleidoscope_harvest:peanut",
+              "kaleidoscope_harvest:sweet_potato",
+              "kaleidoscope_harvest:taro",
+              "kaleidoscope_harvest:scallion",
+              "kaleidoscope_harvest:garlic",
+              "kaleidoscope_harvest:ginger",
+              "kaleidoscope_harvest:cilantro",
+              "kaleidoscope_harvest:sesame",
+              "kaleidoscope_harvest:black_pepper",
+              "kaleidoscope_harvest:cumin"
             ]
           },
           {
@@ -27,7 +48,19 @@
               "name": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
             },
             "items": [
-              "kaleidoscope_harvest:chopped_scallion"
+              "kaleidoscope_harvest:chopped_scallion",
+              "kaleidoscope_harvest:minced_garlic",
+              "kaleidoscope_harvest:ginger_shreds",
+              "kaleidoscope_harvest:chopped_cilantro",
+              "kaleidoscope_harvest:diced_onion",
+              "kaleidoscope_harvest:daikon_slices",
+              "kaleidoscope_harvest:sesame_powder",
+              "kaleidoscope_harvest:sesame_oil",
+              "kaleidoscope_harvest:peanut_oil",
+              "kaleidoscope_harvest:soy_milk",
+              "kaleidoscope_harvest:okara",
+              "kaleidoscope_harvest:ground_black_pepper",
+              "kaleidoscope_harvest:ground_cumin"
             ]
           }
         ]

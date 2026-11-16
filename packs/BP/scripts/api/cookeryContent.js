@@ -1,11 +1,11 @@
 // Harvest's recipes and guidebook chapter, sent to Cookery once it is ready.
 //
-//   kaleidoscope_cookery:register_recipe   chopping board, wok, stockpot, steamer (data/dishes.js)
+//   kaleidoscope_cookery:register_recipe   chopping board, millstone, wok, stockpot, steamer (data/dishes.js)
 //   kaleidoscope_cookery:guidebook_*       the「豐收」chapter (data/guidebook.js)
 //
 // ## Every registration is checked against Cookery's capability list first, so
 // ## an older Cookery skips what it lacks (企劃書 risk: 廚房更新改動內部結構).
-// ## Payload fields follow what Ranching 1.1 sends to Cookery 1.6.6.
+// ## Payload fields follow what Ranching 1.1 and Herbal 1.2 send to Cookery 1.6.6.
 
 import { system } from "@minecraft/server";
 import { RECIPES } from "../data/dishes.js";
@@ -14,7 +14,7 @@ import { NAMESPACE, rid } from "../data/ns.js";
 import { cookeryHas, onCookeryReady, send } from "./cookery.js";
 
 const SOURCE = NAMESPACE;
-const KIND = { chopping_board: "chopping_board", wok: "wok", stockpot: "stockpot_exact", steamer: "steamer" };
+const KIND = { chopping_board: "chopping_board", millstone: "millstone", wok: "wok", stockpot: "stockpot_exact", steamer: "steamer" };
 
 /** The register_recipe payload for one row of data/dishes.js. */
 export function recipePayload(row) {
@@ -26,6 +26,10 @@ export function recipePayload(row) {
   switch (row.station) {
     case "chopping_board":
       recipe = { id, input: rid(row.input), result, count: row.count ?? 1, cuts: row.cuts ?? 1 };
+      break;
+    case "millstone":
+      // ## Herbal's shape: every output is { id, count, chance } (chance 1 = always).
+      recipe = { id, input: rid(row.input), outputs: row.outputs.map(([out, count, chance = 1]) => ({ id: rid(out), count, chance })) };
       break;
     case "steamer":
       recipe = { id, input: rid(row.input), result, count: row.count ?? 1, time: row.time };

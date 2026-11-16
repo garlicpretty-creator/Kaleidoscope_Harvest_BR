@@ -27,10 +27,12 @@ function disc(img, cx, cy, r, colour) {
 }
 
 /** A crop at `stage` of `max`: stalks grow taller and denser, the ripe stage shows the produce. */
-export function cropStage(look, stage, max, { grey = false, top = false, trellis = false } = {}) {
+export function cropStage(look, stage, max, { grey = false, top = false, trellis = false, underground = false } = {}) {
   const img = image(16, 16);
   const rnd = noise(`${look.leaf}${stage}${top}`);
-  const leaf = grey ? GREY(look.leaf) : look.leaf;
+  // ## Underground crops show only leaves, which yellow when the crop is ready (企劃書).
+  const leafBase = underground && stage >= max ? mix(look.leaf, [226, 196, 70], 0.7) : look.leaf;
+  const leaf = grey ? GREY(leafBase) : leafBase;
   const ripe = grey ? GREY(look.ripe) : look.ripe;
   if (trellis) drawTrellis(img);
   const t = (stage + 1) / (max + 1);
@@ -43,6 +45,7 @@ export function cropStage(look, stage, max, { grey = false, top = false, trellis
       if (y > 2 && rnd() < 0.35) setPixel(img, px + (rnd() < 0.5 ? -1 : 1), 15 - y, shade(leaf, 1.1));
     }
   }
+  if (underground) return img;
   if (stage >= max) for (const x of stalks) disc(img, x + 1, 15 - Math.round(height * 0.6), 1, ripe);
   else if (stage >= max - 2) for (const x of stalks.slice(0, 2)) setPixel(img, x + 1, 15 - Math.round(height * 0.6), mix(leaf, ripe, 0.5));
   return img;
@@ -147,6 +150,39 @@ export function icon([shapeName, rgb]) {
     case "bowl":
       for (let y = 9; y < 14; y++) for (let x = 2 + (y - 9); x < 14 - (y - 9); x++) setPixel(img, x, y, [150, 110, 70]);
       for (let x = 3; x < 13; x++) setPixel(img, x, 8, rgb), setPixel(img, x, 7, x % 3 ? rgb : light);
+      break;
+    case "leafy":
+      for (let i = 0; i < 3; i++) {
+        const cx = 5 + i * 3;
+        for (let y = 3; y < 12; y++) for (let x = -1; x <= 1; x++) setPixel(img, cx + x, y + Math.abs(i - 1), x === 0 ? light : rgb);
+      }
+      for (let y = 11; y < 15; y++) for (let x = 6; x < 11; x++) setPixel(img, x, y, [226, 236, 210]);
+      break;
+    case "bulb":
+      disc(img, 8, 10, 5, rgb);
+      disc(img, 7, 9, 2, light);
+      for (let y = 1; y < 6; y++) setPixel(img, 8, y, y < 4 ? [110, 170, 80] : dark);
+      for (let x = 6; x < 11; x++) setPixel(img, x, 15, [200, 190, 160]);
+      break;
+    case "root":
+      for (let i = 0; i < 10; i++) disc(img, 4 + i, 4 + i, i < 2 || i > 8 ? 1 : 2, i % 4 ? rgb : dark);
+      setPixel(img, 3, 3, [100, 160, 80]), setPixel(img, 2, 2, [100, 160, 80]);
+      break;
+    case "pod":
+      for (const [cx, cy] of [[5, 6], [9, 9], [12, 5]]) {
+        disc(img, cx, cy, 2, rgb);
+        setPixel(img, cx, cy, dark);
+      }
+      break;
+    case "powder":
+      for (let y = 10; y < 14; y++) for (let x = 2 + (y - 10); x < 14 - (y - 10); x++) setPixel(img, x, y, [150, 110, 70]);
+      for (let x = 4; x < 12; x++) for (let y = 6 + Math.abs(x - 8) / 2; y < 10; y++) setPixel(img, x, y, (x + y) % 3 ? rgb : light);
+      break;
+    case "bottle":
+      for (let y = 6; y < 15; y++) for (let x = 5; x < 11; x++) setPixel(img, x, y, y < 8 ? [220, 230, 240, 160] : rgb);
+      for (let y = 2; y < 6; y++) setPixel(img, 7, y, [220, 230, 240, 200]), setPixel(img, 8, y, [220, 230, 240, 200]);
+      setPixel(img, 7, 1, [140, 100, 60]), setPixel(img, 8, 1, [140, 100, 60]);
+      for (let y = 9; y < 14; y++) setPixel(img, 6, y, light);
       break;
     default:
       throw new Error(`art: unknown icon shape ${shapeName}`);

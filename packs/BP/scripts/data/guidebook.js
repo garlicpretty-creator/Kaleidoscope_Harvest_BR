@@ -8,7 +8,7 @@
 
 import { CLIMATES } from "./climate.js";
 import { CROPS, TRELLIS } from "./crops.js";
-import { RECIPES } from "./dishes.js";
+import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
@@ -23,12 +23,13 @@ const CLIMATE_NAME = {
 
 const STATION_NAME = {
   chopping_board: ["砧板", "Chopping Board"],
+  millstone: ["石磨", "Millstone"],
   wok: ["炒鍋", "Wok"],
   stockpot: ["湯鍋", "Stockpot"],
   steamer: ["蒸籠", "Steamer"],
 };
 // ## Cookery translates these method names in its recipe box (as for Ranching).
-const METHOD = { chopping_board: "Chopping Board", wok: "Wok", stockpot: "Stockpot", steamer: "Steamer" };
+const METHOD = { chopping_board: "Chopping Board", millstone: "Millstone", wok: "Wok", stockpot: "Stockpot", steamer: "Steamer" };
 
 export const GUIDE_CATEGORIES = [
   { id: "crops", zh: "作物", en: "Crops", icon: "napa_cabbage" },
@@ -55,17 +56,32 @@ const FORM_LINE = {
   trellis: ["先在耕地上放竹藤架，再拿種子點竹藤架種下。熟了點它採收，會再結果；打掉時竹藤架會還給你。", "Place a Bamboo Trellis on farmland, then use the seeds on it. Use the ripe vine to pick; it fruits again. Breaking it gives the trellis back."],
 };
 
+const BIOME_NAME = {
+  plains: ["平原", "plains"],
+  forest: ["森林", "forests"],
+  flower_forest: ["繁花森林", "flower forests"],
+  savanna: ["熱帶草原", "savannas"],
+  jungle: ["叢林", "jungles"],
+  swamp: ["沼澤", "swamps"],
+  desert: ["沙漠", "deserts"],
+  taiga: ["針葉林", "taigas"],
+};
+
+export function wildLine(wild) {
+  const names = wild.biomes.map((b) => BIOME_NAME[b]);
+  return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生的，打下來就有第一份。`, `In the wild: it grows now and then in ${names.map((n) => n[1]).join(" and ")}; break one for your first harvest.`];
+}
+
 const BONE_MEAL_LINE = ["骨粉一次推進兩個階段。", "Bone meal moves it on two stages."];
 
 /** Lines saying where a crop goes on Cookery's stations. */
 function usesOf(id) {
   const out = [];
   for (const row of RECIPES) {
-    const inputs = row.input ? [rid(row.input)] : row.slots.flat();
-    if (!inputs.includes(rid(id))) continue;
+    if (!inputsOf(row).includes(rid(id))) continue;
     const [zh, en] = STATION_NAME[row.station];
-    const dish = ITEM_BY_ID.get(row.result);
-    out.push([`${zh}：${dish.zh}`, `${en}: ${dish.en}`]);
+    const made = outputsOf(row).map((out) => ITEM_BY_ID.get(out));
+    out.push([`${zh}：${made.map((m) => m.zh).join("＋")}`, `${en}: ${made.map((m) => m.en).join(" + ")}`]);
   }
   if (!out.length) return [];
   return [[`用途：${out.map((u) => u[0]).join("、")}。`, `Used for: ${out.map((u) => u[1]).join(", ")}.`]];
@@ -79,7 +95,7 @@ function entry(id, category, lines, extra = {}) {
 export function guideEntries() {
   const rows = [];
   for (const crop of CROPS) {
-    const lines = [FORM_LINE[crop.form], climateLine(crop.climate), BONE_MEAL_LINE, ...usesOf(crop.produce)];
+    const lines = [FORM_LINE[crop.form], climateLine(crop.climate), BONE_MEAL_LINE, wildLine(crop.wild), ...usesOf(crop.produce)];
     rows.push(entry(crop.produce, "crops", lines));
     if (crop.seed !== crop.produce) rows.push(entry(crop.seed, "crops", [[`種下長成${ITEM_BY_ID.get(crop.produce).zh}。`, `Grows into ${ITEM_BY_ID.get(crop.produce).en}.`], FORM_LINE[crop.form]]));
   }
@@ -103,11 +119,11 @@ export function guideEntries() {
   rows.push(entry(FRUIT_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，果葉會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the fruit leaves fall and the tree is gone."]], { block: true }));
 
   for (const item of ITEMS.filter((i) => i.kind === "ingredient" || i.kind === "dish")) {
-    const row = RECIPES.find((r) => r.result === item.id);
+    const row = recipeMaking(item.id);
     const [zh, en] = STATION_NAME[row.station];
     const inputs = (row.input ? [rid(row.input)] : row.slots.map((slot) => slot[0])).map(nameOf);
     const made = [`在${zh}上做：${inputs.map((n) => n[0]).join("＋")}。`, `Made on the ${en}: ${inputs.map((n) => n[1]).join(" + ")}.`];
-    rows.push(entry(item.id, item.kind === "dish" ? "dishes" : "ingredients", [made, ...usesOf(item.id)], { recipe: row }));
+    rows.push(entry(item.id, item.kind === "dish" ? "dishes" : "ingredients", [made, ...usesOf(item.id)], { recipe: row, makes: item.id }));
   }
   return rows;
 }
@@ -117,6 +133,7 @@ const VANILLA_NAMES = {
   "minecraft:porkchop": ["生豬排", "Raw Porkchop"],
   "minecraft:sugar": ["糖", "Sugar"],
   "minecraft:bowl": ["碗", "Bowl"],
+  "minecraft:beef": ["生牛肉", "Raw Beef"],
 };
 
 /** [zh, en] name of any id the chapter mentions. */
@@ -163,14 +180,15 @@ export const GUIDE_TEXT = {
 
 const LOCALES = ["en_US", "zh_TW", "zh_CN"];
 
-function recipeOf(row) {
+function recipeOf(row, makes) {
   const ingredients = row.input ? [rid(row.input)] : row.slots.map((slot) => slot[0]);
+  const count = row.outputs ? row.outputs.find(([id]) => id === makes)[1] : row.count ?? 1;
   return {
     method: METHOD[row.station],
     ingredients,
-    count: row.count ?? 1,
+    count,
     time: row.time ?? 0,
-    result: rid(row.result),
+    result: rid(makes),
     ...(row.station === "stockpot" ? { base: "minecraft:water" } : {}),
   };
 }
@@ -191,7 +209,7 @@ export function guidebookPayload() {
     };
     const item = ITEM_BY_ID.get(row.id);
     if (item?.food) Object.assign(out, { stack: 64, food: { nutrition: item.food[0], saturation: item.food[1] } });
-    if (row.recipe) out.recipes = [recipeOf(row.recipe)];
+    if (row.recipe) out.recipes = [recipeOf(row.recipe, row.makes)];
     return out;
   });
 

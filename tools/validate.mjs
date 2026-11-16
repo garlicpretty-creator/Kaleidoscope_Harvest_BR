@@ -39,7 +39,7 @@ const { NAMESPACE, rid } = await load("ns.js");
 const { CROPS, TRELLIS } = await load("crops.js");
 const { TREES } = await load("trees.js");
 const { ITEMS } = await load("items.js");
-const { RECIPES } = await load("dishes.js");
+const { RECIPES, inputsOf, outputsOf } = await load("dishes.js");
 const { CLIMATES } = await load("climate.js");
 const { guidebookPayload } = await load("guidebook.js");
 const { HINTS } = await load("zh_cn.js");
@@ -74,14 +74,13 @@ for (const tree of TREES) {
 // ## Two goals of the proposal checked mechanically: every crop has a use
 // ## (企劃書：每種作物至少兩個用途 — M1 checks at least one Cookery use; the
 // ## second use arrives with M2–M4 and the G4 gate then raises this to two).
-const usedIn = new Set(RECIPES.flatMap((row) => (row.input ? [rid(row.input)] : row.slots.flat())));
+const usedIn = new Set(RECIPES.flatMap(inputsOf));
 for (const id of [...CROPS.map((c) => c.produce), ...TREES.map((t) => t.fruit)]) if (!usedIn.has(rid(id))) fail(`${id}: no Cookery recipe uses it`);
 for (const row of RECIPES) {
-  if (!itemIds.has(row.result)) fail(`recipe ${row.result}: result is not in data/items.js`);
-  const inputs = row.input ? [rid(row.input)] : row.slots.flat();
-  for (const id of inputs) if (id.startsWith(`${NAMESPACE}:`) && !itemIds.has(id.slice(NAMESPACE.length + 1))) fail(`recipe ${row.result}: unknown input ${id}`);
+  for (const out of outputsOf(row)) if (!itemIds.has(out)) fail(`recipe ${row.result}: output ${out} is not in data/items.js`);
+  for (const id of inputsOf(row)) if (id.startsWith(`${NAMESPACE}:`) && !itemIds.has(id.slice(NAMESPACE.length + 1))) fail(`recipe ${row.result}: unknown input ${id}`);
 }
-for (const item of ITEMS.filter((i) => i.kind === "dish" || i.kind === "ingredient")) if (!RECIPES.some((row) => row.result === item.id)) fail(`${item.id}: no recipe makes it`);
+for (const item of ITEMS.filter((i) => i.kind === "dish" || i.kind === "ingredient")) if (!RECIPES.some((row) => outputsOf(row).includes(item.id))) fail(`${item.id}: no recipe makes it`);
 
 let payload;
 try {

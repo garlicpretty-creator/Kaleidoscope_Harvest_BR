@@ -39,6 +39,7 @@ const { guideEntries } = await import("../../packs/BP/scripts/data/guidebook.js"
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 const { brokeCrop } = await import("../../packs/BP/scripts/growth/crops.js");
+const { recipePayload } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 
 const NS = "kaleidoscope_harvest";
 const r = (id) => `${NS}:${id}`;
@@ -298,13 +299,63 @@ test("chopping the trunk away makes the fruit leaves fall", () => {
   equal(overworld.getBlock(at(1, 66)).typeId, "minecraft:air", "leaf fell");
 });
 
+// --- M2: spices, underground crops, wild plants ------------------------------------------------------------
+
+test("garlic is planted from a clove, and a hoe digs up one more when its leaves are yellow", () => {
+  const garlic = JSON.parse(readFileSync("packs/BP/items/garlic.json", "utf8"))["minecraft:item"].components["minecraft:block_placer"];
+  equal(garlic.block, r("garlic_crop"), "garlic plants garlic");
+  let crop = tick(plant("garlic_crop"), 20);
+  equal(growth(crop), 7, "ripe");
+  __break(player("minecraft:iron_hoe"), crop);
+  equal(overworld.dropped(r("garlic")), 2, "1 from loot + 1 hoe bonus");
+  crop = tick(plant("garlic_crop", 2), 20);
+  __break(player(), crop);
+  equal(overworld.dropped(r("garlic")), 3, "by hand only the loot");
+});
+
+test("black pepper is planted on a trellis with a peppercorn and picked again and again", () => {
+  overworld.biome = "minecraft:jungle";
+  __place(overworld, at(0, 63), "minecraft:farmland");
+  __interact(player(r("black_pepper")), __place(overworld, at(0), r("bamboo_trellis")));
+  const crop = tick(overworld.getBlock(at(0)), 30);
+  equal(crop.typeId, r("black_pepper_crop"), "planted");
+  equal(growth(crop), 7, "ripe");
+  __interact(player(), crop);
+  assert(overworld.dropped(r("black_pepper")) >= 1, "picked");
+});
+
+test("every crop grows wild somewhere, and breaking the wild plant gives a first harvest", () => {
+  for (const crop of CROPS) {
+    __reset();
+    const wild = `wild_${crop.id}`;
+    const rules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.startsWith(`${wild}_`));
+    assert(rules.length === crop.wild.biomes.length && rules.length > 0, `${crop.id}: one feature rule per biome`);
+    for (const file of rules) {
+      const rule = JSON.parse(readFileSync(`packs/BP/feature_rules/wild/${file}`, "utf8"))["minecraft:feature_rules"];
+      const search = JSON.parse(readFileSync(`packs/BP/features/wild/${rule.description.places_feature.split(":")[1]}.json`, "utf8"))["minecraft:search_feature"];
+      const single = JSON.parse(readFileSync(`packs/BP/features/wild/${search.places_feature.split(":")[1]}.json`, "utf8"))["minecraft:single_block_feature"];
+      equal(single.places_block.name, r(wild), `${file} places the wild plant`);
+    }
+    __break(player(), __place(overworld, at(0), r(wild)));
+    assert(overworld.dropped(r(crop.produce)) >= 1, `${crop.id}: produce from the wild plant`);
+    if (crop.seed !== crop.produce) assert(overworld.dropped(r(crop.seed)) >= 1, `${crop.id}: seeds from the wild plant`);
+  }
+});
+
+test("millstone payloads use Herbal's outputs list", () => {
+  const sesame = recipePayload(RECIPES.find((row) => row.station === "millstone" && row.input === "sesame"));
+  equal(sesame.kind, "millstone", "kind");
+  equal(sesame.recipe.input, r("sesame"), "input");
+  equal(JSON.stringify(sesame.recipe.outputs), JSON.stringify([{ id: r("sesame_powder"), count: 1, chance: 1 }, { id: r("sesame_oil"), count: 1, chance: 0.5 }]), "outputs");
+});
+
 // --- Cookery --------------------------------------------------------------------------------------------------
 
 test("recipes go to Cookery once it reports its capabilities; unknown kinds are skipped", () => {
   assert(PINGED, "api_ping and guidebook_ping sent at startup");
   system.sendScriptEvent("kaleidoscope_cookery:api_ready", JSON.stringify({ api: 1, capabilities: ["chopping_board", "wok", "steamer"] }));
   const sent = system.sentEvents.filter((e) => e.id === "kaleidoscope_cookery:register_recipe").map((e) => JSON.parse(e.message));
-  equal(sent.length, RECIPES.filter((row) => row.station !== "stockpot").length, "stockpot skipped");
+  equal(sent.length, RECIPES.filter((row) => ["chopping_board", "wok", "steamer"].includes(row.station)).length, "stockpot and millstone skipped");
   const board = sent.find((p) => p.recipe.result === r("chopped_scallion"));
   equal(board.kind, "chopping_board", "kind");
   equal(board.source, NS, "source");

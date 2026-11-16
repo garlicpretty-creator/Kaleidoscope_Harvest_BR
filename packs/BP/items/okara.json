@@ -1,0 +1,19 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:okara",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_okara",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:okara.name"
+      },
+      "minecraft:max_stack_size": 64
+    }
+  }
+}
