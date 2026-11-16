@@ -1,0 +1,27 @@
+{
+  "format_version": "1.21.40",
+  "kaleidoscope_harvest:napa_cabbage_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:scallion_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:corn_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:cucumber_crop": {
+    "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:bamboo_trellis": {
+    "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:fruit_log": {
+    "sound": "wood"
+  },
+  "kaleidoscope_harvest:mandarin_sapling": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:mandarin_fruit_leaves": {
+    "sound": "grass"
+  }
+}

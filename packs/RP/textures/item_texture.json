@@ -1,0 +1,60 @@
+{
+  "resource_pack_name": "kaleidoscope_harvest",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "kh_bamboo_trellis": {
+      "textures": "textures/items/kaleidoscope_harvest/bamboo_trellis"
+    },
+    "kh_fruit_log": {
+      "textures": "textures/items/kaleidoscope_harvest/fruit_log"
+    },
+    "kh_mandarin_sapling": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin_sapling"
+    },
+    "kh_mandarin_fruit_leaves": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin_fruit_leaves"
+    },
+    "kh_napa_cabbage_seeds": {
+      "textures": "textures/items/kaleidoscope_harvest/napa_cabbage_seeds"
+    },
+    "kh_corn_seeds": {
+      "textures": "textures/items/kaleidoscope_harvest/corn_seeds"
+    },
+    "kh_cucumber_seeds": {
+      "textures": "textures/items/kaleidoscope_harvest/cucumber_seeds"
+    },
+    "kh_napa_cabbage": {
+      "textures": "textures/items/kaleidoscope_harvest/napa_cabbage"
+    },
+    "kh_scallion": {
+      "textures": "textures/items/kaleidoscope_harvest/scallion"
+    },
+    "kh_corn": {
+      "textures": "textures/items/kaleidoscope_harvest/corn"
+    },
+    "kh_cucumber": {
+      "textures": "textures/items/kaleidoscope_harvest/cucumber"
+    },
+    "kh_mandarin": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin"
+    },
+    "kh_chopped_scallion": {
+      "textures": "textures/items/kaleidoscope_harvest/chopped_scallion"
+    },
+    "kh_smashed_cucumber": {
+      "textures": "textures/items/kaleidoscope_harvest/smashed_cucumber"
+    },
+    "kh_scallion_omelette": {
+      "textures": "textures/items/kaleidoscope_harvest/scallion_omelette"
+    },
+    "kh_napa_cabbage_pork_stew": {
+      "textures": "textures/items/kaleidoscope_harvest/napa_cabbage_pork_stew"
+    },
+    "kh_steamed_corn": {
+      "textures": "textures/items/kaleidoscope_harvest/steamed_corn"
+    },
+    "kh_mandarin_sweet_soup": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin_sweet_soup"
+    }
+  }
+}

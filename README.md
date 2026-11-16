@@ -4,3 +4,15 @@
 ## 文件
 
 - [企劃書](docs/PROPOSAL.zh-TW.md)
+- [M1 說明：基礎與生長系統](docs/M1_說明.md)
+
+## 開發
+
+需要 Node 22，不需安裝套件。
+
+```
+npm run generate   # 由 packs/BP/scripts/data/ 產生方塊、物品、語言檔與貼圖清單
+npm run validate   # 檢查資料與產生的檔案
+npm test           # 行為測試
+npm run build      # 打包成 dist/*.mcaddon
+```

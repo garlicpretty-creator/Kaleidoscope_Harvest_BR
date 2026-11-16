@@ -1,0 +1,30 @@
+## pack
+pack.name=森羅物語：豐收
+pack.description=非官方的森羅物語擴充：為廚房加入新的蔬菜、香料、水果與果樹。需要《森羅物語：廚房》。
+
+## generated from packs/BP/scripts/data — do not edit by hand
+item.kaleidoscope_harvest:chopped_scallion.name=蔥花
+item.kaleidoscope_harvest:corn.name=玉米
+item.kaleidoscope_harvest:corn_seeds.name=玉米種子
+item.kaleidoscope_harvest:cucumber.name=小黃瓜
+item.kaleidoscope_harvest:cucumber_seeds.name=小黃瓜種子
+item.kaleidoscope_harvest:mandarin.name=橘子
+item.kaleidoscope_harvest:mandarin_sweet_soup.name=橘子糖水
+item.kaleidoscope_harvest:napa_cabbage.name=大白菜
+item.kaleidoscope_harvest:napa_cabbage_pork_stew.name=白菜燉肉
+item.kaleidoscope_harvest:napa_cabbage_seeds.name=大白菜種子
+item.kaleidoscope_harvest:scallion.name=蔥
+item.kaleidoscope_harvest:scallion_omelette.name=蔥花炒蛋
+item.kaleidoscope_harvest:smashed_cucumber.name=拍黃瓜
+item.kaleidoscope_harvest:steamed_corn.name=蒸玉米
+kaleidoscope_harvest:itemGroup.name.harvest_crops=豐收：作物
+kaleidoscope_harvest:itemGroup.name.harvest_ingredients=豐收：食材
+kaleidoscope_harvest:itemGroup.name.harvest_trees=豐收：果樹
+tile.kaleidoscope_harvest:bamboo_trellis.name=竹藤架
+tile.kaleidoscope_harvest:corn_crop.name=玉米
+tile.kaleidoscope_harvest:cucumber_crop.name=小黃瓜
+tile.kaleidoscope_harvest:fruit_log.name=果木原木
+tile.kaleidoscope_harvest:mandarin_fruit_leaves.name=柑橘果葉
+tile.kaleidoscope_harvest:mandarin_sapling.name=柑橘樹苗
+tile.kaleidoscope_harvest:napa_cabbage_crop.name=大白菜
+tile.kaleidoscope_harvest:scallion_crop.name=蔥

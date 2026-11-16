@@ -1,0 +1,33 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:bamboo_trellis"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "B B",
+      "BSB",
+      "B B"
+    ],
+    "key": {
+      "B": {
+        "item": "minecraft:bamboo"
+      },
+      "S": {
+        "item": "minecraft:string"
+      }
+    },
+    "result": {
+      "item": "kaleidoscope_harvest:bamboo_trellis",
+      "count": 2
+    },
+    "unlock": [
+      {
+        "item": "minecraft:bamboo"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:crafting_items_catalog": {
+    "categories": [
+      {
+        "category_name": "items",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:napa_cabbage",
+              "name": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+            },
+            "items": [
+              "kaleidoscope_harvest:bamboo_trellis",
+              "kaleidoscope_harvest:napa_cabbage_seeds",
+              "kaleidoscope_harvest:corn_seeds",
+              "kaleidoscope_harvest:cucumber_seeds",
+              "kaleidoscope_harvest:napa_cabbage",
+              "kaleidoscope_harvest:scallion",
+              "kaleidoscope_harvest:corn",
+              "kaleidoscope_harvest:cucumber"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:chopped_scallion",
+              "name": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
+            },
+            "items": [
+              "kaleidoscope_harvest:chopped_scallion"
+            ]
+          }
+        ]
+      },
+      {
+        "category_name": "nature",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:mandarin",
+              "name": "kaleidoscope_harvest:itemGroup.name.harvest_trees"
+            },
+            "items": [
+              "kaleidoscope_harvest:fruit_log",
+              "kaleidoscope_harvest:mandarin_sapling",
+              "kaleidoscope_harvest:mandarin_fruit_leaves",
+              "kaleidoscope_harvest:mandarin"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

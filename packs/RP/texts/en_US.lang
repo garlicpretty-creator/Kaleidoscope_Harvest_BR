@@ -1,0 +1,30 @@
+## pack
+pack.name=Kaleidoscope Harvest
+pack.description=An unofficial Kaleidoscope expansion: new vegetables, spices, fruit and fruit trees for Cookery. Requires Kaleidoscope Cookery.
+
+## generated from packs/BP/scripts/data — do not edit by hand
+item.kaleidoscope_harvest:chopped_scallion.name=Chopped Scallion
+item.kaleidoscope_harvest:corn.name=Corn
+item.kaleidoscope_harvest:corn_seeds.name=Corn Seeds
+item.kaleidoscope_harvest:cucumber.name=Cucumber
+item.kaleidoscope_harvest:cucumber_seeds.name=Cucumber Seeds
+item.kaleidoscope_harvest:mandarin.name=Mandarin
+item.kaleidoscope_harvest:mandarin_sweet_soup.name=Mandarin Sweet Soup
+item.kaleidoscope_harvest:napa_cabbage.name=Napa Cabbage
+item.kaleidoscope_harvest:napa_cabbage_pork_stew.name=Napa Cabbage and Pork Stew
+item.kaleidoscope_harvest:napa_cabbage_seeds.name=Napa Cabbage Seeds
+item.kaleidoscope_harvest:scallion.name=Scallion
+item.kaleidoscope_harvest:scallion_omelette.name=Scallion Omelette
+item.kaleidoscope_harvest:smashed_cucumber.name=Smashed Cucumber Salad
+item.kaleidoscope_harvest:steamed_corn.name=Steamed Corn
+kaleidoscope_harvest:itemGroup.name.harvest_crops=Harvest: Crops
+kaleidoscope_harvest:itemGroup.name.harvest_ingredients=Harvest: Ingredients
+kaleidoscope_harvest:itemGroup.name.harvest_trees=Harvest: Fruit Trees
+tile.kaleidoscope_harvest:bamboo_trellis.name=Bamboo Trellis
+tile.kaleidoscope_harvest:corn_crop.name=Corn
+tile.kaleidoscope_harvest:cucumber_crop.name=Cucumber
+tile.kaleidoscope_harvest:fruit_log.name=Fruitwood Log
+tile.kaleidoscope_harvest:mandarin_fruit_leaves.name=Mandarin Fruit Leaves
+tile.kaleidoscope_harvest:mandarin_sapling.name=Mandarin Sapling
+tile.kaleidoscope_harvest:napa_cabbage_crop.name=Napa Cabbage
+tile.kaleidoscope_harvest:scallion_crop.name=Scallion
