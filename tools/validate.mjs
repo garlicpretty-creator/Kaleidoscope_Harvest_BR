@@ -71,11 +71,29 @@ for (const tree of TREES) {
   if (!itemIds.has(tree.fruit)) fail(`tree ${tree.id}: fruit ${tree.fruit} is not in data/items.js`);
 }
 
-// ## Two goals of the proposal checked mechanically: every crop has a use
-// ## (企劃書：每種作物至少兩個用途 — M1 checks at least one Cookery use; the
-// ## second use arrives with M2–M4 and the G4 gate then raises this to two).
-const usedIn = new Set(RECIPES.flatMap(inputsOf));
-for (const id of [...CROPS.map((c) => c.produce), ...TREES.map((t) => t.fruit)]) if (!usedIn.has(rid(id))) fail(`${id}: no Cookery recipe uses it`);
+// ## G4 (企劃書 M4 關卡：每種作物至少兩個用途), checked mechanically: every crop and fruit
+// ## must end up in at least two different finished items, following prepared
+// ## ingredients through (garlic → minced garlic → three dishes counts as three).
+const usesFrom = (id, seen = new Set()) => {
+  for (const row of RECIPES) {
+    if (!inputsOf(row).includes(rid(id))) continue;
+    for (const out of outputsOf(row)) {
+      if (seen.has(out)) continue;
+      seen.add(out);
+      usesFrom(out, seen);
+    }
+  }
+  return seen;
+};
+/** Something a player eats or drinks, or cooks with as oil (pickles and jams count). */
+const finished = (id) => {
+  const item = ITEMS.find((i) => i.id === id);
+  return Boolean(item && (["dish", "drink"].includes(item.kind) || item.food || item.oil));
+};
+for (const id of [...CROPS.map((c) => c.produce), ...TREES.map((t) => t.fruit)]) {
+  const ends = [...usesFrom(id)].filter(finished);
+  if (ends.length < 2) fail(`G4: ${id} ends up in ${ends.length} dish(es) or drink(s) (${ends.join(", ") || "none"}); it needs two`);
+}
 for (const row of RECIPES) {
   for (const out of outputsOf(row)) if (!itemIds.has(out)) fail(`recipe ${row.result}: output ${out} is not in data/items.js`);
   for (const id of inputsOf(row)) if (id.startsWith(`${NAMESPACE}:`) && !itemIds.has(id.slice(NAMESPACE.length + 1))) fail(`recipe ${row.result}: unknown input ${id}`);

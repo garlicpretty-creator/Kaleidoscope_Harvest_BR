@@ -8,7 +8,7 @@
 // (packs/BP/scripts/data/), not the JSON. Placeholder PNGs are only written where
 // no file exists yet; pass --art to redraw them all.
 
-import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import * as art from "./art.mjs";
@@ -23,6 +23,8 @@ const { NAMESPACE, rid, state } = await load("ns.js");
 const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
 const { TREES, FRUIT_LOG, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId } = await load("trees.js");
 const { ITEMS } = await load("items.js");
+const { RECIPES, recipeMaking } = await load("dishes.js");
+const { JUICER, PICKLING_JAR } = await load("stations.js");
 const { toSimplified } = await load("zh_cn.js");
 
 const REDRAW = process.argv.includes("--art");
@@ -32,15 +34,19 @@ const ITEM_FORMAT = "1.21.90";
 const GROUP = {
   crops: `${NS}:itemGroup.name.harvest_crops`,
   trees: `${NS}:itemGroup.name.harvest_trees`,
-  ingredients: `${NS}:itemGroup.name.harvest_ingredients`,
-  // ## The only Cookery creative group Ranching confirms against Cookery 1.6.6.
+  // ## Cookery's own groups, as Ranching (foods) and Herbal (ingredients, tea_drinks,
+  // ## cooking_stations) use them against Cookery 1.6.6.
   foods: "kaleidoscope_cookery:itemGroup.name.foods",
+  ingredients: "kaleidoscope_cookery:itemGroup.name.ingredients",
+  drinks: "kaleidoscope_cookery:itemGroup.name.tea_drinks",
+  stations: "kaleidoscope_cookery:itemGroup.name.cooking_stations",
 };
 const GROUP_NAMES = {
   [GROUP.crops]: ["豐收：作物", "Harvest: Crops"],
   [GROUP.trees]: ["豐收：果樹", "Harvest: Fruit Trees"],
-  [GROUP.ingredients]: ["豐收：食材", "Harvest: Ingredients"],
 };
+/** Icons drawn for the art set (tools/art/rd_icons.py); they replace the placeholders. */
+const ART_ICONS = join(RP, "textures", NS, "items");
 
 // --- Output helpers ---------------------------------------------------------------------
 
@@ -60,13 +66,14 @@ function wipe(dir) {
   mkdirSync(dir, { recursive: true });
 }
 
-for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features"), join(BP, "feature_rules"), join(RP, "models", "blocks")]) wipe(dir);
+for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features"), join(BP, "feature_rules")]) wipe(dir);
+// ## RP/models/blocks is not wiped: the station models there are hand-made (tools/art/station_models.py).
 
 const terrain = {};
 const itemTextures = {};
 const blockSounds = {};
 const names = {}; // lang key → [zh, en]
-const catalog = { crops: [], trees: [], ingredients: [] };
+const catalog = { crops: [], trees: [] };
 
 const blockTex = (name) => `textures/blocks/${NS}/${name}`;
 const itemTex = (name) => `textures/items/${NS}/${name}`;
@@ -77,7 +84,11 @@ function addTerrain(name, img) {
 /** An item icon; `img` is drawn only when no file is there yet. */
 function addIcon(id, img) {
   itemTextures[`kh_${id}`] = { textures: itemTex(id) };
-  writeArt(join(RP, `${itemTex(id)}.png`), img);
+  const drawn = join(ART_ICONS, `${id}.png`);
+  if (existsSync(drawn)) {
+    mkdirSync(dirname(join(RP, `${itemTex(id)}.png`)), { recursive: true });
+    copyFileSync(drawn, join(RP, `${itemTex(id)}.png`));
+  } else writeArt(join(RP, `${itemTex(id)}.png`), img);
 }
 
 // --- Shared block pieces ------------------------------------------------------------------
@@ -388,46 +399,139 @@ const PLANTS = new Map(CROPS.filter((crop) => crop.form !== "trellis").map((crop
 for (const item of ITEMS) {
   names[`item.${rid(item.id)}.name`] = [item.zh, item.en];
   addIcon(item.id, art.icon(item.look));
-  const dish = item.kind === "dish";
+  const made = recipeMaking(item.id);
+  const prepared = ["ingredient", "dish", "drink"].includes(item.kind);
+  // ## Eating gives back what the dish was served in: the bowl it was carried out in
+  // ## or crafted with, or the drink's own bottle / Cookery cup.
+  const bowl = made && (made.carrier === "minecraft:bowl" || (made.inputs ?? []).includes("minecraft:bowl"));
+  const converts = item.converts ?? (bowl ? "minecraft:bowl" : undefined);
   const components = {
     "minecraft:icon": `kh_${item.id}`,
     "minecraft:display_name": { value: `item.${rid(item.id)}.name` },
-    "minecraft:max_stack_size": 64,
+    // ## An oil bottle keeps its uses left in a dynamic property, so it cannot stack.
+    "minecraft:max_stack_size": item.oil ? 1 : item.kind === "drink" ? 16 : 64,
   };
   const plants = PLANTS.get(item.id);
   if (plants) components["minecraft:block_placer"] = { block: rid(cropBlockId(plants)), use_on: FARMLAND };
   if (item.food) {
+    const drink = item.kind === "drink" || converts === "minecraft:glass_bottle";
     components["minecraft:food"] = {
       nutrition: item.food[0],
       saturation_modifier: item.food[1],
-      ...(dish ? { can_always_eat: true } : {}),
-      ...(item.bowl ? { using_converts_to: "minecraft:bowl" } : {}),
+      ...(prepared ? { can_always_eat: true } : {}),
+      ...(converts ? { using_converts_to: converts } : {}),
     };
-    components["minecraft:use_animation"] = "eat";
+    components["minecraft:use_animation"] = drink ? "drink" : "eat";
     components["minecraft:use_modifiers"] = { use_duration: 1.6, movement_modifier: 0.33 };
     components["minecraft:tags"] = { tags: ["minecraft:is_food"] };
   }
-  const group = dish ? GROUP.foods : item.kind === "ingredient" ? GROUP.ingredients : item.id === "mandarin" ? GROUP.trees : GROUP.crops;
+  const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (item.id === "mandarin" ? GROUP.trees : GROUP.crops);
+  const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : "items";
   writeJson(join(BP, "items", `${item.id}.json`), {
     format_version: ITEM_FORMAT,
-    "minecraft:item": {
-      description: { identifier: rid(item.id), menu_category: { category: dish ? "equipment" : "items", group } },
-      components,
-    },
+    "minecraft:item": { description: { identifier: rid(item.id), menu_category: { category, group } }, components },
   });
-  if (!dish) catalog[group === GROUP.trees ? "trees" : group === GROUP.ingredients ? "ingredients" : "crops"].push(rid(item.id));
+  if (group === GROUP.trees) catalog.trees.push(rid(item.id));
+  else if (group === GROUP.crops) catalog.crops.push(rid(item.id));
 }
+
+// --- Vanilla recipes from the menu (crafting table, furnace) ----------------------------------------------
+
+for (const row of RECIPES) {
+  const result = { item: rid(row.result), count: row.count ?? 1 };
+  const asItem = (id) => ({ item: id.includes(":") ? id : rid(id) });
+  if (row.station === "crafting") {
+    const counts = new Map();
+    for (const id of row.inputs) counts.set(id, (counts.get(id) ?? 0) + 1);
+    writeJson(join(BP, "recipes", `${row.result}.json`), {
+      format_version: "1.20.10",
+      "minecraft:recipe_shapeless": {
+        description: { identifier: rid(row.result) },
+        tags: ["crafting_table"],
+        ingredients: [...counts].map(([id, count]) => ({ ...asItem(id), count })),
+        result,
+        unlock: [asItem(row.inputs.find((id) => !id.startsWith("minecraft:")) ?? row.inputs[0])],
+      },
+    });
+  } else if (row.station === "furnace") {
+    writeJson(join(BP, "recipes", `${row.result}.json`), {
+      format_version: "1.20.10",
+      "minecraft:recipe_furnace": {
+        description: { identifier: rid(row.result) },
+        tags: ["furnace", "smoker", "campfire", "soul_campfire"],
+        input: asItem(row.input),
+        output: rid(row.result),
+      },
+    });
+  }
+}
+
+// --- Juicer and pickling jar (models and textures from tools/art/station_models.py) -----------------------
+
+const stationTex = (name) => `textures/${NS}/blocks/stations/${name}`;
+for (const name of [JUICER.id, PICKLING_JAR.id, ...JUICER.colours.map((c) => `juice_${c}`), ...PICKLING_JAR.contents.slice(1).map((c) => `contents_${c}`)])
+  terrain[`kh_station_${name}`] = { textures: stationTex(name) };
+
+function station(def, { states, materials, permutations, component, recipe, sound }) {
+  names[`tile.${rid(def.id)}.name`] = [def.zh, def.en];
+  // ## The block item shows the model; this icon is for the guidebook.
+  addIcon(def.id, art.icon(def.look));
+  block(def.id, {
+    menu: { category: "items", group: GROUP.stations },
+    states,
+    components: {
+      "minecraft:geometry": `geometry.${NS}.${def.id}`,
+      "minecraft:material_instances": materials,
+      "minecraft:collision_box": { origin: [-6, 0, -6], size: [12, 12, 12] },
+      "minecraft:selection_box": { origin: [-6, 0, -6], size: [12, 13, 12] },
+      "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
+      "minecraft:light_dampening": 0,
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"] }] },
+      [`${NS}:${def.id}`]: {},
+    },
+    permutations,
+  });
+  blockSounds[rid(def.id)] = { sound };
+  writeJson(join(BP, "recipes", `${def.id}.json`), {
+    format_version: "1.20.10",
+    "minecraft:recipe_shaped": { description: { identifier: rid(def.id) }, tags: ["crafting_table"], ...recipe, result: { item: rid(def.id), count: 1 } },
+  });
+}
+
+const opaque = (name) => ({ texture: `kh_station_${name}`, render_method: "alpha_test" });
+station(JUICER, {
+  states: { [state("fruit")]: intRange(JUICER.capacity), [state("juice")]: JUICER.colours },
+  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" }, juice: { texture: "kh_station_juice_empty", render_method: "blend" } },
+  permutations: JUICER.colours.slice(1).map((colour) => ({
+    condition: `${S("juice")} == '${colour}'`,
+    components: {
+      "minecraft:material_instances": { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" }, juice: { texture: `kh_station_juice_${colour}`, render_method: "blend" } },
+    },
+  })),
+  recipe: { pattern: [" I ", "GGG", "PPP"], key: { I: { item: "minecraft:iron_ingot" }, G: { item: "minecraft:glass" }, P: { item: "minecraft:oak_planks" } }, unlock: [{ item: "minecraft:glass" }] },
+  sound: "glass",
+});
+station(PICKLING_JAR, {
+  states: { [state("contents")]: PICKLING_JAR.contents },
+  materials: { "*": opaque(PICKLING_JAR.id), contents: { texture: "kh_station_juice_empty", render_method: "alpha_test" } },
+  permutations: PICKLING_JAR.contents.slice(1).map((c) => ({
+    condition: `${S("contents")} == '${c}'`,
+    components: { "minecraft:material_instances": { "*": opaque(PICKLING_JAR.id), contents: opaque(`contents_${c}`) } },
+  })),
+  recipe: { pattern: ["P", "C", "C"], key: { P: { item: "minecraft:oak_planks" }, C: { item: "minecraft:clay_ball" } }, unlock: [{ item: "minecraft:clay_ball" }] },
+  sound: "stone",
+});
 
 // --- Creative inventory groups -----------------------------------------------------------------------
 
-const groupIcon = { crops: rid("napa_cabbage"), trees: rid("mandarin"), ingredients: rid("chopped_scallion") };
+const groupIcon = { crops: rid("napa_cabbage"), trees: rid("mandarin") };
 writeJson(join(BP, "item_catalog", "crafting_item_catalog.json"), {
   format_version: "1.21.60",
   "minecraft:crafting_items_catalog": {
     categories: [
       {
         category_name: "items",
-        groups: ["crops", "ingredients"].map((g) => ({ group_identifier: { icon: groupIcon[g], name: GROUP[g] }, items: catalog[g] })),
+        groups: ["crops"].map((g) => ({ group_identifier: { icon: groupIcon[g], name: GROUP[g] }, items: catalog[g] })),
       },
       {
         category_name: "nature",

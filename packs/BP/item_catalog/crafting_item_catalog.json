@@ -41,27 +41,6 @@
               "kaleidoscope_harvest:black_pepper",
               "kaleidoscope_harvest:cumin"
             ]
-          },
-          {
-            "group_identifier": {
-              "icon": "kaleidoscope_harvest:chopped_scallion",
-              "name": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
-            },
-            "items": [
-              "kaleidoscope_harvest:chopped_scallion",
-              "kaleidoscope_harvest:minced_garlic",
-              "kaleidoscope_harvest:ginger_shreds",
-              "kaleidoscope_harvest:chopped_cilantro",
-              "kaleidoscope_harvest:diced_onion",
-              "kaleidoscope_harvest:daikon_slices",
-              "kaleidoscope_harvest:sesame_powder",
-              "kaleidoscope_harvest:sesame_oil",
-              "kaleidoscope_harvest:peanut_oil",
-              "kaleidoscope_harvest:soy_milk",
-              "kaleidoscope_harvest:okara",
-              "kaleidoscope_harvest:ground_black_pepper",
-              "kaleidoscope_harvest:ground_cumin"
-            ]
           }
         ]
       },

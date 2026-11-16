@@ -2,16 +2,16 @@
   "format_version": "1.21.90",
   "minecraft:item": {
     "description": {
-      "identifier": "kaleidoscope_harvest:steamed_taro",
+      "identifier": "kaleidoscope_harvest:scallion_pancake",
       "menu_category": {
         "category": "equipment",
         "group": "kaleidoscope_cookery:itemGroup.name.foods"
       }
     },
     "components": {
-      "minecraft:icon": "kh_steamed_taro",
+      "minecraft:icon": "kh_scallion_pancake",
       "minecraft:display_name": {
-        "value": "item.kaleidoscope_harvest:steamed_taro.name"
+        "value": "item.kaleidoscope_harvest:scallion_pancake.name"
       },
       "minecraft:max_stack_size": 64,
       "minecraft:food": {

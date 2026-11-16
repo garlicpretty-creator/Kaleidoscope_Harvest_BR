@@ -1,0 +1,42 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:pepper_bun"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "minecraft:wheat",
+        "count": 1
+      },
+      {
+        "item": "minecraft:porkchop",
+        "count": 1
+      },
+      {
+        "item": "kaleidoscope_harvest:ground_black_pepper",
+        "count": 1
+      },
+      {
+        "item": "kaleidoscope_harvest:chopped_scallion",
+        "count": 1
+      },
+      {
+        "item": "kaleidoscope_harvest:sesame",
+        "count": 1
+      }
+    ],
+    "result": {
+      "item": "kaleidoscope_harvest:pepper_bun",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "kaleidoscope_harvest:ground_black_pepper"
+      }
+    ]
+  }
+}

@@ -125,5 +125,11 @@
   },
   "kaleidoscope_harvest:mandarin_fruit_leaves": {
     "sound": "grass"
+  },
+  "kaleidoscope_harvest:juicer": {
+    "sound": "glass"
+  },
+  "kaleidoscope_harvest:pickling_jar": {
+    "sound": "stone"
   }
 }

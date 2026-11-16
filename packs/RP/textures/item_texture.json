@@ -107,8 +107,8 @@
     "kh_minced_garlic": {
       "textures": "textures/items/kaleidoscope_harvest/minced_garlic"
     },
-    "kh_ginger_shreds": {
-      "textures": "textures/items/kaleidoscope_harvest/ginger_shreds"
+    "kh_shredded_ginger": {
+      "textures": "textures/items/kaleidoscope_harvest/shredded_ginger"
     },
     "kh_chopped_cilantro": {
       "textures": "textures/items/kaleidoscope_harvest/chopped_cilantro"
@@ -125,6 +125,9 @@
     "kh_sesame_oil": {
       "textures": "textures/items/kaleidoscope_harvest/sesame_oil"
     },
+    "kh_peanut_butter": {
+      "textures": "textures/items/kaleidoscope_harvest/peanut_butter"
+    },
     "kh_peanut_oil": {
       "textures": "textures/items/kaleidoscope_harvest/peanut_oil"
     },
@@ -140,26 +143,38 @@
     "kh_ground_cumin": {
       "textures": "textures/items/kaleidoscope_harvest/ground_cumin"
     },
-    "kh_smashed_cucumber": {
-      "textures": "textures/items/kaleidoscope_harvest/smashed_cucumber"
+    "kh_tofu": {
+      "textures": "textures/items/kaleidoscope_harvest/tofu"
+    },
+    "kh_soy_sauce": {
+      "textures": "textures/items/kaleidoscope_harvest/soy_sauce"
+    },
+    "kh_dried_tangerine_peel": {
+      "textures": "textures/items/kaleidoscope_harvest/dried_tangerine_peel"
+    },
+    "kh_pickled_napa_cabbage": {
+      "textures": "textures/items/kaleidoscope_harvest/pickled_napa_cabbage"
+    },
+    "kh_kimchi": {
+      "textures": "textures/items/kaleidoscope_harvest/kimchi"
+    },
+    "kh_pickled_daikon": {
+      "textures": "textures/items/kaleidoscope_harvest/pickled_daikon"
+    },
+    "kh_pickled_cucumber": {
+      "textures": "textures/items/kaleidoscope_harvest/pickled_cucumber"
+    },
+    "kh_mandarin_juice": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin_juice"
+    },
+    "kh_ginger_tea": {
+      "textures": "textures/items/kaleidoscope_harvest/ginger_tea"
     },
     "kh_scallion_omelette": {
       "textures": "textures/items/kaleidoscope_harvest/scallion_omelette"
     },
-    "kh_napa_cabbage_pork_stew": {
-      "textures": "textures/items/kaleidoscope_harvest/napa_cabbage_pork_stew"
-    },
-    "kh_steamed_corn": {
-      "textures": "textures/items/kaleidoscope_harvest/steamed_corn"
-    },
-    "kh_mandarin_sweet_soup": {
-      "textures": "textures/items/kaleidoscope_harvest/mandarin_sweet_soup"
-    },
     "kh_garlic_bok_choy": {
       "textures": "textures/items/kaleidoscope_harvest/garlic_bok_choy"
-    },
-    "kh_garlic_spinach": {
-      "textures": "textures/items/kaleidoscope_harvest/garlic_spinach"
     },
     "kh_onion_omelette": {
       "textures": "textures/items/kaleidoscope_harvest/onion_omelette"
@@ -167,14 +182,86 @@
     "kh_braised_eggplant": {
       "textures": "textures/items/kaleidoscope_harvest/braised_eggplant"
     },
-    "kh_daikon_beef_stew": {
-      "textures": "textures/items/kaleidoscope_harvest/daikon_beef_stew"
+    "kh_yuxiang_eggplant": {
+      "textures": "textures/items/kaleidoscope_harvest/yuxiang_eggplant"
+    },
+    "kh_kung_pao_chicken": {
+      "textures": "textures/items/kaleidoscope_harvest/kung_pao_chicken"
+    },
+    "kh_homestyle_tofu": {
+      "textures": "textures/items/kaleidoscope_harvest/homestyle_tofu"
+    },
+    "kh_cumin_lamb_skewers": {
+      "textures": "textures/items/kaleidoscope_harvest/cumin_lamb_skewers"
+    },
+    "kh_black_pepper_steak": {
+      "textures": "textures/items/kaleidoscope_harvest/black_pepper_steak"
+    },
+    "kh_cumin_potatoes": {
+      "textures": "textures/items/kaleidoscope_harvest/cumin_potatoes"
+    },
+    "kh_cabbage_pork_stew": {
+      "textures": "textures/items/kaleidoscope_harvest/cabbage_pork_stew"
+    },
+    "kh_daikon_beef_brisket": {
+      "textures": "textures/items/kaleidoscope_harvest/daikon_beef_brisket"
+    },
+    "kh_spinach_salad": {
+      "textures": "textures/items/kaleidoscope_harvest/spinach_salad"
+    },
+    "kh_corn_chowder": {
+      "textures": "textures/items/kaleidoscope_harvest/corn_chowder"
+    },
+    "kh_taro_spare_ribs": {
+      "textures": "textures/items/kaleidoscope_harvest/taro_spare_ribs"
+    },
+    "kh_garlic_pork_slices": {
+      "textures": "textures/items/kaleidoscope_harvest/garlic_pork_slices"
+    },
+    "kh_sesame_tangyuan": {
+      "textures": "textures/items/kaleidoscope_harvest/sesame_tangyuan"
+    },
+    "kh_tofu_vegetable_soup": {
+      "textures": "textures/items/kaleidoscope_harvest/tofu_vegetable_soup"
+    },
+    "kh_soy_milk_pudding": {
+      "textures": "textures/items/kaleidoscope_harvest/soy_milk_pudding"
+    },
+    "kh_spinach_dumplings": {
+      "textures": "textures/items/kaleidoscope_harvest/spinach_dumplings"
+    },
+    "kh_pickled_vegetable_noodles": {
+      "textures": "textures/items/kaleidoscope_harvest/pickled_vegetable_noodles"
+    },
+    "kh_mandarin_sweet_soup": {
+      "textures": "textures/items/kaleidoscope_harvest/mandarin_sweet_soup"
+    },
+    "kh_steamed_corn": {
+      "textures": "textures/items/kaleidoscope_harvest/steamed_corn"
     },
     "kh_steamed_sweet_potato": {
       "textures": "textures/items/kaleidoscope_harvest/steamed_sweet_potato"
     },
-    "kh_steamed_taro": {
-      "textures": "textures/items/kaleidoscope_harvest/steamed_taro"
+    "kh_taro_paste": {
+      "textures": "textures/items/kaleidoscope_harvest/taro_paste"
+    },
+    "kh_smashed_cucumber": {
+      "textures": "textures/items/kaleidoscope_harvest/smashed_cucumber"
+    },
+    "kh_roasted_sweet_potato": {
+      "textures": "textures/items/kaleidoscope_harvest/roasted_sweet_potato"
+    },
+    "kh_scallion_pancake": {
+      "textures": "textures/items/kaleidoscope_harvest/scallion_pancake"
+    },
+    "kh_pepper_bun": {
+      "textures": "textures/items/kaleidoscope_harvest/pepper_bun"
+    },
+    "kh_juicer": {
+      "textures": "textures/items/kaleidoscope_harvest/juicer"
+    },
+    "kh_pickling_jar": {
+      "textures": "textures/items/kaleidoscope_harvest/pickling_jar"
     }
   }
 }

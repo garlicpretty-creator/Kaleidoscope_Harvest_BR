@@ -4,7 +4,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import * as mc from "@minecraft/server";
 
-const { world, system, ItemStack, Player, GameMode, __advance, __place, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom } = mc;
+const { world, system, ItemStack, Player, GameMode, __skipTime, __advance, __place, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom } = mc;
 const overworld = world.getDimension("overworld");
 
 const results = [];
@@ -39,7 +39,8 @@ const { guideEntries } = await import("../../packs/BP/scripts/data/guidebook.js"
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 const { brokeCrop } = await import("../../packs/BP/scripts/growth/crops.js");
-const { recipePayload } = await import("../../packs/BP/scripts/api/cookeryContent.js");
+const { recipePayload, oilContainers } = await import("../../packs/BP/scripts/api/cookeryContent.js");
+const { MENU, activeMenu } = await import("../../packs/BP/scripts/data/menu.js");
 
 const NS = "kaleidoscope_harvest";
 const r = (id) => `${NS}:${id}`;
@@ -69,7 +70,7 @@ test("every custom component named in the block JSON is registered at startup", 
     const def = JSON.parse(readFileSync(`packs/BP/blocks/${file}`, "utf8"))["minecraft:block"];
     for (const key of Object.keys(def.components)) if (key.startsWith(`${NS}:`)) assert(COMPONENTS[key], `${file}: ${key} is not registered`);
   }
-  equal(Object.keys(COMPONENTS).length, 4, "component count");
+  equal(Object.keys(COMPONENTS).length, 6, "component count");
 });
 
 // --- Climate --------------------------------------------------------------------------------
@@ -347,6 +348,115 @@ test("millstone payloads use Herbal's outputs list", () => {
   equal(sesame.kind, "millstone", "kind");
   equal(sesame.recipe.input, r("sesame"), "input");
   equal(JSON.stringify(sesame.recipe.outputs), JSON.stringify([{ id: r("sesame_powder"), count: 1, chance: 1 }, { id: r("sesame_oil"), count: 1, chance: 0.5 }]), "outputs");
+});
+
+// --- M4: menu, juicer, pickling jar --------------------------------------------------------------------------
+
+const M3_FRUITS = ["strawberry", "blueberry", "grape", "passion_fruit", "pineapple", "sweet_orange", "lemon", "peach", "pear", "persimmon", "lychee", "mango", "banana", "star_anise", "cinnamon_bark"];
+
+test("fruit rows wait for M3's items and all come in once those ids exist", () => {
+  const base = ITEMS.filter((i) => ["seed", "produce"].includes(i.kind)).map((i) => i.id);
+  const now = activeMenu(base);
+  assert(!now.some((row) => row.item.id === "strawberry_jam"), "no jam without strawberries");
+  assert(now.some((row) => row.item.id === "kimchi"), "kimchi is in");
+  equal(activeMenu([...base, ...M3_FRUITS]).length, MENU.length, "every row active with the M3 fruits");
+  const dishes = MENU.filter((row) => row.item.kind === "dish").length;
+  assert(dishes >= 40, `40 dishes in the full menu (企劃書), got ${dishes}`);
+});
+
+const contents = (block) => block.permutation.getState(S("contents"));
+
+test("juicer: two mandarins and a glass bottle make mandarin juice", () => {
+  const juicer = __place(overworld, at(0), r("juicer"));
+  const p = player(r("mandarin"), 3);
+  __interact(p, juicer);
+  equal(overworld.getBlock(at(0)).permutation.getState(S("juice")), "orange", "jug shows orange");
+  __interact(player(r("mandarin_juice")), overworld.getBlock(at(0))); // not a fruit: nothing
+  __interact(player("minecraft:glass_bottle"), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mandarin_juice")), 0, "one fruit is not enough");
+  __interact(p, overworld.getBlock(at(0)));
+  __interact(p, overworld.getBlock(at(0)));
+  equal(p.hand.amount, 1, "only two fruits go in");
+  const bottle = player("minecraft:glass_bottle", 2);
+  __interact(bottle, overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mandarin_juice")), 1, "juice");
+  equal(bottle.hand.amount, 1, "bottle used");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 0, "empty again");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("juice")), "empty", "jug empty");
+});
+
+test("juicer: an empty hand or breaking it gives the fruit back", () => {
+  const juicer = __place(overworld, at(0), r("juicer"));
+  __interact(player(r("mandarin")), juicer);
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mandarin")), 1, "taken back by hand");
+  __interact(player(r("mandarin")), overworld.getBlock(at(0)));
+  __break(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mandarin")), 2, "dropped on breaking");
+});
+
+test("pickling jar: fill, seal, wait a day, open", () => {
+  const jar = __place(overworld, at(0), r("pickling_jar"));
+  const p = player(r("napa_cabbage"), 2);
+  __interact(p, jar);
+  __interact(p, overworld.getBlock(at(0)));
+  equal(contents(overworld.getBlock(at(0))), "fresh", "fresh");
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(contents(overworld.getBlock(at(0))), "fermenting", "sealed");
+  __interact(player(r("napa_cabbage")), overworld.getBlock(at(0)));
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("pickled_napa_cabbage")), 0, "not done yet");
+  __skipTime(24000);
+  __randomTick(overworld.getBlock(at(0)));
+  equal(contents(overworld.getBlock(at(0))), "done", "done after a day");
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("pickled_napa_cabbage")), 2, "two pickles");
+  equal(contents(overworld.getBlock(at(0))), "empty", "empty again");
+});
+
+test("pickling jar: kimchi in any order; a set that matches nothing comes back", () => {
+  let jar = __place(overworld, at(0), r("pickling_jar"));
+  for (const id of ["shredded_ginger", "napa_cabbage", "minced_garlic"]) __interact(player(r(id)), overworld.getBlock(at(0)));
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(contents(overworld.getBlock(at(0))), "fermenting", "kimchi sealed");
+
+  jar = __place(overworld, at(2), r("pickling_jar"));
+  for (const id of ["daikon", "cucumber"]) __interact(player(r(id)), overworld.getBlock(at(2)));
+  __interact(player(), overworld.getBlock(at(2)));
+  equal(contents(overworld.getBlock(at(2))), "empty", "no match: emptied");
+  equal(overworld.dropped(r("daikon")) + overworld.dropped(r("cucumber")), 2, "both back");
+});
+
+test("breaking a sealed jar gives the ingredients back", () => {
+  __place(overworld, at(0), r("pickling_jar"));
+  for (let i = 0; i < 2; i++) __interact(player(r("napa_cabbage")), overworld.getBlock(at(0)));
+  __interact(player(), overworld.getBlock(at(0)));
+  __break(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("napa_cabbage")), 2, "ingredients back");
+  equal(world.getDynamicPropertyIds().length, 0, "no data left behind");
+});
+
+test("teapot, bamboo tray and oil payloads use Herbal's and Ranching's shapes", () => {
+  const tea = recipePayload(RECIPES.find((row) => row.result === "ginger_tea"));
+  equal(tea.kind, "teapot", "teapot");
+  equal(tea.recipe.ingredient, r("shredded_ginger"), "tea ingredient");
+  equal(tea.recipe.base, "minecraft:water", "tea base");
+  const tray = recipePayload(RECIPES.find((row) => row.result === "dried_tangerine_peel"));
+  equal(tray.recipe.process, "dry", "dried");
+  equal(tray.recipe.duration, 12000, "duration");
+  const oils = oilContainers();
+  equal(oils.length, 2, "two plant oils");
+  equal(oils[0].container.capacity, 256, "capacity 256");
+});
+
+test("generated items: oils do not stack, drinks give their bottle or cup back, bowls come back", () => {
+  const item = (id) => JSON.parse(readFileSync(`packs/BP/items/${id}.json`, "utf8"))["minecraft:item"].components;
+  equal(item("sesame_oil")["minecraft:max_stack_size"], 1, "oil stack");
+  equal(item("mandarin_juice")["minecraft:food"].using_converts_to, "minecraft:glass_bottle", "juice bottle");
+  equal(item("ginger_tea")["minecraft:food"].using_converts_to, "kaleidoscope_cookery:empty_cup", "tea cup");
+  equal(item("cabbage_pork_stew")["minecraft:food"].using_converts_to, "minecraft:bowl", "stew bowl");
+  equal(item("mandarin_juice")["minecraft:use_animation"], "drink", "drinking");
+  for (const id of ["scallion_pancake", "pepper_bun", "roasted_sweet_potato", "juicer", "pickling_jar"]) assert(readdirSync("packs/BP/recipes").includes(`${id}.json`), `${id} recipe file`);
 });
 
 // --- Cookery --------------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_harvest:minced_garlic",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
+        "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
       }
     },
     "components": {

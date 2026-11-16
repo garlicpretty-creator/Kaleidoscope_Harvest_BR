@@ -11,6 +11,7 @@ import { CROPS, TRELLIS } from "./crops.js";
 import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
+import { JUICER, PICKLING_JAR } from "./stations.js";
 import { FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
 import { toSimplified } from "./zh_cn.js";
 
@@ -27,15 +28,28 @@ const STATION_NAME = {
   wok: ["炒鍋", "Wok"],
   stockpot: ["湯鍋", "Stockpot"],
   steamer: ["蒸籠", "Steamer"],
+  teapot: ["茶壺", "Teapot"],
+  bamboo_tray: ["竹篩", "Bamboo Tray"],
+  juicer: [JUICER.zh, JUICER.en],
+  pickling_jar: [PICKLING_JAR.zh, PICKLING_JAR.en],
+  crafting: ["工作台", "Crafting Table"],
+  furnace: ["熔爐", "Furnace"],
 };
-// ## Cookery translates these method names in its recipe box (as for Ranching).
-const METHOD = { chopping_board: "Chopping Board", millstone: "Millstone", wok: "Wok", stockpot: "Stockpot", steamer: "Steamer" };
+// ## Cookery translates its own station names in the recipe box (as for Ranching and
+// ## Herbal) and shows any other method string as it is. No box for the furnace:
+// ## Cookery has no "furnace only" label.
+const METHOD = {
+  chopping_board: "Chopping Board", millstone: "Millstone", wok: "Wok", stockpot: "Stockpot", steamer: "Steamer",
+  teapot: "Teapot", bamboo_tray: "Bamboo Tray", juicer: JUICER.en, pickling_jar: PICKLING_JAR.en, crafting: "Crafting Table",
+};
 
 export const GUIDE_CATEGORIES = [
   { id: "crops", zh: "作物", en: "Crops", icon: "napa_cabbage" },
   { id: "trees", zh: "果樹", en: "Fruit Trees", icon: "mandarin" },
   { id: "ingredients", zh: "食材", en: "Ingredients", icon: "chopped_scallion" },
-  { id: "dishes", zh: "料理", en: "Dishes", icon: "napa_cabbage_pork_stew" },
+  { id: "dishes", zh: "料理", en: "Dishes", icon: "cabbage_pork_stew" },
+  { id: "drinks", zh: "飲品", en: "Drinks", icon: "mandarin_juice" },
+  { id: "stations", zh: "器具", en: "Stations", icon: JUICER.id },
 ];
 
 function climateLine(climate) {
@@ -118,17 +132,59 @@ export function guideEntries() {
   }
   rows.push(entry(FRUIT_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，果葉會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the fruit leaves fall and the tree is gone."]], { block: true }));
 
-  for (const item of ITEMS.filter((i) => i.kind === "ingredient" || i.kind === "dish")) {
+  rows.push(
+    entry(JUICER.id, "stations", [
+      ["拿水果點榨汁機放進去，最多兩顆；裝滿後拿空玻璃瓶點它，就得到一瓶果汁。", "Use fruit on the juicer to put it in, two at most; when it is full, use an empty glass bottle on it for a bottle of juice."],
+      ["兩顆同樣的水果榨出那種果汁，兩顆不同的水果榨出綜合果汁。空手點它把水果拿回來。", "Two of the same fruit give that fruit's juice; two different fruits give mixed juice. An empty hand takes the fruit back."],
+      ["用木板、玻璃與鐵錠在工作台合成。", "Crafted from planks, glass and an iron ingot."],
+    ], { block: true })
+  );
+  rows.push(
+    entry(PICKLING_JAR.id, "stations", [
+      ["拿食材點醃漬缸放進去，最多四樣。缸裡剛好是某道醃漬品的材料時，空手點它封缸。", "Use ingredients on the jar to put them in, four at most. When what is inside is exactly one recipe, use it with an empty hand to seal it."],
+      ["封缸後缸口的顏色會慢慢變深，變成紅褐色就好了，空手點它開缸取出。材料對不上時，空手點它會把東西還給你。", "Once sealed, the colour in its mouth slowly deepens; when it turns red-brown it is done, and an empty hand opens it. If the contents match nothing, an empty hand gives them back."],
+      ["發酵靠世界時間，人不在附近也會繼續。用陶土（黏土球）與木板在工作台合成。", "Fermenting follows the world clock and goes on while you are away. Crafted from clay balls and planks."],
+    ], { block: true })
+  );
+
+  for (const item of ITEMS.filter((i) => ["ingredient", "dish", "drink"].includes(i.kind))) {
     const row = recipeMaking(item.id);
-    const [zh, en] = STATION_NAME[row.station];
-    const inputs = (row.input ? [rid(row.input)] : row.slots.map((slot) => slot[0])).map(nameOf);
-    const made = [`在${zh}上做：${inputs.map((n) => n[0]).join("＋")}。`, `Made on the ${en}: ${inputs.map((n) => n[1]).join(" + ")}.`];
-    rows.push(entry(item.id, item.kind === "dish" ? "dishes" : "ingredients", [made, ...usesOf(item.id)], { recipe: row, makes: item.id }));
+    const lines = [madeLine(row, item.id)];
+    if (row.station === "pickling_jar") lines.push([`封缸 ${days(row.time)} 天。`, `Sealed for ${days(row.time)} day${row.time > 24000 ? "s" : ""}.`]);
+    if (item.oil) lines.push([`可當炒鍋用油，一瓶可用 ${OIL_USES} 次，用完留下空瓶。`, `Works as wok oil: one bottle lasts ${OIL_USES} uses and leaves an empty bottle.`]);
+    const category = item.kind === "dish" ? "dishes" : item.kind === "drink" ? "drinks" : "ingredients";
+    rows.push(entry(item.id, category, [...lines, ...usesOf(item.id)], { recipe: row, makes: item.id }));
   }
   return rows;
 }
 
+const OIL_USES = 256;
+const days = (ticks) => String(Math.round((ticks / 24000) * 10) / 10);
+
+/** Ingredient names of a recipe, as [zh, en] pairs. */
+function inputNames(row) {
+  if (row.input === "*") return [["任兩種不同的水果", "any two different fruits"]];
+  const ids = row.input ? [rid(row.input)] : row.inputs ? row.inputs.map(rid) : row.slots.map((slot) => slot[0]);
+  const names = ids.map(nameOf);
+  return row.station === "juicer" ? [names[0], names[0]] : names;
+}
+
+function madeLine(row, id) {
+  const [zh, en] = STATION_NAME[row.station];
+  const names = inputNames(row);
+  const extra = row.outputs && row.outputs[0][0] !== id ? ["（副產物）", " (a by-product)"] : ["", ""];
+  return [`在${zh}${row.station === "furnace" ? "裡烤" : "上做"}：${names.map((n) => n[0]).join("＋")}${extra[0]}。`, `Made ${row.station === "furnace" ? "in" : "on"} the ${en}: ${names.map((n) => n[1]).join(" + ")}${extra[1]}.`];
+}
+
 const VANILLA_NAMES = {
+  "minecraft:wheat": ["小麥", "Wheat"],
+  "minecraft:potato": ["馬鈴薯", "Potato"],
+  "minecraft:chicken": ["生雞肉", "Raw Chicken"],
+  "minecraft:mutton": ["生羊肉", "Raw Mutton"],
+  "minecraft:snowball": ["雪球", "Snowball"],
+  "minecraft:honey_bottle": ["蜂蜜瓶", "Honey Bottle"],
+  "minecraft:glass_bottle": ["玻璃瓶", "Glass Bottle"],
+  "minecraft:stick": ["木棒", "Stick"],
   "minecraft:egg": ["雞蛋", "Egg"],
   "minecraft:porkchop": ["生豬排", "Raw Porkchop"],
   "minecraft:sugar": ["糖", "Sugar"],
@@ -144,6 +200,7 @@ export function nameOf(id) {
   if (item) return [item.zh, item.en];
   if (bare === TRELLIS.id) return [TRELLIS.zh, TRELLIS.en];
   if (bare === FRUIT_LOG.id) return [FRUIT_LOG.zh, FRUIT_LOG.en];
+  for (const station of [JUICER, PICKLING_JAR]) if (bare === station.id) return [station.zh, station.en];
   const tree = TREES.find((t) => saplingBlockId(t) === bare);
   if (tree) return [`${tree.zh}樹苗`, `${tree.en} Sapling`];
   throw new Error(`guidebook: no name for ${id}`);
@@ -157,6 +214,7 @@ export const GUIDE_TEXT = {
     intro: [
       "豐收為廚房加入新的作物與果樹。作物的成熟度只看外觀：顏色變了、葉子轉黃、果實上色，就是熟了。",
       "每種作物都有喜歡的氣候。種在對的地方長得最快；用玻璃當屋頂、四周圍起來的溫室，什麼作物都能照常生長。",
+      "收成可以在廚房的砧板、石磨、炒鍋、湯鍋、蒸籠、茶壺與竹篩上處理，也能用豐收自己的榨汁機和醃漬缸。",
       "畫面上不會跳出提示文字，各樣東西怎麼種、怎麼用，都寫在本章的條目裡。",
     ].join("\n\n"),
     all: "全部條目",
@@ -169,6 +227,7 @@ export const GUIDE_TEXT = {
     intro: [
       "Harvest adds new crops and fruit trees to Cookery. You tell a ripe crop by its look alone: its colour changes, its leaves turn yellow, its fruit colours up.",
       "Every crop likes a climate. It grows fastest in the right place; in a greenhouse — glass roof, walls all round — every crop grows as usual.",
+      "The harvest goes onto Cookery's chopping board, millstone, wok, stockpot, steamer, teapot and bamboo tray, and into Harvest's own juicer and pickling jar.",
       "No hint text appears on screen: how to grow and use each thing is written in this chapter.",
     ].join("\n\n"),
     all: "All entries",
@@ -181,7 +240,8 @@ export const GUIDE_TEXT = {
 const LOCALES = ["en_US", "zh_TW", "zh_CN"];
 
 function recipeOf(row, makes) {
-  const ingredients = row.input ? [rid(row.input)] : row.slots.map((slot) => slot[0]);
+  if (!METHOD[row.station] || row.input === "*") return null;
+  const ingredients = row.input ? [rid(row.input)] : row.inputs ? row.inputs.map(rid) : row.slots.map((slot) => slot[0]);
   const count = row.outputs ? row.outputs.find(([id]) => id === makes)[1] : row.count ?? 1;
   return {
     method: METHOD[row.station],
@@ -209,7 +269,8 @@ export function guidebookPayload() {
     };
     const item = ITEM_BY_ID.get(row.id);
     if (item?.food) Object.assign(out, { stack: 64, food: { nutrition: item.food[0], saturation: item.food[1] } });
-    if (row.recipe) out.recipes = [recipeOf(row.recipe, row.makes)];
+    const recipe = row.recipe && recipeOf(row.recipe, row.makes);
+    if (recipe) out.recipes = [recipe];
     return out;
   });
 

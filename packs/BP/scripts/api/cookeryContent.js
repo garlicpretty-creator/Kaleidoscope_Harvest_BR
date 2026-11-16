@@ -1,6 +1,8 @@
 // Harvest's recipes and guidebook chapter, sent to Cookery once it is ready.
 //
-//   kaleidoscope_cookery:register_recipe   chopping board, millstone, wok, stockpot, steamer (data/dishes.js)
+//   kaleidoscope_cookery:register_recipe         chopping board, millstone, wok, stockpot, steamer,
+//                                                teapot, bamboo tray (data/menu.js)
+//   kaleidoscope_cookery:register_oil_container  sesame oil and peanut oil as wok oil
 //   kaleidoscope_cookery:guidebook_*       the「豐收」chapter (data/guidebook.js)
 //
 // ## Every registration is checked against Cookery's capability list first, so
@@ -8,15 +10,19 @@
 // ## Payload fields follow what Ranching 1.1 and Herbal 1.2 send to Cookery 1.6.6.
 
 import { system } from "@minecraft/server";
-import { RECIPES } from "../data/dishes.js";
+import { COOKERY_STATIONS, RECIPES } from "../data/dishes.js";
+import { ITEMS } from "../data/items.js";
 import { guidebookPayload } from "../data/guidebook.js";
 import { NAMESPACE, rid } from "../data/ns.js";
 import { cookeryHas, onCookeryReady, send } from "./cookery.js";
 
 const SOURCE = NAMESPACE;
-const KIND = { chopping_board: "chopping_board", millstone: "millstone", wok: "wok", stockpot: "stockpot_exact", steamer: "steamer" };
+const KIND = {
+  chopping_board: "chopping_board", millstone: "millstone", wok: "wok", stockpot: "stockpot_exact",
+  steamer: "steamer", teapot: "teapot", bamboo_tray: "bamboo_tray",
+};
 
-/** The register_recipe payload for one row of data/dishes.js. */
+/** The register_recipe payload for one Cookery recipe of data/dishes.js. */
 export function recipePayload(row) {
   const kind = KIND[row.station];
   if (!kind) throw new Error(`unknown station ${row.station}`);
@@ -33,6 +39,13 @@ export function recipePayload(row) {
       break;
     case "steamer":
       recipe = { id, input: rid(row.input), result, count: row.count ?? 1, time: row.time };
+      break;
+    case "teapot":
+      // ## Herbal's shape: one ingredient brewed in water, poured into Cookery cups.
+      recipe = { id, ingredient: rid(row.input), base: "minecraft:water", result, count: row.count ?? 4, time: row.time };
+      break;
+    case "bamboo_tray":
+      recipe = { id, input: rid(row.input), result, process: "dry", duration: row.time };
       break;
     default:
       recipe = {
@@ -51,11 +64,35 @@ export function recipePayload(row) {
 /** Sends every recipe Cookery can take; returns how many went out. */
 export function registerRecipes() {
   let sent = 0;
-  for (const row of RECIPES) {
+  for (const row of RECIPES.filter((r) => COOKERY_STATIONS.includes(r.station))) {
     const payload = recipePayload(row);
     if (cookeryHas(payload.kind) && send("kaleidoscope_cookery:register_recipe", payload)) sent++;
   }
+  if (cookeryHas("oil_containers")) for (const payload of oilContainers()) send("kaleidoscope_cookery:register_oil_container", payload);
   return sent;
+}
+
+/** Plant oil capacity in Cookery wok uses (企劃書：容量預設 256). */
+export const OIL_CAPACITY = 256;
+
+/**
+ * Sesame and peanut oil as Cookery wok oil, in the shape Ranching uses for lard. The
+ * bottle holds OIL_CAPACITY uses, kept in an item dynamic property, so the oil items do
+ * not stack (tools/generate.mjs); an empty glass bottle is left.
+ */
+export function oilContainers() {
+  return ITEMS.filter((item) => item.oil).map((item) => ({
+    api: 1,
+    source: SOURCE,
+    container: {
+      id: rid(item.id),
+      empty: "minecraft:glass_bottle",
+      oil: rid(item.id),
+      capacity: OIL_CAPACITY,
+      defaultAmount: OIL_CAPACITY,
+      amountProperty: `${NAMESPACE}:oil_amount`,
+    },
+  }));
 }
 
 // --- Guidebook chapter -----------------------------------------------------------------

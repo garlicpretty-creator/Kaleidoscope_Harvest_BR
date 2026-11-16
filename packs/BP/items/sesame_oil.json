@@ -5,7 +5,7 @@
       "identifier": "kaleidoscope_harvest:sesame_oil",
       "menu_category": {
         "category": "items",
-        "group": "kaleidoscope_harvest:itemGroup.name.harvest_ingredients"
+        "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
       }
     },
     "components": {
@@ -13,7 +13,7 @@
       "minecraft:display_name": {
         "value": "item.kaleidoscope_harvest:sesame_oil.name"
       },
-      "minecraft:max_stack_size": 64
+      "minecraft:max_stack_size": 1
     }
   }
 }

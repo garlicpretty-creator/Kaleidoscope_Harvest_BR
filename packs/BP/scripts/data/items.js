@@ -5,15 +5,17 @@
 // kind:
 //   seed        plants a crop (the crop row names it as `seed`)
 //   produce     what a crop or tree gives (may also be what plants it)
-//   ingredient  prepared on a Cookery station, used in other recipes (企劃書「中間食材」)
-//   dish        a finished dish
-// data/dishes.js says how ingredients and dishes are made.
+//   ingredient  prepared on a station, used in other recipes (企劃書「中間食材」)  ┐ from
+//   dish        a finished dish                                                 ├ data/menu.js
+//   drink       juice and tea                                                   ┘
 // food: [nutrition, saturation] when it can be eaten.
 // look: placeholder icon (tools/art.mjs): [shape, [r, g, b]].
 
+import { activeMenu } from "./menu.js";
+
 const seed = (id, zh, en, rgb) => ({ id, kind: "seed", zh, en, look: ["seeds", rgb] });
 
-export const ITEMS = [
+const BASE_ITEMS = [
   // --- Seeds ------------------------------------------------------------------------
   seed("napa_cabbage_seeds", "大白菜種子", "Napa Cabbage Seeds", [186, 160, 96]),
   seed("bok_choy_seeds", "青江菜種子", "Bok Choy Seeds", [120, 90, 60]),
@@ -51,39 +53,11 @@ export const ITEMS = [
 
   // --- Fruit -------------------------------------------------------------------------------
   { id: "mandarin", kind: "produce", zh: "橘子", en: "Mandarin", food: [3, 0.4], look: ["round", [244, 150, 40]] },
-
-  // --- Prepared ingredients: chopping board -------------------------------------------------
-  { id: "chopped_scallion", kind: "ingredient", zh: "蔥花", en: "Chopped Scallion", look: ["bits", [110, 186, 80]] },
-  { id: "minced_garlic", kind: "ingredient", zh: "蒜末", en: "Minced Garlic", look: ["bits", [240, 234, 216]] },
-  { id: "ginger_shreds", kind: "ingredient", zh: "薑絲", en: "Ginger Shreds", look: ["bits", [226, 196, 120]] },
-  { id: "chopped_cilantro", kind: "ingredient", zh: "香菜末", en: "Chopped Cilantro", look: ["bits", [90, 170, 76]] },
-  { id: "diced_onion", kind: "ingredient", zh: "洋蔥丁", en: "Diced Onion", look: ["bits", [226, 200, 160]] },
-  { id: "daikon_slices", kind: "ingredient", zh: "蘿蔔塊", en: "Daikon Chunks", look: ["bits", [244, 244, 232]] },
-
-  // --- Prepared ingredients: millstone --------------------------------------------------------
-  { id: "sesame_powder", kind: "ingredient", zh: "芝麻粉", en: "Sesame Powder", look: ["powder", [80, 70, 64]] },
-  { id: "sesame_oil", kind: "ingredient", zh: "芝麻油", en: "Sesame Oil", look: ["bottle", [170, 110, 40]] },
-  { id: "peanut_oil", kind: "ingredient", zh: "花生油", en: "Peanut Oil", look: ["bottle", [230, 190, 80]] },
-  { id: "soy_milk", kind: "ingredient", zh: "豆漿", en: "Soy Milk", food: [3, 0.4], look: ["bottle", [244, 238, 220]] },
-  // ## 豆渣: left over from soy milk; Ranching's feed mixer takes it once its feed API is out (M5).
-  { id: "okara", kind: "ingredient", zh: "豆渣", en: "Okara", look: ["powder", [236, 226, 196]] },
-  { id: "ground_black_pepper", kind: "ingredient", zh: "黑胡椒粉", en: "Ground Black Pepper", look: ["powder", [70, 60, 56]] },
-  { id: "ground_cumin", kind: "ingredient", zh: "孜然粉", en: "Ground Cumin", look: ["powder", [160, 120, 70]] },
-
-  // --- Dishes ------------------------------------------------------------------------------------
-  // ## M2 keeps one dish per crop that has no other use yet; the full menu is M4.
-  { id: "smashed_cucumber", kind: "dish", zh: "拍黃瓜", en: "Smashed Cucumber Salad", food: [4, 0.5], bowl: true, look: ["bowl", [96, 160, 76]] },
-  { id: "scallion_omelette", kind: "dish", zh: "蔥花炒蛋", en: "Scallion Omelette", food: [6, 0.6], bowl: true, look: ["bowl", [246, 214, 96]] },
-  { id: "napa_cabbage_pork_stew", kind: "dish", zh: "白菜燉肉", en: "Napa Cabbage and Pork Stew", food: [10, 0.8], bowl: true, look: ["bowl", [226, 206, 170]] },
-  { id: "steamed_corn", kind: "dish", zh: "蒸玉米", en: "Steamed Corn", food: [5, 0.6], look: ["cob", [250, 220, 100]] },
-  { id: "mandarin_sweet_soup", kind: "dish", zh: "橘子糖水", en: "Mandarin Sweet Soup", food: [5, 0.5], bowl: true, look: ["bowl", [248, 176, 72]] },
-  { id: "garlic_bok_choy", kind: "dish", zh: "蒜炒青菜", en: "Garlic Bok Choy", food: [5, 0.6], bowl: true, look: ["bowl", [100, 170, 80]] },
-  { id: "garlic_spinach", kind: "dish", zh: "蒜炒菠菜", en: "Garlic Spinach", food: [5, 0.6], bowl: true, look: ["bowl", [60, 130, 60]] },
-  { id: "onion_omelette", kind: "dish", zh: "洋蔥炒蛋", en: "Onion Omelette", food: [6, 0.6], bowl: true, look: ["bowl", [240, 210, 120]] },
-  { id: "braised_eggplant", kind: "dish", zh: "紅燒茄子", en: "Braised Eggplant", food: [7, 0.6], bowl: true, look: ["bowl", [120, 60, 110]] },
-  { id: "daikon_beef_stew", kind: "dish", zh: "蘿蔔燉牛腩", en: "Daikon and Beef Stew", food: [11, 0.8], bowl: true, look: ["bowl", [200, 150, 110]] },
-  { id: "steamed_sweet_potato", kind: "dish", zh: "蒸地瓜", en: "Steamed Sweet Potato", food: [6, 0.6], look: ["root", [230, 140, 70]] },
-  { id: "steamed_taro", kind: "dish", zh: "蒸芋頭", en: "Steamed Taro", food: [6, 0.6], look: ["root", [190, 170, 200]] },
 ];
+
+/** The menu rows (data/menu.js) whose Harvest inputs all exist. */
+export const ACTIVE_MENU = activeMenu(BASE_ITEMS.map((item) => item.id));
+
+export const ITEMS = [...BASE_ITEMS, ...ACTIVE_MENU.map((row) => row.item)];
 
 export const ITEM_BY_ID = new Map(ITEMS.map((item) => [item.id, item]));

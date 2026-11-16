@@ -9,6 +9,12 @@ export const SOUND = {
   boneMeal: "item.bone_meal.use",
   treeGrown: "block.azalea.place",
   trellisPlant: "use.bamboo",
+  juicerAdd: "block.composter.fill",
+  juicerPour: "bucket.fill.water",
+  jarAdd: "block.composter.fill",
+  jarSeal: "block.barrel.close",
+  jarOpen: "block.barrel.open",
+  jarDone: "block.composter.ready",
 };
 
 export const PARTICLE = {

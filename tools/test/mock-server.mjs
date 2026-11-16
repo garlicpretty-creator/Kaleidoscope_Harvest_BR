@@ -108,7 +108,8 @@ function conditionHolds(condition, permutation) {
   return condition.split("&&").every((part) => {
     const m = part.trim().match(/^q\.block_state\('([^']+)'\)\s*==\s*(\S+)$/);
     if (!m) throw new Error(`mock: cannot read condition "${part}"`);
-    const want = m[2] === "true" ? true : m[2] === "false" ? false : Number(m[2]);
+    const raw = m[2];
+    const want = raw === "true" ? true : raw === "false" ? false : /^'.*'$/.test(raw) ? raw.slice(1, -1) : Number(raw);
     return permutation.getState(m[1]) === want;
   });
 }
@@ -235,8 +236,22 @@ class Dimension {
 
 const DIMENSIONS = { overworld: new Dimension("minecraft:overworld") };
 
+let absoluteTime = 0;
+const dynamicProperties = new Map();
+/** Moves the world clock on (stations compare it with world.getAbsoluteTime). */
+export function __skipTime(ticks) {
+  absoluteTime += ticks;
+}
+
 export const world = {
   getDimension: (id) => DIMENSIONS[id.replace("minecraft:", "")],
+  getAbsoluteTime: () => absoluteTime,
+  getDynamicProperty: (key) => dynamicProperties.get(key),
+  setDynamicProperty(key, value) {
+    if (value === undefined) dynamicProperties.delete(key);
+    else dynamicProperties.set(key, value);
+  },
+  getDynamicPropertyIds: () => [...dynamicProperties.keys()],
   sendMessage(message) {
     world.messages.push(message);
   },
@@ -351,4 +366,5 @@ export function __reset() {
   }
   world.messages = [];
   system.sentEvents = [];
+  dynamicProperties.clear();
 }

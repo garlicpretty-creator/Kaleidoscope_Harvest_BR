@@ -1041,6 +1041,33 @@
     },
     "kh_mandarin_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_ripe_grey"
+    },
+    "kh_station_juicer": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/juicer"
+    },
+    "kh_station_pickling_jar": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/pickling_jar"
+    },
+    "kh_station_juice_empty": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_empty"
+    },
+    "kh_station_juice_orange": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_orange"
+    },
+    "kh_station_juice_grape": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_grape"
+    },
+    "kh_station_juice_mango": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_mango"
+    },
+    "kh_station_contents_fresh": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_fresh"
+    },
+    "kh_station_contents_fermenting": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_fermenting"
+    },
+    "kh_station_contents_done": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_done"
     }
   }
 }
