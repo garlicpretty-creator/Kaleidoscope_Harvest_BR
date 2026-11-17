@@ -375,7 +375,7 @@
     },
     "cabbage_pork_stew": {
       "zh": "白菜燉肉",
-      "prompt": "bowl of stewed napa cabbage with pork slices in clear broth"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of pale cabbage and pork stew"
     },
     "garlic_bok_choy": {
       "zh": "蒜炒青菜",
@@ -391,7 +391,7 @@
     },
     "daikon_beef_brisket": {
       "zh": "蘿蔔燉牛腩",
-      "prompt": "clay pot of braised beef brisket chunks with white radish pieces in brown sauce"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of brown beef brisket and white daikon stew"
     },
     "yuxiang_eggplant": {
       "zh": "魚香茄子",
@@ -411,7 +411,7 @@
     },
     "corn_chowder": {
       "zh": "玉米濃湯",
-      "prompt": "bowl of creamy pale yellow corn soup with corn kernels"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of creamy yellow corn chowder"
     },
     "kung_pao_chicken": {
       "zh": "宮保雞丁",
@@ -427,7 +427,7 @@
     },
     "taro_spare_ribs": {
       "zh": "芋頭蒸排骨",
-      "prompt": "small steamer plate of pork spare ribs with purple speckled taro cubes"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of purple taro and pork ribs in pale broth"
     },
     "taro_paste": {
       "zh": "芋泥",
@@ -463,11 +463,11 @@
     },
     "blueberry_pie": {
       "zh": "藍莓派",
-      "prompt": "round blueberry pie with a golden lattice crust"
+      "prompt": "square tray of blueberry pie with a golden lattice crust over dark blue filling, on a white plate"
     },
     "pineapple_cake": {
       "zh": "鳳梨酥",
-      "prompt": "two small golden square shortbread pastries, one cut showing yellow pineapple filling"
+      "prompt": "white plate with four small square golden pineapple cakes"
     },
     "pineapple_fried_rice": {
       "zh": "鳳梨炒飯",
@@ -519,7 +519,7 @@
     },
     "tofu_vegetable_soup": {
       "zh": "豆腐蔬菜湯",
-      "prompt": "bowl of clear soup with white tofu cubes, bok choy and scallion"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of white tofu and green vegetable soup"
     },
     "soy_milk_pudding": {
       "zh": "豆花",
@@ -547,7 +547,7 @@
     },
     "fruit_platter": {
       "zh": "水果拼盤",
-      "prompt": "round plate of mixed fruit: orange slices, grapes, strawberries and mango cubes"
+      "prompt": "square white plate with four piles of cut fruit, white, orange, purple and yellow"
     },
     "pickled_vegetable_noodles": {
       "zh": "酸菜麵",
@@ -555,7 +555,7 @@
     },
     "braised_pork": {
       "zh": "紅燒肉",
-      "prompt": "bowl of glossy dark red-brown braised pork belly cubes in thick sauce with star anise"
+      "prompt": "square dark brown wooden stew pot with two side handles, full of red braised pork cubes in dark sauce"
     },
     "chopped_coriander": {
       "zh": "香菜末",
