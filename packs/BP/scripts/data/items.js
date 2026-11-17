@@ -9,7 +9,8 @@
 //   dish        a finished dish                                                 ├ data/menu.js
 //   drink       juice and tea                                                   ┘
 // food: [nutrition, saturation] when it can be eaten.
-// look: placeholder icon (tools/art.mjs): [shape, [r, g, b]].
+// look: [shape, [r, g, b]], a note for drawing the icon; the icon itself is the drawn one
+//   (packs/RP/textures/kaleidoscope_harvest/items/<id>.png, docs/art/MISSING_ART.md lists the ones still to draw).
 
 import { activeMenu } from "./menu.js";
 

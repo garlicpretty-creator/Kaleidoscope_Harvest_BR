@@ -237,7 +237,8 @@ export function nameOf(id) {
   throw new Error(`guidebook: no name for ${id}`);
 }
 
-export const iconPath = (id) => `textures/items/${NAMESPACE}/${id.replace(`${NAMESPACE}:`, "")}`;
+/** The drawn icon (tools/art/rd_icons.py); docs/art/MISSING_ART.md lists the ones not drawn yet. */
+export const iconPath = (id) => `textures/${NAMESPACE}/items/${id.replace(`${NAMESPACE}:`, "")}`;
 
 export const GUIDE_TEXT = {
   zh: {

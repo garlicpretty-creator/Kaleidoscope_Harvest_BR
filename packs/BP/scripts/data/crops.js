@@ -30,7 +30,7 @@
 // village: village house chests that may hold its seed (plains, savanna, taiga, snowy,
 //   desert). tools/generate.mjs overrides those vanilla chest tables, keeping every
 //   vanilla entry and adding one Harvest pool (data/village.js).
-// look: placeholder art (tools/art.mjs) until the real textures are drawn:
+// look: leaf / ripe colours, used for the block's map colour; textures come from the drawn art:
 //   leaf / ripe colours as [r, g, b].
 
 const GROWTH = { growthChance: 0.45, minLightLevel: 9, maxGrowth: 7 };

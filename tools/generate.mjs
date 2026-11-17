@@ -2,16 +2,18 @@
 //
 //   BP  blocks/, items/, loot_tables/kaleidoscope_harvest/, recipes/, item_catalog/, texts/,
 //       features/, feature_rules/ (wild plants)
-//   RP  blocks.json, models/blocks/, textures/*.json, texts/, placeholder textures
+//   RP  blocks.json, models/blocks/, textures/*.json, texts/, grey copies of the drawn crop textures
 //
 // Generated folders are wiped and rewritten, so edit the data tables
-// (packs/BP/scripts/data/), not the JSON. Placeholder PNGs are only written where
-// no file exists yet; pass --art to redraw them all.
+// (packs/BP/scripts/data/), not the JSON.
+//
+// ## Textures and icons come only from the drawn art (packs/RP/textures/kaleidoscope_harvest/,
+// ## tools/art/). Nothing is drawn here: a texture the art does not have yet is still named at
+// ## the path the art will use, and listed in docs/art/MISSING_ART.md.
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import * as art from "./art.mjs";
 import { decodePng, encodePng } from "./png.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -28,7 +30,6 @@ const { JUICER, PICKLING_JAR } = await load("stations.js");
 const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
 const { toSimplified } = await load("zh_cn.js");
 
-const REDRAW = process.argv.includes("--art");
 const NS = NAMESPACE;
 const BLOCK_FORMAT = "1.21.90";
 const ITEM_FORMAT = "1.21.90";
@@ -46,7 +47,7 @@ const GROUP_NAMES = {
   [GROUP.crops]: ["豐收：作物", "Harvest: Crops"],
   [GROUP.trees]: ["豐收：果樹", "Harvest: Fruit Trees"],
 };
-/** Icons drawn for the art set (tools/art/rd_icons.py); they replace the placeholders. */
+/** Icons drawn for the art set (tools/art/rd_icons.py). */
 const ART_ICONS = join(RP, "textures", NS, "items");
 
 // --- Output helpers ---------------------------------------------------------------------
@@ -56,11 +57,6 @@ function writeJson(path, value) {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
   written.push(path);
-}
-function writeArt(path, img) {
-  if (existsSync(path) && !REDRAW) return;
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, encodePng(img));
 }
 function wipe(dir) {
   rmSync(dir, { recursive: true, force: true });
@@ -79,7 +75,16 @@ const names = {}; // lang key → [zh, en]
 const catalog = { crops: [], trees: [] };
 
 const blockTex = (name) => `textures/blocks/${NS}/${name}`;
-const itemTex = (name) => `textures/items/${NS}/${name}`;
+const itemTex = (name) => `textures/${NS}/items/${name}`;
+
+/** Drawn art the packs name but that is not there yet: [kind, id, path]. */
+const missingArt = [];
+
+/** Desaturates a colour, for crops off their climate (the art has no grey leaves). */
+function grey([r, g, b]) {
+  const l = r * 0.3 + g * 0.59 + b * 0.11;
+  return [r, g, b].map((v) => (v + (l - v) * 0.75) * 0.85);
+}
 /** The drawn block textures (tools/art/crop_textures.py), with _normal and _mer maps. */
 const ART_BLOCKS = join(RP, "textures", NS, "blocks");
 const artBlockTex = (rel) => `textures/${NS}/blocks/${rel}`;
@@ -97,12 +102,12 @@ function textureSet(base) {
 /**
  * A block texture. With `from` (a path under the drawn textures, no extension) the drawn
  * texture is used, and `grey` makes a desaturated copy for crops off their climate;
- * without it, or while that file is not drawn yet, a placeholder is.
+ * while that file is not drawn yet, the path is still named and listed as missing.
  */
-function addTerrain(name, img, { from, grey = false } = {}) {
-  const src = from && join(ART_BLOCKS, from);
-  if (src && existsSync(`${src}.png`)) {
-    if (!grey) {
+function addTerrain(name, { from, grey: makeGrey = false }) {
+  const src = join(ART_BLOCKS, from);
+  if (existsSync(`${src}.png`)) {
+    if (!makeGrey) {
       terrain[`kh_${name}`] = { textures: artBlockTex(from) };
       textureSet(src);
       return;
@@ -111,7 +116,7 @@ function addTerrain(name, img, { from, grey = false } = {}) {
     const pic = decodePng(readFileSync(`${src}.png`));
     for (let i = 0; i < pic.data.length; i += 4) {
       if (!pic.data[i + 3]) continue;
-      const [r, g, b] = art.GREY([pic.data[i], pic.data[i + 1], pic.data[i + 2]]);
+      const [r, g, b] = grey([pic.data[i], pic.data[i + 1], pic.data[i + 2]]);
       pic.data.set([r, g, b].map((v) => Math.round(Math.min(255, v))), i);
     }
     mkdirSync(dirname(out), { recursive: true });
@@ -121,17 +126,14 @@ function addTerrain(name, img, { from, grey = false } = {}) {
     terrain[`kh_${name}`] = { textures: blockTex(name) };
     return;
   }
-  terrain[`kh_${name}`] = { textures: blockTex(name) };
-  writeArt(join(RP, `${blockTex(name)}.png`), img);
+  // ## Not drawn yet: name the path the art will have (a grey copy is made once it exists).
+  missingArt.push(["block", name, `${artBlockTex(from)}.png`]);
+  terrain[`kh_${name}`] = { textures: artBlockTex(from) };
 }
-/** An item icon; `img` is drawn only when no file is there yet. */
-function addIcon(id, img) {
+/** An item icon from the drawn icons (tools/art/rd_icons.py), named even before it is drawn. */
+function addIcon(id) {
   itemTextures[`kh_${id}`] = { textures: itemTex(id) };
-  const drawn = join(ART_ICONS, `${id}.png`);
-  if (existsSync(drawn)) {
-    mkdirSync(dirname(join(RP, `${itemTex(id)}.png`)), { recursive: true });
-    copyFileSync(drawn, join(RP, `${itemTex(id)}.png`));
-  } else writeArt(join(RP, `${itemTex(id)}.png`), img);
+  if (!existsSync(join(ART_ICONS, `${id}.png`))) missingArt.push(["icon", id, `${itemTex(id)}.png`]);
 }
 
 // --- Shared block pieces ------------------------------------------------------------------
@@ -193,8 +195,8 @@ for (const crop of CROPS) {
   for (let s = 0; s <= max; s++)
     for (const grey of [false, true]) {
       const suffix = `${s}${grey ? "_grey" : ""}`;
-      addTerrain(`${crop.id}_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, trellis, underground: crop.form === "underground" }), { from: `crops/${crop.id}_stage_${artStage(s)}`, grey });
-      if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, top: true }), { from: `crops/${crop.id}_upper_stage_${artStage(s)}`, grey });
+      addTerrain(`${crop.id}_stage${suffix}`, { from: `crops/${crop.id}_stage_${artStage(s)}`, grey });
+      if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, { from: `crops/${crop.id}_upper_stage_${artStage(s)}`, grey });
     }
 
   // ## Young and ripe loot. Underground crops only differ when dug with a hoe
@@ -258,7 +260,7 @@ function wildPlant(crop) {
   const id = wildBlockId(crop);
   const soil = crop.wild.soil ?? WILD_SOIL;
   names[`tile.${rid(id)}.name`] = [`野生${crop.zh}`, `Wild ${crop.en}`];
-  addTerrain(id, art.cropStage(crop.look, crop.maxGrowth, crop.maxGrowth, { underground: crop.form === "underground" }), { from: `crops/${crop.id}_stage_3` });
+  addTerrain(id, { from: `crops/${crop.id}_stage_3` });
   const pools = [countEntry(crop.produce, [1, 2])];
   if (crop.seed !== crop.produce) pools.push(countEntry(crop.seed, [1, 2]));
   block(id, {
@@ -328,7 +330,7 @@ function wildFeature(name, blockId, soil, biomes) {
 // --- Bamboo Trellis -------------------------------------------------------------------------------
 
 names[`tile.${rid(TRELLIS.id)}.name`] = [TRELLIS.zh, TRELLIS.en];
-addIcon(TRELLIS.id, art.trellis());
+addIcon(TRELLIS.id);
 block(TRELLIS.id, {
   menu: { category: "items", group: GROUP.crops },
   components: {
@@ -363,9 +365,9 @@ const TRUNK_ART = { [FRUIT_LOG.id]: ["trees/fruitwood_log", "trees/fruitwood_log
 for (const trunk of TRUNKS) {
   const [side, top] = TRUNK_ART[trunk.id];
   names[`tile.${rid(trunk.id)}.name`] = [trunk.zh, trunk.en];
-  addTerrain(`${trunk.id}_side`, art.logSide(), { from: side });
-  addTerrain(`${trunk.id}_top`, art.logTop(), { from: top });
-  addIcon(trunk.id, art.logSide());
+  addTerrain(`${trunk.id}_side`, { from: side });
+  addTerrain(`${trunk.id}_top`, { from: top });
+  addIcon(trunk.id);
   block(trunk.id, {
     menu: { category: "nature", group: GROUP.trees },
     components: {
@@ -399,8 +401,8 @@ for (const tree of TREES) {
   names[`tile.${rid(leaves)}.name`] = [`${tree.zh}果葉`, `${tree.en} Fruit Leaves`];
 
   // ## One drawn sapling texture for every sapling stage.
-  for (let s = 0; s < tree.saplingStages; s++) addTerrain(`${sap}_stage${s}`, art.sapling(tree.look, s, tree.saplingStages), { from: `saplings/${tree.id}_sapling` });
-  addIcon(sap, art.sapling(tree.look, tree.saplingStages - 1, tree.saplingStages));
+  for (let s = 0; s < tree.saplingStages; s++) addTerrain(`${sap}_stage${s}`, { from: `saplings/${tree.id}_sapling` });
+  addIcon(sap);
   block(sap, {
     menu: { category: "nature", group: GROUP.trees },
     states: { [state("growth")]: intRange(tree.saplingStages - 1) },
@@ -424,8 +426,8 @@ for (const tree of TREES) {
   catalog.trees.push(rid(sap));
 
   for (let s = 0; s < FRUIT_STAGES.length; s++)
-    for (const grey of [false, true]) addTerrain(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`, art.fruitLeaves(tree.look, s, grey), { from: `trees/${tree.id}_leaves_${LEAF_ART[FRUIT_STAGES[s]]}`, grey });
-  addIcon(leaves, art.fruitLeaves(tree.look, FRUIT_STAGES.length - 1));
+    for (const grey of [false, true]) addTerrain(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`, { from: `trees/${tree.id}_leaves_${LEAF_ART[FRUIT_STAGES[s]]}`, grey });
+  addIcon(leaves);
   // ## Leaves drop a sapling now and then, like vanilla leaves: the way to start a second tree.
   const leafLoot = lootTable(leaves, [{ rolls: 1, entries: [{ type: "item", name: rid(sap), weight: 1 }, { type: "empty", weight: 19 }] }]);
   const ripeLeafLoot = lootTable(`${leaves}_ripe`, [{ rolls: 1, entries: [{ type: "item", name: rid(sap), weight: 1 }, { type: "empty", weight: 19 }] }, countEntry(tree.fruit, tree.pick)]);
@@ -469,7 +471,7 @@ const PLANTS = new Map(CROPS.filter((crop) => crop.form !== "trellis").map((crop
 
 for (const item of ITEMS) {
   names[`item.${rid(item.id)}.name`] = [item.zh, item.en];
-  addIcon(item.id, art.icon(item.look));
+  addIcon(item.id);
   const made = recipeMaking(item.id);
   const prepared = ["ingredient", "dish", "drink"].includes(item.kind);
   // ## Eating gives back what the dish was served in: the bowl it was carried out in
@@ -546,7 +548,7 @@ for (const name of [JUICER.id, PICKLING_JAR.id, ...JUICER.colours.map((c) => `ju
 function station(def, { states, materials, permutations, component, recipe, sound }) {
   names[`tile.${rid(def.id)}.name`] = [def.zh, def.en];
   // ## The block item shows the model; this icon is for the guidebook.
-  addIcon(def.id, art.icon(def.look));
+  addIcon(def.id);
   block(def.id, {
     menu: { category: "items", group: GROUP.stations },
     states,
@@ -682,6 +684,16 @@ for (const pack of [BP, RP]) {
   writeJson(join(pack, "texts", "languages.json"), ["en_US", "zh_TW", "zh_CN"]);
 }
 
-for (const pack of [BP, RP]) writeArt(join(pack, "pack_icon.png"), art.packIcon());
+// ## No pack icon until one is drawn (the game shows its default).
+for (const pack of [BP, RP]) rmSync(join(pack, "pack_icon.png"), { force: true });
+// Copies of the icons used to live here; the item atlas now points at the drawn icons.
+rmSync(join(RP, "textures", "items", NS), { recursive: true, force: true });
 
-console.log(`generate: ${written.length} JSON files, ${Object.keys(terrain).length} block textures, ${Object.keys(itemTextures).length} item icons`);
+missingArt.sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]));
+writeFileSync(
+  join(root, "docs", "art", "MISSING_ART.md"),
+  ["# 尚缺的美術", "", "由 `npm run generate` 產生。這些貼圖與 icon 已在包裡以下列路徑命名，畫好放上去即可，不用改程式。", "",
+    ...(missingArt.length ? ["| 類別 | ID | 路徑 |", "| --- | --- | --- |", ...missingArt.map(([kind, id, path]) => `| ${kind === "icon" ? "物品 icon" : "方塊貼圖"} | \`${id}\` | \`packs/RP/${path}\` |`)] : ["目前沒有缺。"]), ""].join("\n")
+);
+
+console.log(`generate: ${written.length} JSON files, ${Object.keys(terrain).length} block textures, ${Object.keys(itemTextures).length} item icons, ${missingArt.length} not drawn yet (docs/art/MISSING_ART.md)`);

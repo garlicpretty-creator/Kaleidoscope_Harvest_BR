@@ -1,4 +1,4 @@
-// Minimal RGBA PNG writer (no dependencies) for the placeholder art.
+// Minimal RGBA PNG reader and writer (no dependencies), for the grey copies of the drawn crop textures.
 
 import { deflateSync, inflateSync } from "node:zlib";
 
