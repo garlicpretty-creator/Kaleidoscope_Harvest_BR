@@ -79,3 +79,18 @@ export const TAVERN_WINES = [
   },
 ];
 export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, carrier: "minecraft:glass_bottle", unitTime: 4800 };
+
+// --- 漁歌 Fishing Voyage: baits and pond feed (kaleidoscope_fishing:register_bait / register_pond_feed) ---
+//
+// biteFactor: 0.5–1, the waiting-for-a-bite multiplier; lower is quicker. Fishing's best bait is 0.5 and an
+// unspecified one 0.75; Ranching's offal and minces are 0.75–0.85. Plant baits stay on the slow side.
+// meals: 1–4 per item in Fishing's pond feeder (its Fish Meal is 4, Dried Fish 1).
+export const FISHING_BAITS = [
+  { id: "corn_seeds", biteFactor: 0.8, why: "玉米粒是釣鯉魚的老牌素餌" },
+  { id: "okara", biteFactor: 0.75, why: "豆渣打窩誘魚，本來就是釣客的餌料" },
+];
+export const FISHING_POND_FEEDS = [
+  { id: "okara", meals: 2, why: "豆渣蛋白質高，魚池裡的魚也吃" },
+  { id: "soybean", meals: 1, why: "黃豆泡過可以餵魚，一顆一餐" },
+  { id: "corn_seeds", meals: 1, why: "玉米粒，和小魚乾一樣算一餐" },
+];

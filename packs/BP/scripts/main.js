@@ -3,6 +3,8 @@
 
 import { connectToCookery } from "./api/cookery.js";
 import { startCookeryContent } from "./api/cookeryContent.js";
+import { connectToFishing } from "./api/fishing.js";
+import { startHarvestApi } from "./api/harvestApi.js";
 import { connectToHerbal } from "./api/herbal.js";
 import { connectToRanching } from "./api/ranching.js";
 import { connectToTavern } from "./api/tavern.js";
@@ -15,3 +17,6 @@ startCookeryContent();
 connectToRanching();
 connectToHerbal();
 connectToTavern();
+connectToFishing();
+// ## Harvest's own api_ping / api_ready (next release): the sister packs can find it without guessing from its items.
+startHarvestApi();

@@ -280,7 +280,7 @@ for (const [m, other] of [[bp, rp], [rp, bp]]) {
 
 // --- 5. M5: partner tables and balance -----------------------------------------------------------------
 
-const { RANCHING_FEEDS, HERBAL_HEAT, HERBAL_ADJUVANTS, TAVERN_WINES } = await load("integrations.js");
+const { RANCHING_FEEDS, HERBAL_HEAT, HERBAL_ADJUVANTS, TAVERN_WINES, FISHING_BAITS, FISHING_POND_FEEDS } = await load("integrations.js");
 const { tavernPayload } = await load("tavern.js");
 const itemOf = (id) => ITEMS.find((i) => i.id === id);
 const FEED_KINDS = ["grass", "grain", "veg", "mixed", "concentrate", "ruminant", "calcium"];
@@ -299,7 +299,17 @@ if (HERBAL_HEAT.length > 32) fail(`Herbal heat: ${HERBAL_HEAT.length} rows; keep
 // ## Herbal's adjuvant limit (32) is shared by every pack.
 if (HERBAL_ADJUVANTS.length > 4) fail(`Herbal adjuvants: ${HERBAL_ADJUVANTS.length}; all packs together get 32, keep Harvest's to a few`);
 for (const row of HERBAL_ADJUVANTS) if (!itemOf(row.id)) fail(`Herbal adjuvant ${row.id}: not a Harvest item`);
-for (const table of [RANCHING_FEEDS.map((f) => f.item), HERBAL_HEAT.map((h) => h.id), HERBAL_ADJUVANTS.map((a) => a.id)])
+for (const row of FISHING_BAITS) {
+  if (!itemOf(row.id)) fail(`Fishing bait ${row.id}: not a Harvest item`);
+  if (!(row.biteFactor >= 0.5 && row.biteFactor <= 1)) fail(`Fishing bait ${row.id}: biteFactor must be 0.5–1`);
+  if (!row.why) fail(`Fishing bait ${row.id}: say why (data/integrations.js)`);
+}
+for (const row of FISHING_POND_FEEDS) {
+  if (!itemOf(row.id)) fail(`Fishing pond feed ${row.id}: not a Harvest item`);
+  if (!(Number.isInteger(row.meals) && row.meals >= 1 && row.meals <= 4)) fail(`Fishing pond feed ${row.id}: meals must be 1–4`);
+  if (!row.why) fail(`Fishing pond feed ${row.id}: say why (data/integrations.js)`);
+}
+for (const table of [FISHING_BAITS.map((b) => b.id), FISHING_POND_FEEDS.map((f) => f.id), RANCHING_FEEDS.map((f) => f.item), HERBAL_HEAT.map((h) => h.id), HERBAL_ADJUVANTS.map((a) => a.id)])
   if (new Set(table).size !== table.length) fail(`partner table lists an item twice: ${table.join(", ")}`);
 for (const wine of TAVERN_WINES) {
   if (itemOf(wine.id)?.kind !== "drink") fail(`Tavern wine ${wine.id}: not a Harvest drink`);
