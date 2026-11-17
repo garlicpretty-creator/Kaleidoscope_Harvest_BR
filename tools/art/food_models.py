@@ -192,9 +192,30 @@ PLATE = Box(-7.5, 0, -7.5, 7.5, 0.5, 7.5, "plate")
 SLICE = {0: (0.5, -7, 7, -0.5), 1: (-7, -7, -0.5, -0.5), 2: (-7, 0.5, -0.5, 7), 3: (0.5, 0.5, 7, 7)}
 
 
+# The pie is round: each slice is two boxes that leave its outer corner out (a PIE_CUT x PIE_CUT notch), so the whole
+# pie is a stepped disc on its square plate, as a round thing is in Minecraft. The item icon shows a round pie.
+PIE_CUT = 2
+PIE_SIGN = {0: (1, -1), 1: (-1, -1), 2: (-1, 1), 3: (1, 1)}
+
+
 def pie_boxes(s):
-    return [PLATE] + [Box(SLICE[k][0], 0.5, SLICE[k][1], SLICE[k][2], 4.5, SLICE[k][3],
-                          {"*": "crust_side", "top": "pie_top"}) for k in range(4 - s)]
+    out, near, mat = [PLATE], 7 - PIE_CUT, {"*": "crust_side", "top": "pie_top"}
+    for k in range(4 - s):
+        sx, sz = PIE_SIGN[k]
+        out.append(Box(sx * 0.5, 0.5, sz * 0.5, sx * 7, 4.5, sz * near, mat))
+        out.append(Box(sx * 0.5, 0.5, sz * near, sx * near, 4.5, sz * 7, mat))
+    return out
+
+
+def pie_edge(t):
+    """Distance from the pie's rim (the stepped disc of pie_boxes), in pixels."""
+    ax, az, near = abs(t.x), abs(t.z), 7 - PIE_CUT
+    d = min(7 - ax, 7 - az)
+    if ax < near and az < near:
+        return min(d, math.hypot(near - ax, near - az))
+    if ax < near or az < near:
+        return min(d, max(near - ax, near - az))
+    return d
 
 
 CRUST = R((214, 152, 80))
@@ -206,7 +227,7 @@ def lattice_top(fill):
 
     @painter
     def p(t):
-        edge = 7 - max(abs(t.x), abs(t.z))
+        edge = pie_edge(t)
         x, z = wx(t), wz(t)
         if edge < 1.3:
             return CRUST[4] if (x + z) % 2 == 0 else CRUST[1]   # crimped rim
@@ -227,7 +248,7 @@ def crust_side(fill):
 
     @painter
     def p(t):
-        outer = max(abs(t.x), abs(t.z)) > 6.9
+        outer = max(abs(t.x), abs(t.z)) > 6.9 or min(abs(t.x), abs(t.z)) > 6.9 - PIE_CUT   # the rim, notch included
         if outer:
             return CRUST[3] if (wx(t) + wz(t)) % 2 == 0 else (CRUST[1] if t.v > 0 else CRUST[2])  # fluted
         if t.y < 1.5:
