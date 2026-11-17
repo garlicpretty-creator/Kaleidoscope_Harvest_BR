@@ -9,9 +9,18 @@
       "placement_pass": "surface_pass",
       "minecraft:biome_filter": [
         {
-          "test": "has_biome_tag",
-          "operator": "==",
-          "value": "savanna"
+          "any_of": [
+            {
+              "test": "has_biome_tag",
+              "operator": "==",
+              "value": "savanna"
+            },
+            {
+              "test": "has_biome_tag",
+              "operator": "==",
+              "value": "bop_like_savanna"
+            }
+          ]
         }
       ]
     },

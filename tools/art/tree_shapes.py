@@ -45,8 +45,24 @@ def chance(n, d):
     return {'numerator': n, 'denominator': d}
 
 
-def tag(t, op='=='):
+def raw_tag(t, op='=='):
     return {'test': 'has_biome_tag', 'operator': op, 'value': t}
+
+
+# ## Biomes O' Plenty compatibility (our Bedrock port, BOP_BR/docs/HANDSHAKE.md): BOP biomes carry no
+# ## vanilla vegetation tags, only bop_like_<tag>. So `== X` also accepts bop_like_X, and `!= X` also
+# ## rejects it. Without BOP those tags never match, so vanilla placement is unchanged.
+# ## Keep BOP_LIKE_EXTRA in step with packs/BP/scripts/data/bop.js.
+BOP_LIKE_EXTRA = {'edge': ['bop_like_jungle_edge']}  # the handshake has no bop_like_edge
+
+
+def bop_like(t):
+    return [f'bop_like_{t}'] + BOP_LIKE_EXTRA.get(t, [])
+
+
+def tag(t, op='=='):
+    tests = [raw_tag(v, op) for v in [t] + bop_like(t)]
+    return {'any_of' if op == '==' else 'all_of': tests}
 
 
 # ---------------------------------------------------------------- the shape table
@@ -238,7 +254,7 @@ def feature_json(tid):
 # ## mandarin, in a freshly started game; the registry stays cached for the life of the game process,
 # ## so test this after restarting the game). A tree with no wild spawn still gets a rule, whose biome
 # ## filter names a tag no biome has, so it never places.
-NEVER = dict(filter=[{'test': 'has_biome_tag', 'operator': '==', 'value': f'{NS}_never'}], chance=(1, 2))  # the game rejects 1/1
+NEVER = dict(filter=[raw_tag(f'{NS}_never')], chance=(1, 2))  # the game rejects 1/1
 
 
 def rule_json(tid):

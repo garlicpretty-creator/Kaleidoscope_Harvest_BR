@@ -30,6 +30,7 @@ const { JUICER, PICKLING_JAR, VISUAL_PROPS, SPLASH_PARTICLE, BUBBLE_PARTICLE } =
 const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
 const { PLACED_FOODS, MAX_CUPS, placedFood } = await load("placedFood.js");
 const { toSimplified } = await load("zh_cn.js");
+const { bopLike } = await load("bop.js");
 
 const NS = NAMESPACE;
 const BLOCK_FORMAT = "1.21.100"; // minecraft:movable needs 1.21.100+
@@ -373,7 +374,8 @@ function wildFeature(name, blockId, soil, biomes, spread = WILD_SPREAD) {
         description: { identifier: rid(`${name}_${biome}`), places_feature: rid(search) },
         conditions: {
           placement_pass: "after_surface_pass",
-          "minecraft:biome_filter": { any_of: [{ test: "has_biome_tag", operator: "==", value: biome }] },
+          // ## The vanilla tag, or its Biomes O' Plenty stand-ins (data/bop.js).
+          "minecraft:biome_filter": { any_of: [biome, ...bopLike(biome)].map((value) => ({ test: "has_biome_tag", operator: "==", value })) },
         },
         distribution: {
           ...spread,

@@ -11,21 +11,48 @@
         {
           "any_of": [
             {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "bamboo"
-            },
-            {
-              "all_of": [
+              "any_of": [
                 {
                   "test": "has_biome_tag",
                   "operator": "==",
-                  "value": "jungle"
+                  "value": "bamboo"
                 },
                 {
                   "test": "has_biome_tag",
                   "operator": "==",
-                  "value": "hills"
+                  "value": "bop_like_bamboo"
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "any_of": [
+                    {
+                      "test": "has_biome_tag",
+                      "operator": "==",
+                      "value": "jungle"
+                    },
+                    {
+                      "test": "has_biome_tag",
+                      "operator": "==",
+                      "value": "bop_like_jungle"
+                    }
+                  ]
+                },
+                {
+                  "any_of": [
+                    {
+                      "test": "has_biome_tag",
+                      "operator": "==",
+                      "value": "hills"
+                    },
+                    {
+                      "test": "has_biome_tag",
+                      "operator": "==",
+                      "value": "bop_like_hills"
+                    }
+                  ]
                 }
               ]
             }

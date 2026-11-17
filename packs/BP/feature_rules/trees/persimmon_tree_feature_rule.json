@@ -9,19 +9,46 @@
       "placement_pass": "surface_pass",
       "minecraft:biome_filter": [
         {
-          "test": "has_biome_tag",
-          "operator": "==",
-          "value": "taiga"
+          "any_of": [
+            {
+              "test": "has_biome_tag",
+              "operator": "==",
+              "value": "taiga"
+            },
+            {
+              "test": "has_biome_tag",
+              "operator": "==",
+              "value": "bop_like_taiga"
+            }
+          ]
         },
         {
-          "test": "has_biome_tag",
-          "operator": "!=",
-          "value": "cold"
+          "all_of": [
+            {
+              "test": "has_biome_tag",
+              "operator": "!=",
+              "value": "cold"
+            },
+            {
+              "test": "has_biome_tag",
+              "operator": "!=",
+              "value": "bop_like_cold"
+            }
+          ]
         },
         {
-          "test": "has_biome_tag",
-          "operator": "!=",
-          "value": "mega"
+          "all_of": [
+            {
+              "test": "has_biome_tag",
+              "operator": "!=",
+              "value": "mega"
+            },
+            {
+              "test": "has_biome_tag",
+              "operator": "!=",
+              "value": "bop_like_mega"
+            }
+          ]
         }
       ]
     },
