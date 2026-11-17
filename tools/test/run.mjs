@@ -759,6 +759,71 @@ test("station visuals: entity, client entity, model, animations and particles al
   equal(juicer["minecraft:movable"].movement_type, "immovable", "pistons cannot split block and entity");
 });
 
+// --- Placeable food (docs/superpowers/specs/2026-11-17-placeable-food-design.md) -----------------------------------
+const { PLACED_FOODS } = await import("../../packs/BP/scripts/data/placedFood.js");
+const json = (path) => JSON.parse(readFileSync(path, "utf8"));
+const lootItems = (path) => (path ? json(`packs/BP/${path}`).pools.flatMap((p) => p.entries.map((e) => e.name)) : []);
+
+test("placed food: the 21 foods of the design, each a block with the item's id", () => {
+  equal(PLACED_FOODS.length, 21, "four groups: 6 pots, 3 desserts, 8 drinks, 4 teas");
+  for (const { item } of PLACED_FOODS) {
+    const it = json(`packs/BP/items/${item}.json`)["minecraft:item"].components;
+    equal(it["minecraft:block_placer"]?.block, r(item), `${item} places its block`);
+    equal(it["minecraft:block_placer"].replace_block_item, true, `${item} is the block's item`);
+    assert(it["minecraft:tags"].tags.includes("kaleidoscope_cookery:placeable_food"), `${item} has Cookery's placeable_food tag`);
+    assert(it["minecraft:food"], `${item} can still be eaten in hand`);
+    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"];
+    equal(b.description.identifier, r(item), `${item} block id`);
+    assert(b.components["kaleidoscope_cookery:placeable_food_placement_guard"], `${item} honours Cookery's sneak-to-place setting`);
+    equal(b.description.traits["minecraft:placement_direction"].y_rotation_offset, 180, `${item} faces the player`);
+  }
+});
+
+test("placed food: pots, desserts and drinks use Cookery's food_bite with a fair bite and their container", () => {
+  for (const { item, bites } of PLACED_FOODS.filter((f) => f.bites > 0)) {
+    const food = json(`packs/BP/items/${item}.json`)["minecraft:item"].components["minecraft:food"];
+    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"];
+    const bite = b.components["kaleidoscope_cookery:food_bite"];
+    equal(bite.state, "kaleidoscope_cookery:food_stage", `${item} stage state`);
+    equal(bite.max_stage, bites, `${item} bites`);
+    equal(bite.nutrition, Math.ceil(food.nutrition / bites), `${item} hunger per bite`);
+    equal(bite.saturation_modifier, food.saturation_modifier, `${item} saturation`);
+    equal(bite.always_eat, true, `${item} can be eaten when full, as in hand`);
+    equal(JSON.stringify(bite.return_items ?? []), JSON.stringify(food.using_converts_to ? [food.using_converts_to] : []), `${item} gives back its container`);
+    equal(b.description.states["kaleidoscope_cookery:food_stage"].values.max, bites, `${item} stage range`);
+    assert(lootItems(b.components["minecraft:loot"]).includes(r(item)), `${item} untouched: the whole dish back`);
+    const started = b.permutations.find((p) => p.condition.includes("food_stage") && p.condition.includes("> 0"));
+    equal(JSON.stringify(lootItems(started.components["minecraft:loot"])), JSON.stringify(food.using_converts_to ? [food.using_converts_to] : []), `${item} started: only the container`);
+  }
+  equal(PLACED_FOODS.filter((f) => f.shape === "bottle" || f.shape === "wine").every((f) => f.bites === 1), true, "drinks are drunk in one");
+});
+
+test("placed food: teas use Cookery's cup_stack like Herbal's", () => {
+  for (const { item } of PLACED_FOODS.filter((f) => f.shape === "teacup")) {
+    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"];
+    const cups = b.components["kaleidoscope_cookery:cup_stack"];
+    equal(cups.filled, true, `${item} filled`);
+    equal(cups.item, r(item), `${item} stacks with itself`);
+    equal(cups.empty_item, "kaleidoscope_cookery:empty_cup", `${item} cup`);
+    equal(cups.max_count, 4, `${item} four cups`);
+    for (const s of ["cup_count", "tea_count"]) equal(b.description.states[`kaleidoscope_cookery:${s}`].values.max, 4, `${item} ${s}`);
+    equal(lootItems(b.components["minecraft:loot"]).length, 0, `${item}: cup_stack drops the cups, not the loot`);
+  }
+});
+
+test("placed food: every model has the bones the block shows, and every texture is drawn", () => {
+  for (const { item } of PLACED_FOODS) {
+    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"].components;
+    const shape = b["minecraft:geometry"].identifier.split(".").pop();
+    const geo = json(`packs/RP/models/blocks/${shape}.geo.json`)["minecraft:geometry"][0];
+    const bones = new Set(geo.bones.map((x) => x.name));
+    for (const bone of Object.keys(b["minecraft:geometry"].bone_visibility)) assert(bones.has(bone), `${shape} has ${bone}`);
+    assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/food").includes(`${item}.png`), `${item} texture`);
+    const terrain = json("packs/RP/textures/terrain_texture.json").texture_data[b["minecraft:material_instances"]["*"].texture];
+    assert(terrain, `${item} terrain entry`);
+  }
+});
+
 test("pickling jar: fill, seal, wait a day, open", () => {
   const jar = __place(overworld, at(0), r("pickling_jar"));
   const p = player(r("napa_cabbage"), 2);

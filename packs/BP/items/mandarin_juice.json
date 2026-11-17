@@ -27,8 +27,13 @@
       },
       "minecraft:tags": {
         "tags": [
-          "minecraft:is_food"
+          "minecraft:is_food",
+          "kaleidoscope_cookery:placeable_food"
         ]
+      },
+      "minecraft:block_placer": {
+        "block": "kaleidoscope_harvest:mandarin_juice",
+        "replace_block_item": true
       }
     }
   }

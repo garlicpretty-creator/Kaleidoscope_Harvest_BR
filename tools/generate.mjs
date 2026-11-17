@@ -28,6 +28,7 @@ const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR, VISUAL_PROPS, SPLASH_PARTICLE, BUBBLE_PARTICLE } = await load("stations.js");
 const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
+const { PLACED_FOODS, MAX_CUPS, placedFood } = await load("placedFood.js");
 const { toSimplified } = await load("zh_cn.js");
 
 const NS = NAMESPACE;
@@ -198,11 +199,11 @@ function boneBounds(geoFile, bone) {
   return { origin, size: top.map((v, i) => Math.max(1, v - origin[i])) };
 }
 
-function block(id, { states, components, permutations = [], menu = { category: "none" } }) {
+function block(id, { states, components, permutations = [], menu = { category: "none" }, traits }) {
   writeJson(join(BP, "blocks", `${id}.json`), {
     format_version: BLOCK_FORMAT,
     "minecraft:block": {
-      description: { identifier: rid(id), menu_category: menu, ...(states ? { states } : {}) },
+      description: { identifier: rid(id), menu_category: menu, ...(states ? { states } : {}), ...(traits ? { traits } : {}) },
       components: { "minecraft:display_name": `tile.${rid(id)}.name`, ...components },
       permutations,
     },
@@ -603,6 +604,11 @@ for (const item of ITEMS) {
     components["minecraft:use_modifiers"] = { use_duration: 1.6, movement_modifier: 0.33 };
     components["minecraft:tags"] = { tags: ["minecraft:is_food"] };
   }
+  // ## Placeable food (data/placedFood.js): the block has the item's id, as Cookery's and Herbal's do.
+  if (placedFood(item.id)) {
+    components["minecraft:block_placer"] = { block: rid(item.id), replace_block_item: true };
+    components["minecraft:tags"].tags.push("kaleidoscope_cookery:placeable_food");
+  }
   const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (TREE_FRUITS.has(item.id) ? GROUP.trees : GROUP.crops);
   const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : "items";
   writeJson(join(BP, "items", `${item.id}.json`), {
@@ -698,6 +704,99 @@ station(PICKLING_JAR, {
   recipe: { pattern: ["P", "C", "C"], key: { P: { item: "minecraft:oak_planks" }, C: { item: "minecraft:clay_ball" } }, unlock: [{ item: "minecraft:clay_ball" }] },
   sound: "stone",
 });
+
+// --- Placeable food (docs/superpowers/specs/2026-11-17-placeable-food-design.md) ---------------------------------
+//
+// Cookery's own components do the eating: food_bite (a bite per use; the last stage is the empty container,
+// one more use gives the container back) and cup_stack (teas). Models per shape, textures per item
+// (tools/art/food_models.py).
+
+const COOKERY = "kaleidoscope_cookery";
+const FOOD_STAGE = `${COOKERY}:food_stage`;
+const CUP_COUNT = `${COOKERY}:cup_count`;
+const TEA_COUNT = `${COOKERY}:tea_count`;
+const foodTex = (id) => `textures/${NS}/blocks/food/${id}`;
+const FOOD_BOX = {
+  pot: { origin: [-6.5, 0, -5], size: [13, 8, 10] },
+  pie: { origin: [-6, 0, -6], size: [12, 3, 12] },
+  cakes: { origin: [-6, 0, -6], size: [12, 3, 12] },
+  platter: { origin: [-6, 0, -6], size: [12, 4, 12] },
+  bottle: { origin: [-3, 0, -3], size: [6, 12, 6] },
+  wine: { origin: [-4, 0, -4], size: [8, 11, 8] },
+  teacup: { origin: [-6, 0, -6], size: [12, 3, 12] },
+};
+const FACING = ["north", "east", "south", "west"].map((f, i) => ({
+  condition: `q.block_state('minecraft:cardinal_direction') == '${f}'`,
+  components: { "minecraft:transformation": { rotation: [0, [0, 270, 180, 90][i], 0] } },
+}));
+const BITTEN = `q.block_state('${FOOD_STAGE}')`;
+/** Which bones show at which stage (stage = bites taken). */
+function foodBones(shape) {
+  if (shape === "pot") return Object.fromEntries([1, 2, 3, 4].flatMap((k) => [[`soup_${k}`, `${BITTEN} == ${4 - k}`], [`bits_${k}`, `${BITTEN} == ${4 - k}`]]));
+  if (["pie", "cakes", "platter"].includes(shape)) return Object.fromEntries([1, 2, 3, 4].map((i) => [`piece_${i}`, `${BITTEN} <= ${4 - i}`]));
+  if (shape === "bottle" || shape === "wine") return { liquid: `${BITTEN} == 0` };
+  const cups = (i) => `q.block_state('${CUP_COUNT}') >= ${i}`;
+  return Object.fromEntries([1, 2, 3, 4].flatMap((i) => [[`cup_${i}`, cups(i)], [`tea_${i}`, `${cups(i)} && q.block_state('${TEA_COUNT}') >= ${i}`]]));
+}
+const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));
+
+for (const row of PLACED_FOODS) {
+  const item = ITEM_BY_ID.get(row.item);
+  const food = JSON.parse(readFileSync(join(BP, "items", `${row.item}.json`), "utf8"))["minecraft:item"].components["minecraft:food"];
+  const container = food.using_converts_to;
+  names[`tile.${rid(row.item)}.name`] = [item.zh, item.en];
+  terrain[`kh_food_${row.item}`] = { textures: foodTex(row.item) };
+  const material = { texture: `kh_food_${row.item}`, render_method: "alpha_test" };
+  const glassy = row.shape === "bottle" || row.shape === "wine";
+  const box = FOOD_BOX[row.shape];
+  const common = {
+    "minecraft:geometry": { identifier: `geometry.${NS}.food_${row.shape}`, bone_visibility: foodBones(row.shape) },
+    "minecraft:material_instances": { "*": material, ...(glassy ? { glass: { ...material, render_method: "blend" } } : {}) },
+    "minecraft:selection_box": box,
+    "minecraft:collision_box": row.shape === "teacup" ? false : box,
+    "minecraft:destructible_by_mining": { seconds_to_destroy: 0.3 },
+    "minecraft:destructible_by_explosion": { explosion_resistance: 1 },
+    "minecraft:light_dampening": 0,
+    "minecraft:movable": { movement_type: "immovable" },
+    "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"] }] },
+    [`${COOKERY}:placeable_food_placement_guard`]: {},
+  };
+  const traits = { "minecraft:placement_direction": { enabled_states: ["minecraft:cardinal_direction"], y_rotation_offset: 180 } };
+  if (row.shape === "teacup") {
+    block(row.item, {
+      states: { [CUP_COUNT]: { values: { min: 1, max: MAX_CUPS } }, [TEA_COUNT]: { values: { min: 1, max: MAX_CUPS } } },
+      components: {
+        ...common,
+        "minecraft:loot": lootTable("placed_nothing", []),
+        // ## cup_stack drops the teas and empty cups itself.
+        [`${COOKERY}:cup_stack`]: { filled: true, item: rid(row.item), empty_item: `${COOKERY}:empty_cup`, max_count: MAX_CUPS },
+      },
+      permutations: FACING,
+      traits,
+    });
+    continue;
+  }
+  const full = lootTable(`placed_${row.item}_full`, [countEntry(row.item, [1, 1])]);
+  const eaten = container ? lootTable(`placed_${container.split(":")[1]}`, [{ rolls: 1, entries: [{ type: "item", name: container, weight: 1 }] }]) : lootTable("placed_nothing", []);
+  block(row.item, {
+    states: { [FOOD_STAGE]: { values: { min: 0, max: row.bites } } },
+    components: {
+      ...common,
+      "minecraft:loot": full,
+      [`${COOKERY}:food_bite`]: {
+        state: FOOD_STAGE,
+        max_stage: row.bites,
+        nutrition: Math.ceil(food.nutrition / row.bites),
+        saturation_modifier: food.saturation_modifier,
+        always_eat: true,
+        ...(container ? { return_items: [container] } : {}),
+      },
+    },
+    // ## Untouched: the whole dish back; started: only its container.
+    permutations: [{ condition: `${BITTEN} > 0`, components: { "minecraft:loot": eaten } }, ...FACING],
+    traits,
+  });
+}
 
 // --- Station display entities: the moving parts (docs/superpowers/specs/2026-11-17-station-animations-design.md) ---
 //

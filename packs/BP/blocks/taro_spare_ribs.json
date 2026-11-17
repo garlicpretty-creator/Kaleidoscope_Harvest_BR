@@ -1,0 +1,160 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:taro_spare_ribs",
+      "menu_category": {
+        "category": "none"
+      },
+      "states": {
+        "kaleidoscope_cookery:food_stage": {
+          "values": {
+            "min": 0,
+            "max": 4
+          }
+        }
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ],
+          "y_rotation_offset": 180
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:taro_spare_ribs.name",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.food_pot",
+        "bone_visibility": {
+          "soup_1": "q.block_state('kaleidoscope_cookery:food_stage') == 3",
+          "bits_1": "q.block_state('kaleidoscope_cookery:food_stage') == 3",
+          "soup_2": "q.block_state('kaleidoscope_cookery:food_stage') == 2",
+          "bits_2": "q.block_state('kaleidoscope_cookery:food_stage') == 2",
+          "soup_3": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
+          "bits_3": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
+          "soup_4": "q.block_state('kaleidoscope_cookery:food_stage') == 0",
+          "bits_4": "q.block_state('kaleidoscope_cookery:food_stage') == 0"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_food_taro_spare_ribs",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -6.5,
+          0,
+          -5
+        ],
+        "size": [
+          13,
+          8,
+          10
+        ]
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -6.5,
+          0,
+          -5
+        ],
+        "size": [
+          13,
+          8,
+          10
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.3
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": {
+        "movement_type": "immovable"
+      },
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_cookery:placeable_food_placement_guard": {},
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_taro_spare_ribs_full.json",
+      "kaleidoscope_cookery:food_bite": {
+        "state": "kaleidoscope_cookery:food_stage",
+        "max_stage": 4,
+        "nutrition": 3,
+        "saturation_modifier": 0.8,
+        "always_eat": true,
+        "return_items": [
+          "minecraft:bowl"
+        ]
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') > 0",
+        "components": {
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_bowl.json"
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              270,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              180,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
