@@ -17,7 +17,7 @@ python tools/art/crop_textures.py
 | 作物 | `crops/<作物>_stage_<0-3>.png` | 24 種 × 4 |
 | 玉米上半格 | `crops/corn_upper_stage_2.png`、`crops/corn_upper_stage_3.png` | 2 |
 | 樹苗 | `saplings/<果樹>_sapling.png` | 11 |
-| 果葉 | `trees/<果樹>_leaves_<bare/blossom/unripe/ripe>.png` | 11 × 4 |
+| 果葉 | `trees/<果樹>_leaves_<bare/blossom>.png` | 11 × 2 |
 | 木材 | `trees/fruitwood_log.png`（側面）、`trees/fruitwood_log_top.png`（年輪）、`trees/banana_trunk.png` | 3 |
 
 作物：napa_cabbage、bok_choy、spinach、coriander、cumin、sesame、soybean、onion、scallion、garlic、peanut、sweet_potato、ginger、daikon、taro、eggplant、strawberry、blueberry、pineapple、corn、cucumber、black_pepper、grape、passion_fruit。
@@ -39,7 +39,7 @@ python tools/art/crop_textures.py
 
 藤架作物（小黃瓜、黑胡椒、葡萄、百香果）只畫藤蔓，背景透明；竹藤架是另外的模型。
 
-果葉的 `fruit_stage`：`bare` 無果 → `blossom` 開花 → `unripe` 青果 → `ripe` 熟果。肉桂沒有果實，改以紅褐色嫩葉的多寡表示樹皮可採收（`ripe` 最多）。果葉貼圖可無縫平鋪，有少量透明孔，材質用 `alpha_test`。
+果葉只有兩個階段：`bare` 無花 → `blossom` 開花。果實不畫在葉子裡，而是另一個垂掛在葉子下方的方塊（見 `tools/art/fruit_models.py` 與 PLANT_MODELS.md）。果葉貼圖可無縫平鋪，有少量透明孔，材質用 `alpha_test`。
 
 ## PBR
 
