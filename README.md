@@ -9,7 +9,8 @@
 
 ## 文件
 
-- [企劃書](docs/PROPOSAL.zh-TW.md)
+- [企劃書](docs/PROPOSAL.zh-TW.md)（1.0）
+- [1.1 企劃書](docs/PROPOSAL_1.1.zh-TW.md)：水生作物、14 種新作物、更多可放置食物
 - [M1 說明：基礎與生長系統](docs/M1_說明.md)
 - [M2 說明：蔬菜與香料](docs/M2_說明.md)
 - [M3 說明：水果與果樹](docs/M3_說明.md)
