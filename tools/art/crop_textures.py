@@ -1127,8 +1127,39 @@ def maps(px, tile):
     return nrm, mer
 
 
-def save(rel, c, written):
-    px = c.shaded()
+ICONS = os.path.join(ROOT, 'art', 'icons')
+
+
+def icon_pixels(name):
+    """The picked item icon (art/icons/<name>.png) as {(x, y): (rgb, material)}, or None when there is none.
+
+    The painted saplings share one skeleton and differ mostly in leaf colour, so several read as the same
+    plant in the inventory and on the ground. Each tree's icon is its own drawing (fruit, blossom, habit),
+    so the sapling block wears it instead, the way a vanilla sapling's block and icon are one picture."""
+    path = os.path.join(ICONS, name + '.png')
+    if not os.path.exists(path):
+        return None
+    img = Image.open(path).convert('RGBA')
+    if img.size != (16, 16):
+        return None
+    px = {}
+    for y in range(16):
+        for x in range(16):
+            r, g, b, a = img.getpixel((x, y))
+            if a < 128:
+                continue
+            if g >= r and g >= b:
+                mat = 'leaf'
+            elif r > g > b and r - b > 30 and r < 190:
+                mat = 'bark'
+            else:
+                mat = 'fruit'
+            px[(x, y)] = ((r, g, b), mat)
+    return px
+
+
+def save(rel, c, written, px=None):
+    px = px or c.shaded()
     img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
     for (x, y), (rgb, _) in px.items():
         img.putpixel((x, y), rgb + (255,))
@@ -1161,7 +1192,7 @@ def build():
     for tree in TREES:
         c = Canvas(seed=zlib.crc32(tree.encode()))
         sapling(c, tree)
-        imgs = [save('saplings/%s_sapling' % tree, c, written)]
+        imgs = [save('saplings/%s_sapling' % tree, c, written, icon_pixels('%s_sapling' % tree))]
         for st in ('bare', 'blossom'):  # fruit hangs below the leaves as its own block (tools/art/fruit_models.py)
             c = Canvas(tile=True, seed=zlib.crc32(tree.encode()))
             leaves_block(c, tree, st)

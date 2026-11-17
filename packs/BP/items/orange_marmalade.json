@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_harvest:orange_marmalade",
       "menu_category": {
-        "category": "items",
+        "category": "equipment",
         "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
       }
     },

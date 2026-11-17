@@ -57,6 +57,134 @@
         ]
       },
       {
+        "category_name": "equipment",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:chopped_scallion",
+              "name": "kaleidoscope_cookery:itemGroup.name.ingredients"
+            },
+            "items": [
+              "kaleidoscope_harvest:chopped_scallion",
+              "kaleidoscope_harvest:minced_garlic",
+              "kaleidoscope_harvest:shredded_ginger",
+              "kaleidoscope_harvest:chopped_coriander",
+              "kaleidoscope_harvest:diced_onion",
+              "kaleidoscope_harvest:daikon_slices",
+              "kaleidoscope_harvest:sesame_powder",
+              "kaleidoscope_harvest:sesame_oil",
+              "kaleidoscope_harvest:peanut_butter",
+              "kaleidoscope_harvest:peanut_oil",
+              "kaleidoscope_harvest:soy_milk",
+              "kaleidoscope_harvest:okara",
+              "kaleidoscope_harvest:ground_black_pepper",
+              "kaleidoscope_harvest:ground_cumin",
+              "kaleidoscope_harvest:five_spice_powder",
+              "kaleidoscope_harvest:tofu",
+              "kaleidoscope_harvest:soy_sauce",
+              "kaleidoscope_harvest:dried_tangerine_peel",
+              "kaleidoscope_harvest:dried_persimmon",
+              "kaleidoscope_harvest:ground_cinnamon",
+              "kaleidoscope_harvest:raisins",
+              "kaleidoscope_harvest:pickled_napa_cabbage",
+              "kaleidoscope_harvest:kimchi",
+              "kaleidoscope_harvest:pickled_daikon",
+              "kaleidoscope_harvest:pickled_cucumber",
+              "kaleidoscope_harvest:strawberry_jam",
+              "kaleidoscope_harvest:blueberry_jam",
+              "kaleidoscope_harvest:persimmon_jam",
+              "kaleidoscope_harvest:orange_marmalade"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:scallion_omelette",
+              "name": "kaleidoscope_cookery:itemGroup.name.foods"
+            },
+            "items": [
+              "kaleidoscope_harvest:scallion_omelette",
+              "kaleidoscope_harvest:garlic_bok_choy",
+              "kaleidoscope_harvest:onion_omelette",
+              "kaleidoscope_harvest:braised_eggplant",
+              "kaleidoscope_harvest:yuxiang_eggplant",
+              "kaleidoscope_harvest:kung_pao_chicken",
+              "kaleidoscope_harvest:homestyle_tofu",
+              "kaleidoscope_harvest:cumin_lamb_skewers",
+              "kaleidoscope_harvest:black_pepper_steak",
+              "kaleidoscope_harvest:orange_spare_ribs",
+              "kaleidoscope_harvest:lemon_chicken",
+              "kaleidoscope_harvest:cumin_potatoes",
+              "kaleidoscope_harvest:pineapple_sweet_sour_pork",
+              "kaleidoscope_harvest:candied_banana",
+              "kaleidoscope_harvest:cabbage_pork_stew",
+              "kaleidoscope_harvest:daikon_beef_brisket",
+              "kaleidoscope_harvest:spinach_salad",
+              "kaleidoscope_harvest:corn_chowder",
+              "kaleidoscope_harvest:taro_spare_ribs",
+              "kaleidoscope_harvest:garlic_pork_slices",
+              "kaleidoscope_harvest:sesame_tangyuan",
+              "kaleidoscope_harvest:tofu_vegetable_soup",
+              "kaleidoscope_harvest:soy_milk_pudding",
+              "kaleidoscope_harvest:spinach_dumplings",
+              "kaleidoscope_harvest:pickled_vegetable_noodles",
+              "kaleidoscope_harvest:mandarin_sweet_soup",
+              "kaleidoscope_harvest:five_spice_tea_egg",
+              "kaleidoscope_harvest:braised_pork",
+              "kaleidoscope_harvest:lychee_chicken",
+              "kaleidoscope_harvest:rock_sugar_pear",
+              "kaleidoscope_harvest:peach_jelly",
+              "kaleidoscope_harvest:lychee_jelly",
+              "kaleidoscope_harvest:pear_honey_drink",
+              "kaleidoscope_harvest:steamed_corn",
+              "kaleidoscope_harvest:steamed_sweet_potato",
+              "kaleidoscope_harvest:taro_paste",
+              "kaleidoscope_harvest:smashed_cucumber",
+              "kaleidoscope_harvest:roasted_sweet_potato",
+              "kaleidoscope_harvest:scallion_pancake",
+              "kaleidoscope_harvest:pepper_bun",
+              "kaleidoscope_harvest:strawberry_daifuku",
+              "kaleidoscope_harvest:blueberry_pie",
+              "kaleidoscope_harvest:pineapple_cake",
+              "kaleidoscope_harvest:mango_shaved_ice",
+              "kaleidoscope_harvest:cinnamon_apple",
+              "kaleidoscope_harvest:banana_pancake",
+              "kaleidoscope_harvest:grape_raisin_bread",
+              "kaleidoscope_harvest:fruit_platter"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:lychee_wine",
+              "name": "kaleidoscope_cookery:itemGroup.name.tea_drinks"
+            },
+            "items": [
+              "kaleidoscope_harvest:lychee_wine",
+              "kaleidoscope_harvest:peach_wine",
+              "kaleidoscope_harvest:mandarin_juice",
+              "kaleidoscope_harvest:orange_juice",
+              "kaleidoscope_harvest:grape_juice",
+              "kaleidoscope_harvest:mango_juice",
+              "kaleidoscope_harvest:mixed_juice",
+              "kaleidoscope_harvest:passion_fruit_juice",
+              "kaleidoscope_harvest:cinnamon_tea",
+              "kaleidoscope_harvest:ginger_tea",
+              "kaleidoscope_harvest:lemon_tea",
+              "kaleidoscope_harvest:passion_fruit_tea"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:juicer",
+              "name": "kaleidoscope_cookery:itemGroup.name.cooking_stations"
+            },
+            "items": [
+              "kaleidoscope_harvest:juicer",
+              "kaleidoscope_harvest:pickling_jar"
+            ]
+          }
+        ]
+      },
+      {
         "category_name": "nature",
         "groups": [
           {

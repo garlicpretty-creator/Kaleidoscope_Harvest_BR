@@ -4,7 +4,7 @@
     "description": {
       "identifier": "kaleidoscope_harvest:sesame_powder",
       "menu_category": {
-        "category": "items",
+        "category": "equipment",
         "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
       }
     },

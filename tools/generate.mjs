@@ -80,7 +80,7 @@ const terrain = {};
 const itemTextures = {};
 const blockSounds = {};
 const names = {}; // lang key → [zh, en]
-const catalog = { crops: [], trees: [] };
+const catalog = { crops: [], trees: [], foods: [], drinks: [], ingredients: [], stations: [] };
 
 const blockTex = (name) => `textures/blocks/${NS}/${name}`;
 const itemTex = (name) => `textures/${NS}/items/${name}`;
@@ -612,13 +612,16 @@ for (const item of ITEMS) {
   }
   const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (TREE_FRUITS.has(item.id) ? GROUP.trees : GROUP.crops);
   // ## Tree fruit sits in the Nature tab with its sapling and leaves, where the catalog's harvest_trees group is.
-  const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : group === GROUP.trees ? "nature" : "items";
+  // ## Cookery's groups live in the Equipment tab; an item that names one from another tab is left loose there.
+  const cookeryGroup = { dish: "foods", drink: "drinks", ingredient: "ingredients" }[item.kind];
+  const category = cookeryGroup ? "equipment" : group === GROUP.trees ? "nature" : "items";
   if (placedFood(item.id)) placeableKind.set(rid(item.id), item.kind === "drink" ? "drink" : "food");
   writeJson(join(BP, "items", `${item.id}.json`), {
     format_version: ITEM_FORMAT,
     "minecraft:item": { description: { identifier: rid(item.id), menu_category: { category, group } }, components },
   });
-  if (group === GROUP.trees) catalog.trees.push(rid(item.id));
+  if (cookeryGroup) catalog[cookeryGroup].push(rid(item.id));
+  else if (group === GROUP.trees) catalog.trees.push(rid(item.id));
   else if (group === GROUP.crops) catalog.crops.push(rid(item.id));
 }
 
@@ -664,8 +667,9 @@ function station(def, { states, materials, permutations, component, recipe, soun
   names[`tile.${rid(def.id)}.name`] = [def.zh, def.en];
   // ## The block item shows the model; this icon is for the guidebook.
   addIcon(def.id);
+  catalog.stations.push(rid(def.id));
   block(def.id, {
-    menu: { category: "items", group: GROUP.stations },
+    menu: { category: "equipment", group: GROUP.stations },
     states,
     components: {
       "minecraft:geometry": `geometry.${NS}.${def.id}`,
@@ -1006,6 +1010,14 @@ writeJson(join(BP, "item_catalog", "crafting_item_catalog.json"), {
       {
         category_name: "items",
         groups: ["crops"].map((g) => ({ group_identifier: { icon: groupIcon[g], name: GROUP[g] }, items: catalog[g] })),
+      },
+      {
+        // ## Cookery's own groups, joined the way Herbal and Fishing Voyage join them: listed here under Equipment,
+        // ## with the first item of each as the icon should Cookery be missing.
+        category_name: "equipment",
+        groups: ["ingredients", "foods", "drinks", "stations"]
+          .filter((g) => catalog[g].length)
+          .map((g) => ({ group_identifier: { icon: catalog[g][0], name: GROUP[g] }, items: catalog[g] })),
       },
       {
         category_name: "nature",
