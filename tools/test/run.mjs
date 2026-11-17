@@ -441,7 +441,8 @@ test("wild saplings, village grape cuttings and the drawn textures are wired up"
   assert(plains.entries.some((e) => e.name === r("grape_cutting")), "grape cuttings in plains houses");
   const terrain = JSON.parse(readFileSync("packs/RP/textures/terrain_texture.json", "utf8")).texture_data;
   equal(terrain.kh_corn_stage7.textures, "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3", "state 7 shows drawn stage 3");
-  equal(terrain.kh_mandarin_fruit_leaves_green.textures, "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_unripe", "leaf art");
+  // Stopgap until the hanging fruit blocks exist (art PR #4): leaves with fruit show the blossom texture.
+  equal(terrain.kh_mandarin_fruit_leaves_green.textures, "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom", "leaf art");
   assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/crops").includes("corn_stage_3.texture_set.json"), "PBR texture set");
   assert(terrain.kh_corn_stage7_grey.textures.startsWith("textures/blocks/"), "grey copy made from the art");
 });

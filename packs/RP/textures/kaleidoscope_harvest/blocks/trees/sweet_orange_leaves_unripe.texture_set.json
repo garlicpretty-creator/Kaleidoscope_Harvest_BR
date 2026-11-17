@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "sweet_orange_leaves_unripe",
-    "normal": "sweet_orange_leaves_unripe_normal",
-    "metalness_emissive_roughness": "sweet_orange_leaves_unripe_mer"
-  }
-}

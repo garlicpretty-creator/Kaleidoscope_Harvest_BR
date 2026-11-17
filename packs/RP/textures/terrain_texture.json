@@ -1292,13 +1292,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_blossom_grey"
     },
     "kh_mandarin_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom"
     },
     "kh_mandarin_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_green_grey"
     },
     "kh_mandarin_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom"
     },
     "kh_mandarin_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_ripe_grey"
@@ -1328,13 +1328,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_blossom_grey"
     },
     "kh_sweet_orange_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_blossom"
     },
     "kh_sweet_orange_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_green_grey"
     },
     "kh_sweet_orange_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_blossom"
     },
     "kh_sweet_orange_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_ripe_grey"
@@ -1364,13 +1364,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_blossom_grey"
     },
     "kh_lemon_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_blossom"
     },
     "kh_lemon_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_green_grey"
     },
     "kh_lemon_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_blossom"
     },
     "kh_lemon_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_ripe_grey"
@@ -1400,13 +1400,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_blossom_grey"
     },
     "kh_peach_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_blossom"
     },
     "kh_peach_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_green_grey"
     },
     "kh_peach_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_blossom"
     },
     "kh_peach_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_ripe_grey"
@@ -1436,13 +1436,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_blossom_grey"
     },
     "kh_pear_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_blossom"
     },
     "kh_pear_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_green_grey"
     },
     "kh_pear_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_blossom"
     },
     "kh_pear_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_ripe_grey"
@@ -1472,13 +1472,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_blossom_grey"
     },
     "kh_persimmon_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_blossom"
     },
     "kh_persimmon_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_green_grey"
     },
     "kh_persimmon_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_blossom"
     },
     "kh_persimmon_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_ripe_grey"
@@ -1508,13 +1508,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_blossom_grey"
     },
     "kh_lychee_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_blossom"
     },
     "kh_lychee_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_green_grey"
     },
     "kh_lychee_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_blossom"
     },
     "kh_lychee_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_ripe_grey"
@@ -1544,13 +1544,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_blossom_grey"
     },
     "kh_mango_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_blossom"
     },
     "kh_mango_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_green_grey"
     },
     "kh_mango_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_blossom"
     },
     "kh_mango_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_ripe_grey"
@@ -1580,13 +1580,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_blossom_grey"
     },
     "kh_banana_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_blossom"
     },
     "kh_banana_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_green_grey"
     },
     "kh_banana_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_blossom"
     },
     "kh_banana_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_ripe_grey"
@@ -1616,13 +1616,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_blossom_grey"
     },
     "kh_star_anise_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_blossom"
     },
     "kh_star_anise_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_green_grey"
     },
     "kh_star_anise_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_blossom"
     },
     "kh_star_anise_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_ripe_grey"
@@ -1652,13 +1652,13 @@
       "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_blossom_grey"
     },
     "kh_cinnamon_fruit_leaves_green": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_unripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_blossom"
     },
     "kh_cinnamon_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_green_grey"
     },
     "kh_cinnamon_fruit_leaves_ripe": {
-      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_blossom"
     },
     "kh_cinnamon_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_ripe_grey"

@@ -184,6 +184,24 @@ if (existsSync(villageDir)) {
   }
 }
 
+// --- World generation names only blocks that exist ----------------------------------------------------
+// ## A warning, not a failure: features/trees (tools/art/tree_shapes.py) still uses block ids
+// ## from before the M3 code (<tree>_leaves, fruitwood_log); which tree generation to keep is open.
+
+const blockIdsAll = new Set(readdirSync(join(BP, "blocks")).map((f) => readJson(join(BP, "blocks", f))["minecraft:block"].description.identifier));
+const unknownPlaced = new Map();
+for (const dir of ["features", "feature_rules"]) {
+  for (const path of walk(join(BP, dir)).filter((p) => p.endsWith(".json"))) {
+    const unknown = new Set();
+    for (const m of readFileSync(path, "utf8").matchAll(/"(kaleidoscope_harvest:[a-z0-9_]+)"/g)) {
+      const id = m[1];
+      if (!blockIdsAll.has(id) && !/_(feature|search|rule)$/.test(id) && !id.includes("_feature_") && !/wild_.+_(?:[a-z]+)$/.test(id)) unknown.add(id);
+    }
+    for (const id of unknown) unknownPlaced.set(id, (unknownPlaced.get(id) ?? 0) + 1);
+  }
+}
+if (unknownPlaced.size) console.warn(`validate: world generation names ${unknownPlaced.size} block id(s) the packs do not define: ${[...unknownPlaced.keys()].sort().join(", ")}`);
+
 // --- 4. Manifests ---------------------------------------------------------------------------------
 
 const COOKERY_BP = "9944f731-cc4c-4299-bdd5-f8799c1d832e";

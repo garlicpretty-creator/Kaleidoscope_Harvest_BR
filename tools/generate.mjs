@@ -11,7 +11,7 @@
 // ## tools/art/). Nothing is drawn here: a texture the art does not have yet is still named at
 // ## the path the art will use, and listed in docs/art/MISSING_ART.md.
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { decodePng, encodePng } from "./png.mjs";
@@ -58,15 +58,22 @@ function writeJson(path, value) {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
   written.push(path);
 }
+function walkFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walkFiles(join(dir, e.name)) : [join(dir, e.name)]));
+}
 function wipe(dir) {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
 }
 
-// ## Placeholders and grey copies are regenerated each run; stale ones would linger otherwise.
+// ## PBR sets this script wrote next to drawn textures that have since been removed.
+for (const path of walkFiles(join(RP, "textures", NS, "blocks"))) if (path.endsWith(".texture_set.json") && !existsSync(path.replace(/\.texture_set\.json$/, ".png"))) rmSync(path);
+// ## Grey copies are regenerated each run; stale ones would linger otherwise.
 rmSync(join(RP, "textures", "blocks", NS), { recursive: true, force: true });
-for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features"), join(BP, "feature_rules")]) wipe(dir);
-// ## RP/models/blocks is not wiped: the station models there are hand-made (tools/art/station_models.py).
+for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features", "wild"), join(BP, "feature_rules", "wild")]) wipe(dir);
+// ## Only Harvest's own generated folders are wiped. features/ and feature_rules/ hold other work
+// ## too (features/trees from tools/art/tree_shapes.py), and RP/models/blocks holds the art models.
 
 const terrain = {};
 const itemTextures = {};
@@ -391,8 +398,13 @@ for (const trunk of TRUNKS) {
   catalog.trees.push(rid(trunk.id));
 }
 
-/** Fruit stage → drawn leaf texture suffix (docs/art/CROP_TEXTURES.md). */
-const LEAF_ART = { none: "bare", blossom: "blossom", green: "unripe", ripe: "ripe" };
+/**
+ * Fruit stage → drawn leaf texture suffix. ## Stopgap: the art now draws only bare and
+ * blossoming leaves, and fruit as a block hanging below them (企劃書 as revised in art PR #4,
+ * docs/art/PLANT_MODELS.md). Until the code makes those hanging fruit, a leaf with fruit
+ * shows the blossom texture, so green and ripe fruit cannot be told apart by look.
+ */
+const LEAF_ART = { none: "bare", blossom: "blossom", green: "blossom", ripe: "blossom" };
 
 for (const tree of TREES) {
   const sap = saplingBlockId(tree);
