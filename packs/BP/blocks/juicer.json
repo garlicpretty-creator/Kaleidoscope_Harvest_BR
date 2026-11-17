@@ -28,11 +28,11 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "kh_station_juicer",
-          "render_method": "alpha_test"
+          "render_method": "alpha_test_single_sided"
         },
         "glass": {
           "texture": "kh_station_juicer",
-          "render_method": "blend"
+          "render_method": "alpha_test"
         }
       },
       "minecraft:collision_box": {

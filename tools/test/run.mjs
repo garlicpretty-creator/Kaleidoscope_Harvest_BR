@@ -792,7 +792,7 @@ test("placed food: pots, desserts and drinks use Cookery's food_bite with a fair
     equal(JSON.stringify(bite.return_items ?? []), JSON.stringify(food.using_converts_to ? [food.using_converts_to] : []), `${item} gives back its container`);
     equal(b.description.states["kaleidoscope_cookery:food_stage"].values.max, bites, `${item} stage range`);
     assert(lootItems(b.components["minecraft:loot"]).includes(r(item)), `${item} untouched: the whole dish back`);
-    const started = b.permutations.find((p) => p.condition.includes("food_stage") && p.condition.includes("> 0"));
+    const started = b.permutations.find((p) => p.condition.includes("food_stage") && p.condition.endsWith("== 1"));
     equal(JSON.stringify(lootItems(started.components["minecraft:loot"])), JSON.stringify(food.using_converts_to ? [food.using_converts_to] : []), `${item} started: only the container`);
   }
   equal(PLACED_FOODS.filter((f) => f.shape === "bottle" || f.shape === "wine").every((f) => f.bites === 1), true, "drinks are drunk in one");
@@ -811,16 +811,27 @@ test("placed food: teas use Cookery's cup_stack like Herbal's", () => {
   }
 });
 
-test("placed food: every model has the bones the block shows, and every texture is drawn", () => {
-  for (const { item } of PLACED_FOODS) {
-    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"].components;
-    const shape = b["minecraft:geometry"].identifier.split(".").pop();
-    const geo = json(`packs/RP/models/blocks/${shape}.geo.json`)["minecraft:geometry"][0];
-    const bones = new Set(geo.bones.map((x) => x.name));
-    for (const bone of Object.keys(b["minecraft:geometry"].bone_visibility)) assert(bones.has(bone), `${shape} has ${bone}`);
+test("placed food: every state has its model, every model its texture, and states cover every stage", () => {
+  const models = new Map(readdirSync("packs/RP/models/blocks").filter((f) => f.startsWith("food_")).map((f) => {
+    const geo = json(`packs/RP/models/blocks/${f}`)["minecraft:geometry"][0];
+    return [geo.description.identifier, geo];
+  }));
+  for (const { item, bites, shape } of PLACED_FOODS) {
+    const b = json(`packs/BP/blocks/${item}.json`)["minecraft:block"];
+    const geos = [b.components["minecraft:geometry"], ...b.permutations.map((p) => p.components["minecraft:geometry"]).filter(Boolean)];
+    for (const id of geos) assert(models.has(id), `${item}: model ${id} exists`);
+    const states = shape === "teacup" ? 16 : bites + 1;
+    equal(b.permutations.filter((p) => p.components["minecraft:geometry"]).length, states, `${item}: a model for every state`);
+    const tex = b.components["minecraft:material_instances"]["*"];
+    equal(tex.render_method, "alpha_test_single_sided", `${item}: single-sided, as the art kit draws it`);
     assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/food").includes(`${item}.png`), `${item} texture`);
-    const terrain = json("packs/RP/textures/terrain_texture.json").texture_data[b["minecraft:material_instances"]["*"].texture];
-    assert(terrain, `${item} terrain entry`);
+    assert(json("packs/RP/textures/terrain_texture.json").texture_data[tex.texture], `${item} terrain entry`);
+    for (const id of geos) {
+      const geo = models.get(id);
+      const png = readFileSync(`packs/RP/textures/kaleidoscope_harvest/blocks/food/${item}.png`);
+      equal(png.readUInt32BE(16), geo.description.texture_width, `${item}: ${id} texture width`);
+      equal(png.readUInt32BE(20), geo.description.texture_height, `${item}: ${id} texture height`);
+    }
   }
 });
 

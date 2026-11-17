@@ -16,7 +16,7 @@
         "active_time": 0.1
       },
       "minecraft:emitter_shape_disc": {
-        "radius": 0.29,
+        "radius": 0.235,
         "surface_only": true,
         "direction": [
           0,

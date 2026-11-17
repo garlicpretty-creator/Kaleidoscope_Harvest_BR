@@ -7,7 +7,7 @@
         "default": "entity_alphablend"
       },
       "textures": {
-        "default": "textures/kaleidoscope_harvest/blocks/stations/juicer"
+        "default": "textures/kaleidoscope_harvest/entity/juicer_visual"
       },
       "geometry": {
         "default": "geometry.kaleidoscope_harvest.juicer_visual"

@@ -685,11 +685,12 @@ function station(def, { states, materials, permutations, component, recipe, soun
   });
 }
 
-const opaque = (name) => ({ texture: `kh_station_${name}`, render_method: "alpha_test" });
+// ## Single-sided, as tools/art/stations.py paints them; the juicer's glass is double-sided so its far edges show.
+const opaque = (name) => ({ texture: `kh_station_${name}`, render_method: "alpha_test_single_sided" });
 station(JUICER, {
   states: { [state("fruit")]: intRange(JUICER.capacity), [state("juice")]: JUICER.colours },
   // ## The juice is drawn by the display entity (it rises and drains), so the block has no juice permutations.
-  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" } },
+  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "alpha_test" } },
   permutations: [],
   recipe: { pattern: [" I ", "GGG", "PPP"], key: { I: { item: "minecraft:iron_ingot" }, G: { item: "minecraft:glass" }, P: { item: "minecraft:oak_planks" } }, unlock: [{ item: "minecraft:glass" }] },
   sound: "glass",
@@ -717,27 +718,21 @@ const CUP_COUNT = `${COOKERY}:cup_count`;
 const TEA_COUNT = `${COOKERY}:tea_count`;
 const foodTex = (id) => `textures/${NS}/blocks/food/${id}`;
 const FOOD_BOX = {
-  pot: { origin: [-6.5, 0, -5], size: [13, 8, 10] },
-  pie: { origin: [-6, 0, -6], size: [12, 3, 12] },
-  cakes: { origin: [-6, 0, -6], size: [12, 3, 12] },
-  platter: { origin: [-6, 0, -6], size: [12, 4, 12] },
-  bottle: { origin: [-3, 0, -3], size: [6, 12, 6] },
-  wine: { origin: [-4, 0, -4], size: [8, 11, 8] },
-  teacup: { origin: [-6, 0, -6], size: [12, 3, 12] },
+  pot: { origin: [-6.5, 0, -5], size: [13, 7, 10] },
+  pie: { origin: [-7.5, 0, -7.5], size: [15, 4.5, 15] },
+  cakes: { origin: [-7.5, 0, -7.5], size: [15, 3, 15] },
+  platter: { origin: [-7, 0, -7], size: [14, 3, 14] },
+  bottle: { origin: [-3, 0, -3], size: [6, 11.5, 6] },
+  wine: { origin: [-3.5, 0, -3.5], size: [7, 10.5, 7] },
+  teacup: { origin: [-7, 0, -7], size: [14, 3.5, 14] },
 };
 const FACING = ["north", "east", "south", "west"].map((f, i) => ({
   condition: `q.block_state('minecraft:cardinal_direction') == '${f}'`,
   components: { "minecraft:transformation": { rotation: [0, [0, 270, 180, 90][i], 0] } },
 }));
 const BITTEN = `q.block_state('${FOOD_STAGE}')`;
-/** Which bones show at which stage (stage = bites taken). */
-function foodBones(shape) {
-  if (shape === "pot") return Object.fromEntries([1, 2, 3, 4].flatMap((k) => [[`soup_${k}`, `${BITTEN} == ${4 - k}`], [`bits_${k}`, `${BITTEN} == ${4 - k}`]]));
-  if (["pie", "cakes", "platter"].includes(shape)) return Object.fromEntries([1, 2, 3, 4].map((i) => [`piece_${i}`, `${BITTEN} <= ${4 - i}`]));
-  if (shape === "bottle" || shape === "wine") return { liquid: `${BITTEN} == 0` };
-  const cups = (i) => `q.block_state('${CUP_COUNT}') >= ${i}`;
-  return Object.fromEntries([1, 2, 3, 4].flatMap((i) => [[`cup_${i}`, cups(i)], [`tea_${i}`, `${cups(i)} && q.block_state('${TEA_COUNT}') >= ${i}`]]));
-}
+/** The model for each state (tools/art/food_models.py writes one geometry per shape and stage). */
+const foodGeo = (shape, suffix) => `geometry.${NS}.food_${shape}_${suffix}`;
 const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));
 
 for (const row of PLACED_FOODS) {
@@ -746,12 +741,12 @@ for (const row of PLACED_FOODS) {
   const container = food.using_converts_to;
   names[`tile.${rid(row.item)}.name`] = [item.zh, item.en];
   terrain[`kh_food_${row.item}`] = { textures: foodTex(row.item) };
-  const material = { texture: `kh_food_${row.item}`, render_method: "alpha_test" };
-  const glassy = row.shape === "bottle" || row.shape === "wine";
+  // ## Single-sided, as the art kit assumes: no face fights the one behind it; glass is only clear or opaque pixels.
+  const material = { texture: `kh_food_${row.item}`, render_method: "alpha_test_single_sided" };
   const box = FOOD_BOX[row.shape];
   const common = {
-    "minecraft:geometry": { identifier: `geometry.${NS}.food_${row.shape}`, bone_visibility: foodBones(row.shape) },
-    "minecraft:material_instances": { "*": material, ...(glassy ? { glass: { ...material, render_method: "blend" } } : {}) },
+    "minecraft:geometry": foodGeo(row.shape, row.shape === "teacup" ? "1_1" : "0"),
+    "minecraft:material_instances": { "*": material },
     "minecraft:selection_box": box,
     "minecraft:collision_box": row.shape === "teacup" ? false : box,
     "minecraft:destructible_by_mining": { seconds_to_destroy: 0.3 },
@@ -771,7 +766,14 @@ for (const row of PLACED_FOODS) {
         // ## cup_stack drops the teas and empty cups itself.
         [`${COOKERY}:cup_stack`]: { filled: true, item: rid(row.item), empty_item: `${COOKERY}:empty_cup`, max_count: MAX_CUPS },
       },
-      permutations: FACING,
+      // ## cup_stack keeps tea_count <= cup_count; a larger one shows every cup filled.
+      permutations: [
+        ...[1, 2, 3, 4].flatMap((c) => [1, 2, 3, 4].map((t) => ({
+          condition: `q.block_state('${CUP_COUNT}') == ${c} && q.block_state('${TEA_COUNT}') == ${t}`,
+          components: { "minecraft:geometry": foodGeo("teacup", `${c}_${Math.min(t, c)}`) },
+        }))),
+        ...FACING,
+      ],
       traits,
     });
     continue;
@@ -793,7 +795,13 @@ for (const row of PLACED_FOODS) {
       },
     },
     // ## Untouched: the whole dish back; started: only its container.
-    permutations: [{ condition: `${BITTEN} > 0`, components: { "minecraft:loot": eaten } }, ...FACING],
+    permutations: [
+      ...Array.from({ length: row.bites + 1 }, (_, n) => ({
+        condition: `${BITTEN} == ${n}`,
+        components: { "minecraft:geometry": foodGeo(row.shape, n), ...(n > 0 ? { "minecraft:loot": eaten } : {}) },
+      })),
+      ...FACING,
+    ],
     traits,
   });
 }
@@ -808,7 +816,7 @@ for (const row of PLACED_FOODS) {
 
 for (const dir of [join(BP, "entities"), join(RP, "entity"), join(RP, "animations"), join(RP, "render_controllers"), join(RP, "particles")]) wipe(dir);
 const P = (name) => `q.property('${rid(VISUAL_PROPS[name])}')`;
-const stationAtlas = `textures/${NS}/blocks/stations/${JUICER.id}`;
+const visualTex = (def) => `textures/${NS}/entity/${def.visual}`;
 
 function visualEntity(def, props, client) {
   const id = rid(def.visual);
@@ -859,7 +867,7 @@ function visualEntity(def, props, client) {
       description: {
         identifier: id,
         materials: { default: "entity_alphablend" },
-        textures: { default: stationAtlas },
+        textures: { default: visualTex(def) },
         geometry: { default: `geometry.${NS}.${def.visual}` },
         ...(client.particles ? { particle_effects: client.particles } : {}),
         animations,
@@ -953,7 +961,7 @@ particle(SPLASH_PARTICLE, {
 particle(BUBBLE_PARTICLE, {
   "minecraft:emitter_rate_instant": { num_particles: "math.random_integer(2, 4)" },
   "minecraft:emitter_lifetime_once": { active_time: 0.1 },
-  "minecraft:emitter_shape_disc": { radius: 0.29, surface_only: true, direction: [0, 1, 0] },
+  "minecraft:emitter_shape_disc": { radius: 0.235, surface_only: true, direction: [0, 1, 0] },
   "minecraft:particle_lifetime_expression": { max_lifetime: "math.random(0.5, 0.9)" },
   "minecraft:particle_initial_speed": 0.12,
   "minecraft:particle_motion_dynamic": { linear_acceleration: [0, 0.25, 0], linear_drag_coefficient: 2 },
