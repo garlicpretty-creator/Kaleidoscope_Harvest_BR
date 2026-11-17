@@ -8,22 +8,21 @@
 // ## the project owner; keep the vanilla copies in tools/vanilla/ current.
 
 import { CROPS } from "./crops.js";
+import { TREES, saplingBlockId } from "./trees.js";
 
 /** The vanilla house chests that can be overridden. */
 export const VILLAGE_HOUSES = ["plains", "savanna", "taiga", "snowy", "desert"];
 
-/**
- * Items that are not a crop's seed but still come from village chests. M3 adds its
- * village saplings and cuttings here (the proposal: 柑橘 村莊樹苗, 葡萄 村莊箱子).
- */
-export const VILLAGE_EXTRA = [{ item: "mandarin_sapling", houses: ["plains", "savanna"], count: [1, 1] }];
+/** Anything else village chests should hold, as { item, houses, count }. */
+export const VILLAGE_EXTRA = [];
 
 /** Chance that a house chest holds one Harvest stack. */
 export const VILLAGE_CHANCE = 0.4;
 
-/** [{ item, count }] for one house, from every crop's `village` field and VILLAGE_EXTRA. */
+/** [{ item, count }] for one house: crop seeds and tree saplings with a `village` field, and VILLAGE_EXTRA. */
 export function villageItems(house) {
   const fromCrops = CROPS.filter((crop) => crop.village?.includes(house)).map((crop) => ({ item: crop.seed, count: [1, 3] }));
+  const saplings = TREES.filter((tree) => tree.village?.includes(house)).map((tree) => ({ item: saplingBlockId(tree), count: [1, 1] }));
   const extra = VILLAGE_EXTRA.filter((row) => row.houses.includes(house)).map(({ item, count }) => ({ item, count }));
-  return [...fromCrops, ...extra];
+  return [...fromCrops, ...saplings, ...extra];
 }

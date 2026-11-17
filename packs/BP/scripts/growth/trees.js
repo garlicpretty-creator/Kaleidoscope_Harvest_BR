@@ -11,12 +11,12 @@
 import { BlockPermutation } from "@minecraft/server";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid } from "../data/ns.js";
-import { FRUIT_LOG, FRUIT_STAGES, LEAF_LOG_RANGE, TREES, TREE_SHAPE, fruitLeavesBlockId, saplingBlockId } from "../data/trees.js";
+import { FRUIT_STAGES, LEAF_LOG_RANGE, TREES, TREE_SHAPES, TRUNKS, fruitLeavesBlockId, saplingBlockId } from "../data/trees.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
 import { bright, growthMultiplier } from "./environment.js";
 
 const RIPE = FRUIT_STAGES.length - 1;
-const LOG_ID = rid(FRUIT_LOG.id);
+const TRUNK_IDS = new Set(TRUNKS.map((t) => rid(t.id)));
 const TREE_BY_SAPLING = new Map(TREES.map((tree) => [rid(saplingBlockId(tree)), tree]));
 const TREE_BY_LEAVES = new Map(TREES.map((tree) => [rid(fruitLeavesBlockId(tree)), tree]));
 export const treeOfSapling = (typeId) => TREE_BY_SAPLING.get(typeId);
@@ -32,17 +32,19 @@ const REPLACEABLE = new Set(["minecraft:air", "minecraft:short_grass", "minecraf
 
 /** Turns a grown sapling into its tree. False (and nothing changes) when something is in the way. */
 export function growTree(block, tree) {
-  const spots = [...TREE_SHAPE.trunk.filter(([x, y, z]) => x || y || z), ...TREE_SHAPE.leaves];
+  const shape = TREE_SHAPES[tree.shape];
+  const spots = [...shape.trunk.filter(([x, y, z]) => x || y || z), ...shape.leaves];
   const targets = spots.map((spot) => offset(block, spot));
   if (targets.some((target) => !target || !REPLACEABLE.has(target.typeId))) return false;
 
-  const log = BlockPermutation.resolve(LOG_ID);
+  const trunkId = rid(tree.trunk);
+  const log = BlockPermutation.resolve(trunkId);
   const leaves = BlockPermutation.resolve(rid(fruitLeavesBlockId(tree)));
   block.setPermutation(log);
-  for (const spot of TREE_SHAPE.trunk) offset(block, spot).setPermutation(log);
-  for (const spot of TREE_SHAPE.leaves) {
+  for (const spot of shape.trunk) offset(block, spot).setPermutation(log);
+  for (const spot of shape.leaves) {
     const target = offset(block, spot);
-    if (target.typeId !== LOG_ID) target.setPermutation(leaves);
+    if (target.typeId !== trunkId) target.setPermutation(leaves);
   }
   playAt(block, SOUND.treeGrown);
   return true;
@@ -62,12 +64,12 @@ export function tickSapling(block, tree) {
   advanceSapling(block, tree, 1);
 }
 
-/** True when a Fruit Log is within reach of a leaf (otherwise the tree was chopped away). */
+/** True when a trunk block is within reach of a leaf (otherwise the tree was chopped away). */
 export function hasLog(block) {
   const r = LEAF_LOG_RANGE;
   for (let dx = -r; dx <= r; dx++)
     for (let dy = -r; dy <= r; dy++)
-      for (let dz = -r; dz <= r; dz++) if (offset(block, [dx, dy, dz])?.typeId === LOG_ID) return true;
+      for (let dz = -r; dz <= r; dz++) if (TRUNK_IDS.has(offset(block, [dx, dy, dz])?.typeId)) return true;
   return false;
 }
 

@@ -12,7 +12,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import * as art from "./art.mjs";
-import { encodePng } from "./png.mjs";
+import { decodePng, encodePng } from "./png.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BP = join(root, "packs", "BP");
@@ -21,7 +21,7 @@ const load = (name) => import(pathToFileURL(join(BP, "scripts", "data", name)).h
 
 const { NAMESPACE, rid, state } = await load("ns.js");
 const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
-const { TREES, FRUIT_LOG, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId } = await load("trees.js");
+const { TREES, TRUNKS, FRUIT_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId, wildSaplingFeature } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR } = await load("stations.js");
@@ -67,6 +67,8 @@ function wipe(dir) {
   mkdirSync(dir, { recursive: true });
 }
 
+// ## Placeholders and grey copies are regenerated each run; stale ones would linger otherwise.
+rmSync(join(RP, "textures", "blocks", NS), { recursive: true, force: true });
 for (const dir of [join(BP, "blocks"), join(BP, "items"), join(BP, "loot_tables", NS), join(BP, "recipes"), join(BP, "item_catalog"), join(BP, "features"), join(BP, "feature_rules")]) wipe(dir);
 // ## RP/models/blocks is not wiped: the station models there are hand-made (tools/art/station_models.py).
 
@@ -78,7 +80,47 @@ const catalog = { crops: [], trees: [] };
 
 const blockTex = (name) => `textures/blocks/${NS}/${name}`;
 const itemTex = (name) => `textures/items/${NS}/${name}`;
-function addTerrain(name, img) {
+/** The drawn block textures (tools/art/crop_textures.py), with _normal and _mer maps. */
+const ART_BLOCKS = join(RP, "textures", NS, "blocks");
+const artBlockTex = (rel) => `textures/${NS}/blocks/${rel}`;
+
+/** A PBR texture set next to a colour texture whose _normal and _mer maps exist (企劃書：比照草本提供 PBR). */
+function textureSet(base) {
+  const name = base.split(/[\\/]/).pop();
+  if (!existsSync(`${base}_normal.png`) || !existsSync(`${base}_mer.png`)) return;
+  writeJson(`${base}.texture_set.json`, {
+    format_version: "1.16.100",
+    "minecraft:texture_set": { color: name, normal: `${name}_normal`, metalness_emissive_roughness: `${name}_mer` },
+  });
+}
+
+/**
+ * A block texture. With `from` (a path under the drawn textures, no extension) the drawn
+ * texture is used, and `grey` makes a desaturated copy for crops off their climate;
+ * without it, or while that file is not drawn yet, a placeholder is.
+ */
+function addTerrain(name, img, { from, grey = false } = {}) {
+  const src = from && join(ART_BLOCKS, from);
+  if (src && existsSync(`${src}.png`)) {
+    if (!grey) {
+      terrain[`kh_${name}`] = { textures: artBlockTex(from) };
+      textureSet(src);
+      return;
+    }
+    const out = join(RP, blockTex(name));
+    const pic = decodePng(readFileSync(`${src}.png`));
+    for (let i = 0; i < pic.data.length; i += 4) {
+      if (!pic.data[i + 3]) continue;
+      const [r, g, b] = art.GREY([pic.data[i], pic.data[i + 1], pic.data[i + 2]]);
+      pic.data.set([r, g, b].map((v) => Math.round(Math.min(255, v))), i);
+    }
+    mkdirSync(dirname(out), { recursive: true });
+    writeFileSync(`${out}.png`, encodePng(pic));
+    for (const map of ["_normal", "_mer"]) if (existsSync(`${src}${map}.png`)) copyFileSync(`${src}${map}.png`, `${out}${map}.png`);
+    textureSet(out);
+    terrain[`kh_${name}`] = { textures: blockTex(name) };
+    return;
+  }
   terrain[`kh_${name}`] = { textures: blockTex(name) };
   writeArt(join(RP, `${blockTex(name)}.png`), img);
 }
@@ -102,6 +144,17 @@ const material = (texture) => ({ "*": { texture: `kh_${texture}`, render_method:
 const intRange = (max) => ({ values: { min: 0, max } });
 const FARMLAND = ["minecraft:farmland", { tags: "q.any_tag('kaleidoscope_cookery:farmland')" }];
 const SOIL = ["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:rooted_dirt", "minecraft:moss_block", "minecraft:mud"];
+/** Drawn crop textures have 4 stages; block state 0–7 shows stage floor(state / 2) (docs/art/CROP_TEXTURES.md). */
+const artStage = (s) => Math.floor(s / 2);
+
+// The Bamboo Trellis model: the frame is "*", the vine its own "vine" instance, so a trellis
+// crop draws its vine on the same frame (tools/art/station_models.py).
+const TRELLIS_GEO = `geometry.${NS}.bamboo_trellis`;
+terrain.kh_station_bamboo_trellis = { textures: `textures/${NS}/blocks/stations/bamboo_trellis` };
+const trellisMaterial = (vine) => ({
+  "*": { texture: "kh_station_bamboo_trellis", render_method: "alpha_test" },
+  vine: vine ? { texture: `kh_${vine}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } : { texture: "kh_station_juice_empty", render_method: "alpha_test" },
+});
 
 function block(id, { states, components, permutations = [], menu = { category: "none" } }) {
   writeJson(join(BP, "blocks", `${id}.json`), {
@@ -133,13 +186,15 @@ for (const crop of CROPS) {
   const max = crop.maxGrowth;
   const tall = crop.form === "tall";
   const trellis = crop.form === "trellis";
+  const bush = crop.form === "bush";
+  const look = (texture) => (trellis ? trellisMaterial(texture) : material(texture));
   names[`tile.${rid(id)}.name`] = [crop.zh, crop.en];
 
   for (let s = 0; s <= max; s++)
     for (const grey of [false, true]) {
       const suffix = `${s}${grey ? "_grey" : ""}`;
-      addTerrain(`${crop.id}_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, trellis, underground: crop.form === "underground" }));
-      if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, top: true }));
+      addTerrain(`${crop.id}_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, trellis, underground: crop.form === "underground" }), { from: `crops/${crop.id}_stage_${artStage(s)}`, grey });
+      if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, art.cropStage(crop.look, s, max, { grey, top: true }), { from: `crops/${crop.id}_upper_stage_${artStage(s)}`, grey });
     }
 
   // ## Young and ripe loot. Underground crops only differ when dug with a hoe
@@ -164,7 +219,7 @@ for (const crop of CROPS) {
         permutations.push({ condition: `${cond} && ${S("upper")} == false`, components: { "minecraft:material_instances": material(`${crop.id}_stage${suffix}`), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, height, 16] } } });
         if (s >= crop.tallFrom) permutations.push({ condition: `${cond} && ${S("upper")} == true`, components: { "minecraft:material_instances": material(`${crop.id}_top_stage${suffix}`) } });
       } else {
-        permutations.push({ condition: cond, components: { "minecraft:material_instances": material(`${crop.id}_stage${suffix}`), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, trellis ? 16 : height, 16] } } });
+        permutations.push({ condition: cond, components: { "minecraft:material_instances": look(`${crop.id}_stage${suffix}`), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, trellis ? 16 : height, 16] } } });
       }
     }
   permutations.push({ condition: `${S("growth")} == ${max}`, components: { "minecraft:loot": ripe } });
@@ -173,15 +228,15 @@ for (const crop of CROPS) {
   block(id, {
     states,
     components: {
-      "minecraft:geometry": CROSS_GEO,
-      "minecraft:material_instances": material(`${crop.id}_stage0`),
+      "minecraft:geometry": trellis ? TRELLIS_GEO : CROSS_GEO,
+      "minecraft:material_instances": look(`${crop.id}_stage0`),
       "minecraft:collision_box": false,
       "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 4, 16] },
       "minecraft:destructible_by_mining": { seconds_to_destroy: 0 },
       "minecraft:destructible_by_explosion": { explosion_resistance: 0 },
       "minecraft:light_dampening": 0,
       "minecraft:map_color": `#${crop.look.leaf.map((v) => v.toString(16).padStart(2, "0")).join("")}`,
-      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: tall ? [...FARMLAND, rid(id)] : FARMLAND }] },
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: tall ? [...FARMLAND, rid(id)] : bush ? [...SOIL, "minecraft:farmland"] : FARMLAND }] },
       "minecraft:loot": young,
       // ## So Cookery's sickle reaps Harvest crops too (企劃書; to be checked in game).
       "tag:kaleidoscope_cookery:crop": {},
@@ -203,7 +258,7 @@ function wildPlant(crop) {
   const id = wildBlockId(crop);
   const soil = crop.wild.soil ?? WILD_SOIL;
   names[`tile.${rid(id)}.name`] = [`野生${crop.zh}`, `Wild ${crop.en}`];
-  addTerrain(id, art.cropStage(crop.look, crop.maxGrowth, crop.maxGrowth, { underground: crop.form === "underground" }));
+  addTerrain(id, art.cropStage(crop.look, crop.maxGrowth, crop.maxGrowth, { underground: crop.form === "underground" }), { from: `crops/${crop.id}_stage_3` });
   const pools = [countEntry(crop.produce, [1, 2])];
   if (crop.seed !== crop.produce) pools.push(countEntry(crop.seed, [1, 2]));
   block(id, {
@@ -222,13 +277,18 @@ function wildPlant(crop) {
   });
   blockSounds[rid(id)] = { sound: "grass" };
 
-  const feature = `${id}_feature`;
-  const search = `${id}_search`;
+  wildFeature(id, id, soil, crop.wild.biomes);
+}
+
+/** World generation for one wild block: a rule per biome tag → a surface search → the block. */
+function wildFeature(name, blockId, soil, biomes) {
+  const feature = `${name}_feature`;
+  const search = `${name}_search`;
   writeJson(join(BP, "features", "wild", `${feature}.json`), {
     format_version: "1.21.60",
     "minecraft:single_block_feature": {
       description: { identifier: rid(feature) },
-      places_block: { name: rid(id) },
+      places_block: { name: rid(blockId) },
       enforce_placement_rules: false,
       enforce_survivability_rules: false,
       may_replace: ["minecraft:air", "minecraft:short_grass"],
@@ -245,11 +305,11 @@ function wildPlant(crop) {
       required_successes: 1,
     },
   });
-  for (const biome of crop.wild.biomes) {
-    writeJson(join(BP, "feature_rules", "wild", `${id}_${biome}.json`), {
+  for (const biome of biomes) {
+    writeJson(join(BP, "feature_rules", "wild", `${name}_${biome}.json`), {
       format_version: "1.16.100",
       "minecraft:feature_rules": {
-        description: { identifier: rid(`${id}_${biome}`), places_feature: rid(search) },
+        description: { identifier: rid(`${name}_${biome}`), places_feature: rid(search) },
         conditions: {
           placement_pass: "after_surface_pass",
           "minecraft:biome_filter": { any_of: [{ test: "has_biome_tag", operator: "==", value: biome }] },
@@ -268,13 +328,12 @@ function wildPlant(crop) {
 // --- Bamboo Trellis -------------------------------------------------------------------------------
 
 names[`tile.${rid(TRELLIS.id)}.name`] = [TRELLIS.zh, TRELLIS.en];
-addTerrain(TRELLIS.id, art.trellis());
 addIcon(TRELLIS.id, art.trellis());
 block(TRELLIS.id, {
   menu: { category: "items", group: GROUP.crops },
   components: {
-    "minecraft:geometry": CROSS_GEO,
-    "minecraft:material_instances": material(TRELLIS.id),
+    "minecraft:geometry": TRELLIS_GEO,
+    "minecraft:material_instances": trellisMaterial(null),
     "minecraft:collision_box": false,
     "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 16, 16] },
     "minecraft:destructible_by_mining": { seconds_to_destroy: 0.2 },
@@ -299,31 +358,39 @@ writeJson(join(BP, "recipes", `${TRELLIS.id}.json`), {
 
 // --- Fruit trees -------------------------------------------------------------------------------------
 
-names[`tile.${rid(FRUIT_LOG.id)}.name`] = [FRUIT_LOG.zh, FRUIT_LOG.en];
-addTerrain(`${FRUIT_LOG.id}_side`, art.logSide());
-addTerrain(`${FRUIT_LOG.id}_top`, art.logTop());
-addIcon(FRUIT_LOG.id, art.logSide());
-block(FRUIT_LOG.id, {
-  menu: { category: "nature", group: GROUP.trees },
-  components: {
-    "minecraft:geometry": "minecraft:geometry.full_block",
-    "minecraft:material_instances": {
-      "*": { texture: `kh_${FRUIT_LOG.id}_side`, render_method: "opaque" },
-      up: { texture: `kh_${FRUIT_LOG.id}_top`, render_method: "opaque" },
-      down: { texture: `kh_${FRUIT_LOG.id}_top`, render_method: "opaque" },
+// Trunks: Fruitwood Log for every tree but the banana, whose trunk has its own texture.
+const TRUNK_ART = { [FRUIT_LOG.id]: ["trees/fruitwood_log", "trees/fruitwood_log_top"], [BANANA_TRUNK.id]: ["trees/banana_trunk", "trees/banana_trunk"] };
+for (const trunk of TRUNKS) {
+  const [side, top] = TRUNK_ART[trunk.id];
+  names[`tile.${rid(trunk.id)}.name`] = [trunk.zh, trunk.en];
+  addTerrain(`${trunk.id}_side`, art.logSide(), { from: side });
+  addTerrain(`${trunk.id}_top`, art.logTop(), { from: top });
+  addIcon(trunk.id, art.logSide());
+  block(trunk.id, {
+    menu: { category: "nature", group: GROUP.trees },
+    components: {
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": { texture: `kh_${trunk.id}_side`, render_method: "opaque" },
+        up: { texture: `kh_${trunk.id}_top`, render_method: "opaque" },
+        down: { texture: `kh_${trunk.id}_top`, render_method: "opaque" },
+      },
+      "minecraft:destructible_by_mining": {
+        seconds_to_destroy: trunk === BANANA_TRUNK ? 1 : 3,
+        item_specific_speeds: [{ item: { tags: "q.any_tag('minecraft:is_axe')" }, destroy_speed: 0.6 }],
+      },
+      "minecraft:flammable": { catch_chance_modifier: 5, destroy_chance_modifier: 5 },
+      "minecraft:map_color": "#785638",
+      "tag:wood": {},
+      "tag:log": {},
     },
-    "minecraft:destructible_by_mining": {
-      seconds_to_destroy: 3,
-      item_specific_speeds: [{ item: { tags: "q.any_tag('minecraft:is_axe')" }, destroy_speed: 0.6 }],
-    },
-    "minecraft:flammable": { catch_chance_modifier: 5, destroy_chance_modifier: 5 },
-    "minecraft:map_color": "#785638",
-    "tag:wood": {},
-    "tag:log": {},
-  },
-});
-blockSounds[rid(FRUIT_LOG.id)] = { sound: "wood" };
-catalog.trees.push(rid(FRUIT_LOG.id));
+  });
+  blockSounds[rid(trunk.id)] = { sound: trunk === BANANA_TRUNK ? "grass" : "wood" };
+  catalog.trees.push(rid(trunk.id));
+}
+
+/** Fruit stage → drawn leaf texture suffix (docs/art/CROP_TEXTURES.md). */
+const LEAF_ART = { none: "bare", blossom: "blossom", green: "unripe", ripe: "ripe" };
 
 for (const tree of TREES) {
   const sap = saplingBlockId(tree);
@@ -331,7 +398,8 @@ for (const tree of TREES) {
   names[`tile.${rid(sap)}.name`] = [`${tree.zh}樹苗`, `${tree.en} Sapling`];
   names[`tile.${rid(leaves)}.name`] = [`${tree.zh}果葉`, `${tree.en} Fruit Leaves`];
 
-  for (let s = 0; s < tree.saplingStages; s++) addTerrain(`${sap}_stage${s}`, art.sapling(tree.look, s, tree.saplingStages));
+  // ## One drawn sapling texture for every sapling stage.
+  for (let s = 0; s < tree.saplingStages; s++) addTerrain(`${sap}_stage${s}`, art.sapling(tree.look, s, tree.saplingStages), { from: `saplings/${tree.id}_sapling` });
   addIcon(sap, art.sapling(tree.look, tree.saplingStages - 1, tree.saplingStages));
   block(sap, {
     menu: { category: "nature", group: GROUP.trees },
@@ -356,7 +424,7 @@ for (const tree of TREES) {
   catalog.trees.push(rid(sap));
 
   for (let s = 0; s < FRUIT_STAGES.length; s++)
-    for (const grey of [false, true]) addTerrain(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`, art.fruitLeaves(tree.look, s, grey));
+    for (const grey of [false, true]) addTerrain(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`, art.fruitLeaves(tree.look, s, grey), { from: `trees/${tree.id}_leaves_${LEAF_ART[FRUIT_STAGES[s]]}`, grey });
   addIcon(leaves, art.fruitLeaves(tree.look, FRUIT_STAGES.length - 1));
   // ## Leaves drop a sapling now and then, like vanilla leaves: the way to start a second tree.
   const leafLoot = lootTable(leaves, [{ rolls: 1, entries: [{ type: "item", name: rid(sap), weight: 1 }, { type: "empty", weight: 19 }] }]);
@@ -391,10 +459,12 @@ for (const tree of TREES) {
   });
   blockSounds[rid(leaves)] = { sound: "grass" };
   catalog.trees.push(rid(leaves));
+  if (tree.wild) wildFeature(wildSaplingFeature(tree), sap, SOIL, tree.wild);
 }
 
 // --- Items ---------------------------------------------------------------------------------------------
 
+const TREE_FRUITS = new Set(TREES.map((tree) => tree.fruit));
 const PLANTS = new Map(CROPS.filter((crop) => crop.form !== "trellis").map((crop) => [crop.seed, crop]));
 
 for (const item of ITEMS) {
@@ -413,7 +483,7 @@ for (const item of ITEMS) {
     "minecraft:max_stack_size": item.oil ? 1 : item.kind === "drink" ? 16 : 64,
   };
   const plants = PLANTS.get(item.id);
-  if (plants) components["minecraft:block_placer"] = { block: rid(cropBlockId(plants)), use_on: FARMLAND };
+  if (plants) components["minecraft:block_placer"] = { block: rid(cropBlockId(plants)), use_on: plants.form === "bush" ? [...SOIL, "minecraft:farmland"] : FARMLAND };
   if (item.food) {
     const drink = item.kind === "drink" || converts === "minecraft:glass_bottle";
     components["minecraft:food"] = {
@@ -426,7 +496,7 @@ for (const item of ITEMS) {
     components["minecraft:use_modifiers"] = { use_duration: 1.6, movement_modifier: 0.33 };
     components["minecraft:tags"] = { tags: ["minecraft:is_food"] };
   }
-  const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (item.id === "mandarin" ? GROUP.trees : GROUP.crops);
+  const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (TREE_FRUITS.has(item.id) ? GROUP.trees : GROUP.crops);
   const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : "items";
   writeJson(join(BP, "items", `${item.id}.json`), {
     format_version: ITEM_FORMAT,

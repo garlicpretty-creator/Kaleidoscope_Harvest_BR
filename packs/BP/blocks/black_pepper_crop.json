@@ -21,9 +21,13 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:black_pepper_crop.name",
-      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.bamboo_trellis",
       "minecraft:material_instances": {
         "*": {
+          "texture": "kh_station_bamboo_trellis",
+          "render_method": "alpha_test"
+        },
+        "vine": {
           "texture": "kh_black_pepper_stage0",
           "render_method": "alpha_test",
           "face_dimming": false,
@@ -76,6 +80,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage0",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -101,6 +109,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage0_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -126,6 +138,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage1",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -151,6 +167,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage1_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -176,6 +196,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage2",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -201,6 +225,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage2_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -226,6 +254,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage3",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -251,6 +283,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -276,6 +312,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage4",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -301,6 +341,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage4_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -326,6 +370,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage5",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -351,6 +399,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage5_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -376,6 +428,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage6",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -401,6 +457,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage6_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -426,6 +486,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage7",
               "render_method": "alpha_test",
               "face_dimming": false,
@@ -451,6 +515,10 @@
         "components": {
           "minecraft:material_instances": {
             "*": {
+              "texture": "kh_station_bamboo_trellis",
+              "render_method": "alpha_test"
+            },
+            "vine": {
               "texture": "kh_black_pepper_stage7_grey",
               "render_method": "alpha_test",
               "face_dimming": false,

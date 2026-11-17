@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pineapple_stage0_grey",
+    "normal": "pineapple_stage0_grey_normal",
+    "metalness_emissive_roughness": "pineapple_stage0_grey_mer"
+  }
+}

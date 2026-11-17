@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "coriander_stage_2",
+    "normal": "coriander_stage_2_normal",
+    "metalness_emissive_roughness": "coriander_stage_2_mer"
+  }
+}

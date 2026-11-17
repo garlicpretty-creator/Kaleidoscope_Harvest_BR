@@ -15,7 +15,10 @@ import { CROPS, cropBlockId } from "../data/crops.js";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid, state } from "../data/ns.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
-import { bright, growthMultiplier, isFarmland } from "./environment.js";
+import { bright, growthMultiplier, isFarmland, isSoil } from "./environment.js";
+
+/** Forms that are picked by using them and grow back. */
+export const PICKED_FORMS = ["repeatable", "trellis", "bush"];
 
 /** Stages a bone meal adds to a field crop. */
 export const BONE_MEAL_STAGES = 2;
@@ -58,7 +61,7 @@ export function setStage(block, crop, stage) {
 /** One random tick: climate, light and soil decide whether the crop grows a stage. */
 export function tickCrop(block, crop) {
   if (isUpper(block, crop)) return;
-  if (!isFarmland(block.below())) return;
+  if (!(crop.form === "bush" ? isSoil(block.below()) : isFarmland(block.below()))) return;
   const multiplier = growthMultiplier(block, crop.climate);
   const offClimate = multiplier <= 0;
   if (getState(block, "off_climate") !== offClimate) {
@@ -94,7 +97,7 @@ export function useCrop(block, crop, player) {
     return true;
   }
 
-  const picked = crop.form === "repeatable" || crop.form === "trellis";
+  const picked = PICKED_FORMS.includes(crop.form);
   if (!picked || stage < crop.maxGrowth) return false;
   dropAt(block, rid(crop.produce), rollRange(crop.pick));
   setStates(block, { growth: crop.harvestResetAge });

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pear_leaves_bare",
+    "normal": "pear_leaves_bare_normal",
+    "metalness_emissive_roughness": "pear_leaves_bare_mer"
+  }
+}

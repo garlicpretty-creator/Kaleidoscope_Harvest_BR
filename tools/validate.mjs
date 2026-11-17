@@ -51,7 +51,7 @@ for (const id of [...ITEMS.map((i) => i.id), ...CROPS.map((c) => `${c.id}_crop`)
   seen.add(id);
 }
 
-const FORMS = ["once", "underground", "repeatable", "tall", "trellis"];
+const FORMS = ["once", "underground", "repeatable", "tall", "trellis", "bush"];
 for (const crop of CROPS) {
   const where = `crop ${crop.id}`;
   if (!FORMS.includes(crop.form)) fail(`${where}: unknown form ${crop.form}`);
@@ -59,7 +59,7 @@ for (const crop of CROPS) {
   if (!itemIds.has(crop.seed)) fail(`${where}: seed ${crop.seed} is not in data/items.js`);
   if (!itemIds.has(crop.produce)) fail(`${where}: produce ${crop.produce} is not in data/items.js`);
   if (!(crop.growthChance > 0 && crop.growthChance <= 1)) fail(`${where}: growthChance must be in (0, 1]`);
-  if (["repeatable", "trellis"].includes(crop.form)) {
+  if (["repeatable", "trellis", "bush"].includes(crop.form)) {
     if (!(crop.harvestResetAge >= 0 && crop.harvestResetAge < crop.maxGrowth)) fail(`${where}: harvestResetAge must be below maxGrowth`);
     if (!crop.pick) fail(`${where}: a ${crop.form} crop needs pick counts`);
   }

@@ -314,15 +314,15 @@ test("garlic is planted from a clove, and a hoe digs up one more when its leaves
   equal(overworld.dropped(r("garlic")), 3, "by hand only the loot");
 });
 
-test("black pepper is planted on a trellis with a peppercorn and picked again and again", () => {
+test("black pepper is planted on a trellis from a seedling and picked again and again", () => {
   overworld.biome = "minecraft:jungle";
   __place(overworld, at(0, 63), "minecraft:farmland");
-  __interact(player(r("black_pepper")), __place(overworld, at(0), r("bamboo_trellis")));
+  __interact(player(r("black_pepper_seedling")), __place(overworld, at(0), r("bamboo_trellis")));
   const crop = tick(overworld.getBlock(at(0)), 30);
   equal(crop.typeId, r("black_pepper_crop"), "planted");
   equal(growth(crop), 7, "ripe");
   __interact(player(), crop);
-  assert(overworld.dropped(r("black_pepper")) >= 1, "picked");
+  assert(overworld.dropped(r("black_peppercorns")) >= 1, "picked");
 });
 
 test("every crop grows wild somewhere, and breaking the wild plant gives a first harvest", () => {
@@ -354,14 +354,96 @@ test("millstone payloads use Herbal's outputs list", () => {
 
 const M3_FRUITS = ["strawberry", "blueberry", "grape", "passion_fruit", "pineapple", "sweet_orange", "lemon", "peach", "pear", "persimmon", "lychee", "mango", "banana", "star_anise", "cinnamon_bark"];
 
-test("fruit rows wait for M3's items and all come in once those ids exist", () => {
+test("menu rows wait for their inputs, and with M3's fruit every row is in", () => {
   const base = ITEMS.filter((i) => ["seed", "produce"].includes(i.kind)).map((i) => i.id);
-  const now = activeMenu(base);
-  assert(!now.some((row) => row.item.id === "strawberry_jam"), "no jam without strawberries");
-  assert(now.some((row) => row.item.id === "kimchi"), "kimchi is in");
-  equal(activeMenu([...base, ...M3_FRUITS]).length, MENU.length, "every row active with the M3 fruits");
+  const withoutStrawberry = activeMenu(base.filter((id) => id !== "strawberry"));
+  assert(!withoutStrawberry.some((row) => row.item.id === "strawberry_jam"), "no jam without strawberries");
+  equal(activeMenu(base).length, MENU.length, "every menu row active");
+  for (const id of M3_FRUITS) assert(base.includes(id), `${id} exists`);
   const dishes = MENU.filter((row) => row.item.kind === "dish").length;
-  assert(dishes >= 40, `40 dishes in the full menu (企劃書), got ${dishes}`);
+  assert(dishes >= 40, `40 dishes (企劃書), got ${dishes}`);
+});
+
+// --- M3: fruit crops and fruit trees ---------------------------------------------------------------------
+
+test("strawberries are picked and grow back; pineapples start again from a small plant", () => {
+  let crop = plant("strawberry_crop", 0, { [S("growth")]: 7 });
+  __interact(player(), crop);
+  assert(overworld.dropped(r("strawberry")) >= 1, "strawberry picked");
+  equal(growth(overworld.getBlock(at(0))), 4, "strawberry back to 4");
+  overworld.biome = "minecraft:savanna";
+  crop = plant("pineapple_crop", 2, { [S("growth")]: 7 });
+  __interact(player(), crop);
+  equal(overworld.dropped(r("pineapple")), 1, "one pineapple");
+  equal(growth(overworld.getBlock(at(2))), 2, "pineapple back to 2");
+});
+
+test("a blueberry bush grows on grass, not only farmland, and is picked again and again", () => {
+  overworld.biome = "minecraft:taiga";
+  const seedling = JSON.parse(readFileSync("packs/BP/items/blueberry_seedling.json", "utf8"))["minecraft:item"].components["minecraft:block_placer"];
+  assert(seedling.use_on.includes("minecraft:grass_block"), "planted on grass");
+  __place(overworld, at(0, 63), "minecraft:grass_block");
+  const bush = tick(__place(overworld, at(0), r("blueberry_crop")), 40);
+  equal(growth(bush), 7, "ripe on grass");
+  __interact(player(), bush);
+  assert(overworld.dropped(r("blueberry")) >= 2, "blueberries picked");
+  equal(growth(overworld.getBlock(at(0))), 4, "back to 4");
+});
+
+test("grapes grow on a Bamboo Trellis from a cutting, drawn on the trellis model", () => {
+  __place(overworld, at(0, 63), "minecraft:farmland");
+  __interact(player(r("grape_cutting")), __place(overworld, at(0), r("bamboo_trellis")));
+  const vine = tick(overworld.getBlock(at(0)), 40);
+  equal(vine.typeId, r("grape_crop"), "planted");
+  __interact(player(), vine);
+  assert(overworld.dropped(r("grape")) >= 2, "grapes picked");
+  const def = JSON.parse(readFileSync("packs/BP/blocks/grape_crop.json", "utf8"))["minecraft:block"];
+  equal(def.components["minecraft:geometry"], "geometry.kaleidoscope_harvest.bamboo_trellis", "trellis model");
+  assert(def.components["minecraft:material_instances"].vine, "vine material");
+});
+
+const TREES_ALL = (await import("../../packs/BP/scripts/data/trees.js"));
+
+test("every fruit tree grows into its shape with its trunk, and its leaves give its fruit", () => {
+  for (const t of TREES_ALL.TREES) {
+    __reset();
+    setRandom(() => 0);
+    overworld.biome = { cold: "minecraft:taiga", temperate: "minecraft:forest", warm: "minecraft:swamp", hot: "minecraft:jungle" }[t.climate];
+    __place(overworld, at(0, 63), "minecraft:grass_block");
+    tick(__place(overworld, at(0), r(`${t.id}_sapling`)), 4);
+    const shape = TREES_ALL.TREE_SHAPES[t.shape];
+    for (const [x, y, z] of shape.trunk) equal(overworld.getBlock(at(x, 64 + y, z)).typeId, r(t.trunk), `${t.id}: trunk at y${y}`);
+    const leaves = [...overworld.blocks.values()].filter((p) => p.type.id === r(`${t.id}_fruit_leaves`)).length;
+    equal(leaves, shape.leaves.length, `${t.id}: leaf count`);
+    const [lx, ly, lz] = shape.leaves[0];
+    const leaf = tick(overworld.getBlock(at(lx, 64 + ly, lz)), 3);
+    __interact(player(), leaf);
+    assert(overworld.dropped(r(t.fruit)) >= 1, `${t.id}: picked ${t.fruit}`);
+  }
+});
+
+test("a banana's leaves fall when its trunk is chopped", () => {
+  overworld.biome = "minecraft:jungle";
+  __place(overworld, at(0, 63), "minecraft:grass_block");
+  tick(__place(overworld, at(0), r("banana_sapling")), 4);
+  for (const [x, y, z] of TREES_ALL.TREE_SHAPES.palm.trunk) __break(player("minecraft:iron_axe"), overworld.getBlock(at(x, 64 + y, z)));
+  equal(overworld.dropped(r("banana_trunk")), 4, "trunk dropped");
+  tick(overworld.getBlock(at(0, 68)), 1);
+  equal(overworld.getBlock(at(0, 68)).typeId, "minecraft:air", "crown fell");
+});
+
+test("wild saplings, village grape cuttings and the drawn textures are wired up", () => {
+  for (const t of TREES_ALL.TREES.filter((t) => t.wild)) {
+    const rules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.startsWith(`wild_${t.id}_sapling_`));
+    equal(rules.length, t.wild.length, `${t.id}: wild sapling rules`);
+  }
+  const plains = JSON.parse(readFileSync("packs/BP/loot_tables/chests/village/village_plains_house.json", "utf8")).pools.at(-1);
+  assert(plains.entries.some((e) => e.name === r("grape_cutting")), "grape cuttings in plains houses");
+  const terrain = JSON.parse(readFileSync("packs/RP/textures/terrain_texture.json", "utf8")).texture_data;
+  equal(terrain.kh_corn_stage7.textures, "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3", "state 7 shows drawn stage 3");
+  equal(terrain.kh_mandarin_fruit_leaves_green.textures, "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_unripe", "leaf art");
+  assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/crops").includes("corn_stage_3.texture_set.json"), "PBR texture set");
+  assert(terrain.kh_corn_stage7_grey.textures.startsWith("textures/blocks/"), "grey copy made from the art");
 });
 
 const contents = (block) => block.permutation.getState(S("contents"));

@@ -1,0 +1,30 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:grape_raisin_bread"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "kaleidoscope_harvest:raisins",
+        "count": 1
+      },
+      {
+        "item": "minecraft:wheat",
+        "count": 3
+      }
+    ],
+    "result": {
+      "item": "kaleidoscope_harvest:grape_raisin_bread",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "kaleidoscope_harvest:raisins"
+      }
+    ]
+  }
+}

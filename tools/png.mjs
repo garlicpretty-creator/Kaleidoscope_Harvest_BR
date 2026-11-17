@@ -1,6 +1,6 @@
 // Minimal RGBA PNG writer (no dependencies) for the placeholder art.
 
-import { deflateSync } from "node:zlib";
+import { deflateSync, inflateSync } from "node:zlib";
 
 const CRC_TABLE = new Uint32Array(256).map((_, n) => {
   let c = n;
@@ -58,4 +58,52 @@ export function encodePng(img) {
     chunk("IDAT", deflateSync(raw)),
     chunk("IEND", Buffer.alloc(0)),
   ]);
+}
+
+/** Reads an 8-bit RGBA, non-interlaced PNG (what tools/art writes) into an image. */
+export function decodePng(buf) {
+  let offset = 8;
+  let width = 0;
+  let height = 0;
+  let colorType = 6;
+  const idat = [];
+  while (offset < buf.length) {
+    const length = buf.readUInt32BE(offset);
+    const type = buf.toString("ascii", offset + 4, offset + 8);
+    const data = buf.subarray(offset + 8, offset + 8 + length);
+    if (type === "IHDR") {
+      width = data.readUInt32BE(0);
+      height = data.readUInt32BE(4);
+      colorType = data[9];
+      if (data[8] !== 8 || data[12] !== 0) throw new Error("decodePng: only 8-bit non-interlaced PNGs");
+    }
+    if (type === "IDAT") idat.push(data);
+    offset += 12 + length;
+  }
+  const channels = { 6: 4, 2: 3 }[colorType];
+  if (!channels) throw new Error(`decodePng: colour type ${colorType} not supported`);
+  const raw = inflateSync(Buffer.concat(idat));
+  const stride = width * channels;
+  const out = image(width, height);
+  const prev = new Uint8Array(stride);
+  const line = new Uint8Array(stride);
+  for (let y = 0; y < height; y++) {
+    const filter = raw[y * (stride + 1)];
+    for (let i = 0; i < stride; i++) {
+      const x = raw[y * (stride + 1) + 1 + i];
+      const a = i >= channels ? line[i - channels] : 0;
+      const b = prev[i];
+      const c = i >= channels ? prev[i - channels] : 0;
+      const p = a + b - c;
+      const pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      const paeth = pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+      line[i] = (x + [0, a, b, (a + b) >> 1, paeth][filter]) & 0xff;
+    }
+    for (let x = 0; x < width; x++) {
+      const px = line.subarray(x * channels, x * channels + channels);
+      setPixel(out, x, y, channels === 4 ? [...px] : [...px, 255]);
+    }
+    prev.set(line);
+  }
+  return out;
 }

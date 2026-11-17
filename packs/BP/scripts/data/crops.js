@@ -12,6 +12,8 @@
 //                appears from `tallFrom`; breaking either one breaks both.
 //   trellis      planted on a Bamboo Trellis; picked like `repeatable`; breaking it gives
 //                the trellis back.
+//   bush         a shrub planted on grass or dirt, not farmland (blueberries); picked like
+//                `repeatable`, never needs replanting.
 //   tree         see data/trees.js.
 //
 // Rule fields copy the names of Cookery's `crop_growth` (企劃書): growthChance (per random
@@ -115,7 +117,7 @@ export const CROPS = [
   // --- Spices (7) ----------------------------------------------------------------------------
   {
     id: "scallion", zh: "蔥", en: "Scallion", form: "repeatable", climate: "temperate", ...GROWTH, harvestResetAge: 4,
-    seed: "scallion", produce: "scallion", drops: { produce: [1, 2], seed: [0, 0] }, pick: [1, 2],
+    seed: "scallion_seeds", produce: "scallion", drops: { produce: [1, 2], seed: [1, 2] }, pick: [1, 2],
     wild: { biomes: ["plains"] },
     look: { leaf: [92, 168, 70], ripe: [70, 150, 60] },
   },
@@ -132,8 +134,8 @@ export const CROPS = [
     look: { leaf: [90, 160, 70], ripe: [222, 190, 120] },
   },
   {
-    id: "cilantro", zh: "香菜", en: "Cilantro", form: "once", climate: "temperate", ...GROWTH,
-    seed: "cilantro_seeds", produce: "cilantro", drops: { produce: [1, 2], seed: [1, 2] },
+    id: "coriander", zh: "香菜", en: "Coriander", form: "once", climate: "temperate", ...GROWTH,
+    seed: "coriander_seeds", produce: "coriander", drops: { produce: [1, 2], seed: [1, 2] },
     wild: { biomes: ["forest"] },
     look: { leaf: [96, 176, 80], ripe: [80, 160, 70] },
   },
@@ -145,7 +147,7 @@ export const CROPS = [
   },
   {
     id: "black_pepper", zh: "黑胡椒", en: "Black Pepper", form: "trellis", climate: "hot", ...GROWTH, growthChance: 0.35, harvestResetAge: 5,
-    seed: "black_pepper", produce: "black_pepper", drops: { produce: [1, 2], seed: [0, 0] }, pick: [1, 2],
+    seed: "black_pepper_seedling", produce: "black_peppercorns", drops: { produce: [1, 2], seed: [0, 0] }, pick: [1, 2],
     wild: { biomes: ["jungle"] },
     look: { leaf: [60, 130, 60], ripe: [60, 40, 36] },
   },
@@ -154,6 +156,41 @@ export const CROPS = [
     seed: "cumin", produce: "cumin", drops: { produce: [2, 3], seed: [0, 0] },
     wild: { biomes: ["desert"], soil: SAND },
     look: { leaf: [130, 160, 90], ripe: [170, 140, 90] },
+  },
+
+  // --- Fruit (5) -----------------------------------------------------------------------------
+  {
+    id: "strawberry", zh: "草莓", en: "Strawberry", form: "repeatable", climate: "temperate", ...GROWTH, harvestResetAge: 4,
+    seed: "strawberry_seeds", produce: "strawberry", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 3],
+    wild: { biomes: ["flower_forest"] },
+    look: { leaf: [80, 150, 70], ripe: [220, 40, 50] },
+  },
+  {
+    id: "blueberry", zh: "藍莓", en: "Blueberry", form: "bush", climate: "cold", ...GROWTH, growthChance: 0.35, harvestResetAge: 4,
+    seed: "blueberry_seedling", produce: "blueberry", drops: { produce: [1, 2], seed: [1, 1] }, pick: [2, 4],
+    wild: { biomes: ["taiga"] },
+    look: { leaf: [70, 120, 70], ripe: [60, 70, 150] },
+  },
+  {
+    id: "grape", zh: "葡萄", en: "Grape", form: "trellis", climate: "temperate", ...GROWTH, growthChance: 0.35, harvestResetAge: 5,
+    seed: "grape_cutting", produce: "grape", drops: { produce: [1, 2], seed: [0, 0] }, pick: [2, 3],
+    // ## 企劃書: 村莊箱子 (data/village.js); also wild in forests, as for onions.
+    wild: { biomes: ["forest"] }, village: ["plains", "taiga"],
+    look: { leaf: [90, 150, 70], ripe: [110, 40, 100] },
+  },
+  {
+    id: "passion_fruit", zh: "百香果", en: "Passion Fruit", form: "trellis", climate: "hot", ...GROWTH, growthChance: 0.35, harvestResetAge: 5,
+    seed: "passion_fruit_seeds", produce: "passion_fruit", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 2],
+    wild: { biomes: ["jungle"] },
+    look: { leaf: [70, 140, 60], ripe: [90, 40, 90] },
+  },
+  {
+    // ## 一次性，原株再生: the plant gives one pineapple and starts again from a small
+    // ## plant, so it works like a repeatable crop with a long way back.
+    id: "pineapple", zh: "鳳梨", en: "Pineapple", form: "repeatable", climate: "hot", ...GROWTH, growthChance: 0.3, harvestResetAge: 2,
+    seed: "pineapple_crown", produce: "pineapple", drops: { produce: [1, 1], seed: [1, 1] }, pick: [1, 1],
+    wild: { biomes: ["savanna"] },
+    look: { leaf: [90, 140, 80], ripe: [230, 180, 60] },
   },
 ];
 

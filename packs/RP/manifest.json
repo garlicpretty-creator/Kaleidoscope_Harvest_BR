@@ -5,24 +5,45 @@
     "description": "pack.description",
     "uuid": "2f571dcb-3504-4aa7-be69-8968d0856f74",
     "pack_scope": "world",
-    "version": [0, 1, 0],
-    "min_engine_version": [1, 26, 1]
+    "version": [
+      0,
+      1,
+      0
+    ],
+    "min_engine_version": [
+      1,
+      26,
+      1
+    ]
   },
   "metadata": {
     "product_type": "addon",
-    "authors": ["garlicpretty-creator"]
+    "authors": [
+      "garlicpretty-creator"
+    ]
   },
+  "capabilities": [
+    "pbr"
+  ],
   "modules": [
     {
       "type": "resources",
       "uuid": "86cdfb05-4d6d-4f4f-8a32-c64471438986",
-      "version": [0, 1, 0]
+      "version": [
+        0,
+        1,
+        0
+      ]
     }
   ],
   "dependencies": [
     {
       "uuid": "ab8061d8-b130-4846-b0e0-59bf0f1c8651",
-      "version": [0, 1, 0]
+      "version": [
+        0,
+        1,
+        0
+      ]
     }
   ]
 }

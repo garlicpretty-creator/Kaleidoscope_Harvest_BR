@@ -6,6 +6,7 @@
 - [企劃書](docs/PROPOSAL.zh-TW.md)
 - [M1 說明：基礎與生長系統](docs/M1_說明.md)
 - [M2 說明：蔬菜與香料](docs/M2_說明.md)
+- [M3 說明：水果與果樹](docs/M3_說明.md)
 - [M4 說明：料理與新器具](docs/M4_說明.md)
 
 ## 開發

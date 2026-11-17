@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "taro_stage_0",
+    "normal": "taro_stage_0_normal",
+    "metalness_emissive_roughness": "taro_stage_0_mer"
+  }
+}

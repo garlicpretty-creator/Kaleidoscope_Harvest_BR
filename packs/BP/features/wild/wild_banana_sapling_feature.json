@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:single_block_feature": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:wild_banana_sapling_feature"
+    },
+    "places_block": {
+      "name": "kaleidoscope_harvest:banana_sapling"
+    },
+    "enforce_placement_rules": false,
+    "enforce_survivability_rules": false,
+    "may_replace": [
+      "minecraft:air",
+      "minecraft:short_grass"
+    ],
+    "may_attach_to": {
+      "bottom": [
+        "minecraft:grass_block",
+        "minecraft:dirt",
+        "minecraft:coarse_dirt",
+        "minecraft:podzol",
+        "minecraft:rooted_dirt",
+        "minecraft:moss_block",
+        "minecraft:mud"
+      ]
+    }
+  }
+}

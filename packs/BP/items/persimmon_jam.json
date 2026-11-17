@@ -1,0 +1,35 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:persimmon_jam",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_cookery:itemGroup.name.ingredients"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_persimmon_jam",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:persimmon_jam.name"
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:food": {
+        "nutrition": 4,
+        "saturation_modifier": 0.3,
+        "can_always_eat": true,
+        "using_converts_to": "minecraft:glass_bottle"
+      },
+      "minecraft:use_animation": "drink",
+      "minecraft:use_modifiers": {
+        "use_duration": 1.6,
+        "movement_modifier": 0.33
+      },
+      "minecraft:tags": {
+        "tags": [
+          "minecraft:is_food"
+        ]
+      }
+    }
+  }
+}

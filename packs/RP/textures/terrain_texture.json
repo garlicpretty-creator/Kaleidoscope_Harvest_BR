@@ -4,392 +4,395 @@
   "padding": 8,
   "num_mip_levels": 4,
   "texture_data": {
+    "kh_station_bamboo_trellis": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/bamboo_trellis"
+    },
     "kh_napa_cabbage_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_0"
     },
     "kh_napa_cabbage_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage0_grey"
     },
     "kh_napa_cabbage_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_0"
     },
     "kh_napa_cabbage_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage1_grey"
     },
     "kh_napa_cabbage_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_1"
     },
     "kh_napa_cabbage_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage2_grey"
     },
     "kh_napa_cabbage_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_1"
     },
     "kh_napa_cabbage_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage3_grey"
     },
     "kh_napa_cabbage_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_2"
     },
     "kh_napa_cabbage_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage4_grey"
     },
     "kh_napa_cabbage_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_2"
     },
     "kh_napa_cabbage_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage5_grey"
     },
     "kh_napa_cabbage_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_3"
     },
     "kh_napa_cabbage_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage6_grey"
     },
     "kh_napa_cabbage_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_3"
     },
     "kh_napa_cabbage_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/napa_cabbage_stage7_grey"
     },
     "kh_wild_napa_cabbage": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_napa_cabbage"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/napa_cabbage_stage_3"
     },
     "kh_bok_choy_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_0"
     },
     "kh_bok_choy_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage0_grey"
     },
     "kh_bok_choy_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_0"
     },
     "kh_bok_choy_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage1_grey"
     },
     "kh_bok_choy_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_1"
     },
     "kh_bok_choy_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage2_grey"
     },
     "kh_bok_choy_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_1"
     },
     "kh_bok_choy_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage3_grey"
     },
     "kh_bok_choy_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_2"
     },
     "kh_bok_choy_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage4_grey"
     },
     "kh_bok_choy_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_2"
     },
     "kh_bok_choy_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage5_grey"
     },
     "kh_bok_choy_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_3"
     },
     "kh_bok_choy_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage6_grey"
     },
     "kh_bok_choy_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_3"
     },
     "kh_bok_choy_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/bok_choy_stage7_grey"
     },
     "kh_wild_bok_choy": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_bok_choy"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bok_choy_stage_3"
     },
     "kh_spinach_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_0"
     },
     "kh_spinach_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage0_grey"
     },
     "kh_spinach_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_0"
     },
     "kh_spinach_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage1_grey"
     },
     "kh_spinach_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_1"
     },
     "kh_spinach_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage2_grey"
     },
     "kh_spinach_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_1"
     },
     "kh_spinach_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage3_grey"
     },
     "kh_spinach_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_2"
     },
     "kh_spinach_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage4_grey"
     },
     "kh_spinach_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_2"
     },
     "kh_spinach_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage5_grey"
     },
     "kh_spinach_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_3"
     },
     "kh_spinach_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage6_grey"
     },
     "kh_spinach_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_3"
     },
     "kh_spinach_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/spinach_stage7_grey"
     },
     "kh_wild_spinach": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_spinach"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/spinach_stage_3"
     },
     "kh_onion_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_0"
     },
     "kh_onion_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage0_grey"
     },
     "kh_onion_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_0"
     },
     "kh_onion_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage1_grey"
     },
     "kh_onion_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_1"
     },
     "kh_onion_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage2_grey"
     },
     "kh_onion_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_1"
     },
     "kh_onion_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage3_grey"
     },
     "kh_onion_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_2"
     },
     "kh_onion_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage4_grey"
     },
     "kh_onion_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_2"
     },
     "kh_onion_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage5_grey"
     },
     "kh_onion_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_3"
     },
     "kh_onion_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage6_grey"
     },
     "kh_onion_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/onion_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_3"
     },
     "kh_onion_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/onion_stage7_grey"
     },
     "kh_wild_onion": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_onion"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/onion_stage_3"
     },
     "kh_daikon_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_0"
     },
     "kh_daikon_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage0_grey"
     },
     "kh_daikon_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_0"
     },
     "kh_daikon_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage1_grey"
     },
     "kh_daikon_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_1"
     },
     "kh_daikon_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage2_grey"
     },
     "kh_daikon_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_1"
     },
     "kh_daikon_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage3_grey"
     },
     "kh_daikon_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_2"
     },
     "kh_daikon_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage4_grey"
     },
     "kh_daikon_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_2"
     },
     "kh_daikon_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage5_grey"
     },
     "kh_daikon_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_3"
     },
     "kh_daikon_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage6_grey"
     },
     "kh_daikon_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_3"
     },
     "kh_daikon_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/daikon_stage7_grey"
     },
     "kh_wild_daikon": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_daikon"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/daikon_stage_3"
     },
     "kh_eggplant_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_0"
     },
     "kh_eggplant_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage0_grey"
     },
     "kh_eggplant_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_0"
     },
     "kh_eggplant_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage1_grey"
     },
     "kh_eggplant_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_1"
     },
     "kh_eggplant_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage2_grey"
     },
     "kh_eggplant_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_1"
     },
     "kh_eggplant_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage3_grey"
     },
     "kh_eggplant_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_2"
     },
     "kh_eggplant_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage4_grey"
     },
     "kh_eggplant_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_2"
     },
     "kh_eggplant_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage5_grey"
     },
     "kh_eggplant_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_3"
     },
     "kh_eggplant_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage6_grey"
     },
     "kh_eggplant_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_3"
     },
     "kh_eggplant_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/eggplant_stage7_grey"
     },
     "kh_wild_eggplant": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_eggplant"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/eggplant_stage_3"
     },
     "kh_cucumber_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_0"
     },
     "kh_cucumber_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage0_grey"
     },
     "kh_cucumber_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_0"
     },
     "kh_cucumber_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage1_grey"
     },
     "kh_cucumber_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_1"
     },
     "kh_cucumber_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage2_grey"
     },
     "kh_cucumber_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_1"
     },
     "kh_cucumber_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage3_grey"
     },
     "kh_cucumber_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_2"
     },
     "kh_cucumber_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage4_grey"
     },
     "kh_cucumber_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_2"
     },
     "kh_cucumber_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage5_grey"
     },
     "kh_cucumber_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_3"
     },
     "kh_cucumber_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage6_grey"
     },
     "kh_cucumber_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_3"
     },
     "kh_cucumber_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cucumber_stage7_grey"
     },
     "kh_wild_cucumber": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_cucumber"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cucumber_stage_3"
     },
     "kh_corn_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_0"
     },
     "kh_corn_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage0_grey"
     },
     "kh_corn_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_0"
     },
     "kh_corn_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage1_grey"
     },
     "kh_corn_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_1"
     },
     "kh_corn_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage2_grey"
     },
     "kh_corn_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_1"
     },
     "kh_corn_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage3_grey"
     },
     "kh_corn_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_2"
     },
     "kh_corn_top_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_upper_stage_2"
     },
     "kh_corn_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage4_grey"
@@ -398,10 +401,10 @@
       "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage4_grey"
     },
     "kh_corn_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_2"
     },
     "kh_corn_top_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_upper_stage_2"
     },
     "kh_corn_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage5_grey"
@@ -410,10 +413,10 @@
       "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage5_grey"
     },
     "kh_corn_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3"
     },
     "kh_corn_top_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_upper_stage_3"
     },
     "kh_corn_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage6_grey"
@@ -422,10 +425,10 @@
       "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage6_grey"
     },
     "kh_corn_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3"
     },
     "kh_corn_top_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_upper_stage_3"
     },
     "kh_corn_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/corn_stage7_grey"
@@ -434,613 +437,1231 @@
       "textures": "textures/blocks/kaleidoscope_harvest/corn_top_stage7_grey"
     },
     "kh_wild_corn": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_corn"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3"
     },
     "kh_soybean_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_0"
     },
     "kh_soybean_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage0_grey"
     },
     "kh_soybean_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_0"
     },
     "kh_soybean_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage1_grey"
     },
     "kh_soybean_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_1"
     },
     "kh_soybean_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage2_grey"
     },
     "kh_soybean_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_1"
     },
     "kh_soybean_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage3_grey"
     },
     "kh_soybean_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_2"
     },
     "kh_soybean_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage4_grey"
     },
     "kh_soybean_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_2"
     },
     "kh_soybean_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage5_grey"
     },
     "kh_soybean_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_3"
     },
     "kh_soybean_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage6_grey"
     },
     "kh_soybean_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_3"
     },
     "kh_soybean_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/soybean_stage7_grey"
     },
     "kh_wild_soybean": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_soybean"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/soybean_stage_3"
     },
     "kh_peanut_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_0"
     },
     "kh_peanut_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage0_grey"
     },
     "kh_peanut_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_0"
     },
     "kh_peanut_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage1_grey"
     },
     "kh_peanut_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_1"
     },
     "kh_peanut_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage2_grey"
     },
     "kh_peanut_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_1"
     },
     "kh_peanut_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage3_grey"
     },
     "kh_peanut_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_2"
     },
     "kh_peanut_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage4_grey"
     },
     "kh_peanut_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_2"
     },
     "kh_peanut_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage5_grey"
     },
     "kh_peanut_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_3"
     },
     "kh_peanut_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage6_grey"
     },
     "kh_peanut_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_3"
     },
     "kh_peanut_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/peanut_stage7_grey"
     },
     "kh_wild_peanut": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_peanut"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/peanut_stage_3"
     },
     "kh_sweet_potato_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_0"
     },
     "kh_sweet_potato_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage0_grey"
     },
     "kh_sweet_potato_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_0"
     },
     "kh_sweet_potato_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage1_grey"
     },
     "kh_sweet_potato_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_1"
     },
     "kh_sweet_potato_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage2_grey"
     },
     "kh_sweet_potato_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_1"
     },
     "kh_sweet_potato_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage3_grey"
     },
     "kh_sweet_potato_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_2"
     },
     "kh_sweet_potato_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage4_grey"
     },
     "kh_sweet_potato_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_2"
     },
     "kh_sweet_potato_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage5_grey"
     },
     "kh_sweet_potato_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_3"
     },
     "kh_sweet_potato_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage6_grey"
     },
     "kh_sweet_potato_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_3"
     },
     "kh_sweet_potato_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sweet_potato_stage7_grey"
     },
     "kh_wild_sweet_potato": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_sweet_potato"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sweet_potato_stage_3"
     },
     "kh_taro_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_0"
     },
     "kh_taro_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage0_grey"
     },
     "kh_taro_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_0"
     },
     "kh_taro_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage1_grey"
     },
     "kh_taro_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_1"
     },
     "kh_taro_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage2_grey"
     },
     "kh_taro_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_1"
     },
     "kh_taro_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage3_grey"
     },
     "kh_taro_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_2"
     },
     "kh_taro_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage4_grey"
     },
     "kh_taro_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_2"
     },
     "kh_taro_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage5_grey"
     },
     "kh_taro_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_3"
     },
     "kh_taro_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage6_grey"
     },
     "kh_taro_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/taro_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_3"
     },
     "kh_taro_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/taro_stage7_grey"
     },
     "kh_wild_taro": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_taro"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/taro_stage_3"
     },
     "kh_scallion_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_0"
     },
     "kh_scallion_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage0_grey"
     },
     "kh_scallion_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_0"
     },
     "kh_scallion_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage1_grey"
     },
     "kh_scallion_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_1"
     },
     "kh_scallion_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage2_grey"
     },
     "kh_scallion_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_1"
     },
     "kh_scallion_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage3_grey"
     },
     "kh_scallion_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_2"
     },
     "kh_scallion_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage4_grey"
     },
     "kh_scallion_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_2"
     },
     "kh_scallion_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage5_grey"
     },
     "kh_scallion_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_3"
     },
     "kh_scallion_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage6_grey"
     },
     "kh_scallion_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_3"
     },
     "kh_scallion_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/scallion_stage7_grey"
     },
     "kh_wild_scallion": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_scallion"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/scallion_stage_3"
     },
     "kh_garlic_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_0"
     },
     "kh_garlic_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage0_grey"
     },
     "kh_garlic_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_0"
     },
     "kh_garlic_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage1_grey"
     },
     "kh_garlic_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_1"
     },
     "kh_garlic_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage2_grey"
     },
     "kh_garlic_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_1"
     },
     "kh_garlic_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage3_grey"
     },
     "kh_garlic_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_2"
     },
     "kh_garlic_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage4_grey"
     },
     "kh_garlic_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_2"
     },
     "kh_garlic_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage5_grey"
     },
     "kh_garlic_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_3"
     },
     "kh_garlic_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage6_grey"
     },
     "kh_garlic_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_3"
     },
     "kh_garlic_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/garlic_stage7_grey"
     },
     "kh_wild_garlic": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_garlic"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_stage_3"
     },
     "kh_ginger_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_0"
     },
     "kh_ginger_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage0_grey"
     },
     "kh_ginger_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_0"
     },
     "kh_ginger_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage1_grey"
     },
     "kh_ginger_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_1"
     },
     "kh_ginger_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage2_grey"
     },
     "kh_ginger_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_1"
     },
     "kh_ginger_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage3_grey"
     },
     "kh_ginger_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_2"
     },
     "kh_ginger_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage4_grey"
     },
     "kh_ginger_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_2"
     },
     "kh_ginger_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage5_grey"
     },
     "kh_ginger_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_3"
     },
     "kh_ginger_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage6_grey"
     },
     "kh_ginger_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_3"
     },
     "kh_ginger_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/ginger_stage7_grey"
     },
     "kh_wild_ginger": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_ginger"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/ginger_stage_3"
     },
-    "kh_cilantro_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage0"
+    "kh_coriander_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_0"
     },
-    "kh_cilantro_stage0_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage0_grey"
+    "kh_coriander_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage0_grey"
     },
-    "kh_cilantro_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage1"
+    "kh_coriander_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_0"
     },
-    "kh_cilantro_stage1_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage1_grey"
+    "kh_coriander_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage1_grey"
     },
-    "kh_cilantro_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage2"
+    "kh_coriander_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_1"
     },
-    "kh_cilantro_stage2_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage2_grey"
+    "kh_coriander_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage2_grey"
     },
-    "kh_cilantro_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage3"
+    "kh_coriander_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_1"
     },
-    "kh_cilantro_stage3_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage3_grey"
+    "kh_coriander_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage3_grey"
     },
-    "kh_cilantro_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage4"
+    "kh_coriander_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_2"
     },
-    "kh_cilantro_stage4_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage4_grey"
+    "kh_coriander_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage4_grey"
     },
-    "kh_cilantro_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage5"
+    "kh_coriander_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_2"
     },
-    "kh_cilantro_stage5_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage5_grey"
+    "kh_coriander_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage5_grey"
     },
-    "kh_cilantro_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage6"
+    "kh_coriander_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_3"
     },
-    "kh_cilantro_stage6_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage6_grey"
+    "kh_coriander_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage6_grey"
     },
-    "kh_cilantro_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage7"
+    "kh_coriander_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_3"
     },
-    "kh_cilantro_stage7_grey": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cilantro_stage7_grey"
+    "kh_coriander_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/coriander_stage7_grey"
     },
-    "kh_wild_cilantro": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_cilantro"
+    "kh_wild_coriander": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/coriander_stage_3"
     },
     "kh_sesame_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_0"
     },
     "kh_sesame_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage0_grey"
     },
     "kh_sesame_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_0"
     },
     "kh_sesame_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage1_grey"
     },
     "kh_sesame_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_1"
     },
     "kh_sesame_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage2_grey"
     },
     "kh_sesame_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_1"
     },
     "kh_sesame_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage3_grey"
     },
     "kh_sesame_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_2"
     },
     "kh_sesame_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage4_grey"
     },
     "kh_sesame_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_2"
     },
     "kh_sesame_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage5_grey"
     },
     "kh_sesame_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_3"
     },
     "kh_sesame_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage6_grey"
     },
     "kh_sesame_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_3"
     },
     "kh_sesame_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/sesame_stage7_grey"
     },
     "kh_wild_sesame": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_sesame"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sesame_stage_3"
     },
     "kh_black_pepper_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_0"
     },
     "kh_black_pepper_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage0_grey"
     },
     "kh_black_pepper_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_0"
     },
     "kh_black_pepper_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage1_grey"
     },
     "kh_black_pepper_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_1"
     },
     "kh_black_pepper_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage2_grey"
     },
     "kh_black_pepper_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_1"
     },
     "kh_black_pepper_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage3_grey"
     },
     "kh_black_pepper_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_2"
     },
     "kh_black_pepper_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage4_grey"
     },
     "kh_black_pepper_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_2"
     },
     "kh_black_pepper_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage5_grey"
     },
     "kh_black_pepper_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_3"
     },
     "kh_black_pepper_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage6_grey"
     },
     "kh_black_pepper_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_3"
     },
     "kh_black_pepper_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/black_pepper_stage7_grey"
     },
     "kh_wild_black_pepper": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_black_pepper"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/black_pepper_stage_3"
     },
     "kh_cumin_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_0"
     },
     "kh_cumin_stage0_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage0_grey"
     },
     "kh_cumin_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_0"
     },
     "kh_cumin_stage1_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage1_grey"
     },
     "kh_cumin_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_1"
     },
     "kh_cumin_stage2_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage2_grey"
     },
     "kh_cumin_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_1"
     },
     "kh_cumin_stage3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage3_grey"
     },
     "kh_cumin_stage4": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage4"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_2"
     },
     "kh_cumin_stage4_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage4_grey"
     },
     "kh_cumin_stage5": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage5"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_2"
     },
     "kh_cumin_stage5_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage5_grey"
     },
     "kh_cumin_stage6": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage6"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_3"
     },
     "kh_cumin_stage6_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage6_grey"
     },
     "kh_cumin_stage7": {
-      "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage7"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_3"
     },
     "kh_cumin_stage7_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cumin_stage7_grey"
     },
     "kh_wild_cumin": {
-      "textures": "textures/blocks/kaleidoscope_harvest/wild_cumin"
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/cumin_stage_3"
     },
-    "kh_bamboo_trellis": {
-      "textures": "textures/blocks/kaleidoscope_harvest/bamboo_trellis"
+    "kh_strawberry_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_0"
+    },
+    "kh_strawberry_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage0_grey"
+    },
+    "kh_strawberry_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_0"
+    },
+    "kh_strawberry_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage1_grey"
+    },
+    "kh_strawberry_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_1"
+    },
+    "kh_strawberry_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage2_grey"
+    },
+    "kh_strawberry_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_1"
+    },
+    "kh_strawberry_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage3_grey"
+    },
+    "kh_strawberry_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_2"
+    },
+    "kh_strawberry_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage4_grey"
+    },
+    "kh_strawberry_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_2"
+    },
+    "kh_strawberry_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage5_grey"
+    },
+    "kh_strawberry_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_3"
+    },
+    "kh_strawberry_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage6_grey"
+    },
+    "kh_strawberry_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_3"
+    },
+    "kh_strawberry_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/strawberry_stage7_grey"
+    },
+    "kh_wild_strawberry": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/strawberry_stage_3"
+    },
+    "kh_blueberry_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_0"
+    },
+    "kh_blueberry_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage0_grey"
+    },
+    "kh_blueberry_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_0"
+    },
+    "kh_blueberry_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage1_grey"
+    },
+    "kh_blueberry_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_1"
+    },
+    "kh_blueberry_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage2_grey"
+    },
+    "kh_blueberry_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_1"
+    },
+    "kh_blueberry_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage3_grey"
+    },
+    "kh_blueberry_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_2"
+    },
+    "kh_blueberry_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage4_grey"
+    },
+    "kh_blueberry_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_2"
+    },
+    "kh_blueberry_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage5_grey"
+    },
+    "kh_blueberry_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_3"
+    },
+    "kh_blueberry_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage6_grey"
+    },
+    "kh_blueberry_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_3"
+    },
+    "kh_blueberry_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/blueberry_stage7_grey"
+    },
+    "kh_wild_blueberry": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/blueberry_stage_3"
+    },
+    "kh_grape_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_0"
+    },
+    "kh_grape_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage0_grey"
+    },
+    "kh_grape_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_0"
+    },
+    "kh_grape_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage1_grey"
+    },
+    "kh_grape_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_1"
+    },
+    "kh_grape_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage2_grey"
+    },
+    "kh_grape_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_1"
+    },
+    "kh_grape_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage3_grey"
+    },
+    "kh_grape_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_2"
+    },
+    "kh_grape_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage4_grey"
+    },
+    "kh_grape_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_2"
+    },
+    "kh_grape_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage5_grey"
+    },
+    "kh_grape_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_3"
+    },
+    "kh_grape_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage6_grey"
+    },
+    "kh_grape_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_3"
+    },
+    "kh_grape_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/grape_stage7_grey"
+    },
+    "kh_wild_grape": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/grape_stage_3"
+    },
+    "kh_passion_fruit_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_0"
+    },
+    "kh_passion_fruit_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage0_grey"
+    },
+    "kh_passion_fruit_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_0"
+    },
+    "kh_passion_fruit_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage1_grey"
+    },
+    "kh_passion_fruit_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_1"
+    },
+    "kh_passion_fruit_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage2_grey"
+    },
+    "kh_passion_fruit_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_1"
+    },
+    "kh_passion_fruit_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage3_grey"
+    },
+    "kh_passion_fruit_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_2"
+    },
+    "kh_passion_fruit_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage4_grey"
+    },
+    "kh_passion_fruit_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_2"
+    },
+    "kh_passion_fruit_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage5_grey"
+    },
+    "kh_passion_fruit_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_3"
+    },
+    "kh_passion_fruit_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage6_grey"
+    },
+    "kh_passion_fruit_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_3"
+    },
+    "kh_passion_fruit_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/passion_fruit_stage7_grey"
+    },
+    "kh_wild_passion_fruit": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/passion_fruit_stage_3"
+    },
+    "kh_pineapple_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_0"
+    },
+    "kh_pineapple_stage0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage0_grey"
+    },
+    "kh_pineapple_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_0"
+    },
+    "kh_pineapple_stage1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage1_grey"
+    },
+    "kh_pineapple_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_1"
+    },
+    "kh_pineapple_stage2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage2_grey"
+    },
+    "kh_pineapple_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_1"
+    },
+    "kh_pineapple_stage3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage3_grey"
+    },
+    "kh_pineapple_stage4": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_2"
+    },
+    "kh_pineapple_stage4_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage4_grey"
+    },
+    "kh_pineapple_stage5": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_2"
+    },
+    "kh_pineapple_stage5_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage5_grey"
+    },
+    "kh_pineapple_stage6": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_3"
+    },
+    "kh_pineapple_stage6_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage6_grey"
+    },
+    "kh_pineapple_stage7": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_3"
+    },
+    "kh_pineapple_stage7_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage7_grey"
+    },
+    "kh_wild_pineapple": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/pineapple_stage_3"
     },
     "kh_fruit_log_side": {
-      "textures": "textures/blocks/kaleidoscope_harvest/fruit_log_side"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/fruitwood_log"
     },
     "kh_fruit_log_top": {
-      "textures": "textures/blocks/kaleidoscope_harvest/fruit_log_top"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/fruitwood_log_top"
+    },
+    "kh_banana_trunk_side": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_trunk"
+    },
+    "kh_banana_trunk_top": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_trunk"
     },
     "kh_mandarin_sapling_stage0": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_sapling_stage0"
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling"
     },
     "kh_mandarin_sapling_stage1": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_sapling_stage1"
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling"
     },
     "kh_mandarin_sapling_stage2": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_sapling_stage2"
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling"
     },
     "kh_mandarin_sapling_stage3": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_sapling_stage3"
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling"
     },
     "kh_mandarin_fruit_leaves_none": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_none"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_bare"
     },
     "kh_mandarin_fruit_leaves_none_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_none_grey"
     },
     "kh_mandarin_fruit_leaves_blossom": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_blossom"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom"
     },
     "kh_mandarin_fruit_leaves_blossom_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_blossom_grey"
     },
     "kh_mandarin_fruit_leaves_green": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_green"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_unripe"
     },
     "kh_mandarin_fruit_leaves_green_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_green_grey"
     },
     "kh_mandarin_fruit_leaves_ripe": {
-      "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_ripe"
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_ripe"
     },
     "kh_mandarin_fruit_leaves_ripe_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/mandarin_fruit_leaves_ripe_grey"
+    },
+    "kh_sweet_orange_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/sweet_orange_sapling"
+    },
+    "kh_sweet_orange_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/sweet_orange_sapling"
+    },
+    "kh_sweet_orange_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/sweet_orange_sapling"
+    },
+    "kh_sweet_orange_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/sweet_orange_sapling"
+    },
+    "kh_sweet_orange_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_bare"
+    },
+    "kh_sweet_orange_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_none_grey"
+    },
+    "kh_sweet_orange_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_blossom"
+    },
+    "kh_sweet_orange_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_blossom_grey"
+    },
+    "kh_sweet_orange_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_unripe"
+    },
+    "kh_sweet_orange_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_green_grey"
+    },
+    "kh_sweet_orange_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/sweet_orange_leaves_ripe"
+    },
+    "kh_sweet_orange_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sweet_orange_fruit_leaves_ripe_grey"
+    },
+    "kh_lemon_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lemon_sapling"
+    },
+    "kh_lemon_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lemon_sapling"
+    },
+    "kh_lemon_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lemon_sapling"
+    },
+    "kh_lemon_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lemon_sapling"
+    },
+    "kh_lemon_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_bare"
+    },
+    "kh_lemon_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_none_grey"
+    },
+    "kh_lemon_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_blossom"
+    },
+    "kh_lemon_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_blossom_grey"
+    },
+    "kh_lemon_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_unripe"
+    },
+    "kh_lemon_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_green_grey"
+    },
+    "kh_lemon_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lemon_leaves_ripe"
+    },
+    "kh_lemon_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemon_fruit_leaves_ripe_grey"
+    },
+    "kh_peach_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/peach_sapling"
+    },
+    "kh_peach_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/peach_sapling"
+    },
+    "kh_peach_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/peach_sapling"
+    },
+    "kh_peach_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/peach_sapling"
+    },
+    "kh_peach_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_bare"
+    },
+    "kh_peach_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_none_grey"
+    },
+    "kh_peach_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_blossom"
+    },
+    "kh_peach_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_blossom_grey"
+    },
+    "kh_peach_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_unripe"
+    },
+    "kh_peach_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_green_grey"
+    },
+    "kh_peach_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/peach_leaves_ripe"
+    },
+    "kh_peach_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/peach_fruit_leaves_ripe_grey"
+    },
+    "kh_pear_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/pear_sapling"
+    },
+    "kh_pear_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/pear_sapling"
+    },
+    "kh_pear_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/pear_sapling"
+    },
+    "kh_pear_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/pear_sapling"
+    },
+    "kh_pear_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_bare"
+    },
+    "kh_pear_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_none_grey"
+    },
+    "kh_pear_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_blossom"
+    },
+    "kh_pear_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_blossom_grey"
+    },
+    "kh_pear_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_unripe"
+    },
+    "kh_pear_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_green_grey"
+    },
+    "kh_pear_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/pear_leaves_ripe"
+    },
+    "kh_pear_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/pear_fruit_leaves_ripe_grey"
+    },
+    "kh_persimmon_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/persimmon_sapling"
+    },
+    "kh_persimmon_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/persimmon_sapling"
+    },
+    "kh_persimmon_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/persimmon_sapling"
+    },
+    "kh_persimmon_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/persimmon_sapling"
+    },
+    "kh_persimmon_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_bare"
+    },
+    "kh_persimmon_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_none_grey"
+    },
+    "kh_persimmon_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_blossom"
+    },
+    "kh_persimmon_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_blossom_grey"
+    },
+    "kh_persimmon_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_unripe"
+    },
+    "kh_persimmon_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_green_grey"
+    },
+    "kh_persimmon_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/persimmon_leaves_ripe"
+    },
+    "kh_persimmon_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/persimmon_fruit_leaves_ripe_grey"
+    },
+    "kh_lychee_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lychee_sapling"
+    },
+    "kh_lychee_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lychee_sapling"
+    },
+    "kh_lychee_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lychee_sapling"
+    },
+    "kh_lychee_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/lychee_sapling"
+    },
+    "kh_lychee_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_bare"
+    },
+    "kh_lychee_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_none_grey"
+    },
+    "kh_lychee_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_blossom"
+    },
+    "kh_lychee_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_blossom_grey"
+    },
+    "kh_lychee_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_unripe"
+    },
+    "kh_lychee_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_green_grey"
+    },
+    "kh_lychee_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/lychee_leaves_ripe"
+    },
+    "kh_lychee_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lychee_fruit_leaves_ripe_grey"
+    },
+    "kh_mango_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mango_sapling"
+    },
+    "kh_mango_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mango_sapling"
+    },
+    "kh_mango_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mango_sapling"
+    },
+    "kh_mango_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/mango_sapling"
+    },
+    "kh_mango_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_bare"
+    },
+    "kh_mango_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_none_grey"
+    },
+    "kh_mango_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_blossom"
+    },
+    "kh_mango_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_blossom_grey"
+    },
+    "kh_mango_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_unripe"
+    },
+    "kh_mango_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_green_grey"
+    },
+    "kh_mango_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/mango_leaves_ripe"
+    },
+    "kh_mango_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mango_fruit_leaves_ripe_grey"
+    },
+    "kh_banana_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/banana_sapling"
+    },
+    "kh_banana_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/banana_sapling"
+    },
+    "kh_banana_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/banana_sapling"
+    },
+    "kh_banana_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/banana_sapling"
+    },
+    "kh_banana_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_bare"
+    },
+    "kh_banana_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_none_grey"
+    },
+    "kh_banana_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_blossom"
+    },
+    "kh_banana_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_blossom_grey"
+    },
+    "kh_banana_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_unripe"
+    },
+    "kh_banana_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_green_grey"
+    },
+    "kh_banana_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_leaves_ripe"
+    },
+    "kh_banana_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/banana_fruit_leaves_ripe_grey"
+    },
+    "kh_star_anise_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/star_anise_sapling"
+    },
+    "kh_star_anise_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/star_anise_sapling"
+    },
+    "kh_star_anise_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/star_anise_sapling"
+    },
+    "kh_star_anise_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/star_anise_sapling"
+    },
+    "kh_star_anise_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_bare"
+    },
+    "kh_star_anise_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_none_grey"
+    },
+    "kh_star_anise_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_blossom"
+    },
+    "kh_star_anise_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_blossom_grey"
+    },
+    "kh_star_anise_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_unripe"
+    },
+    "kh_star_anise_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_green_grey"
+    },
+    "kh_star_anise_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_anise_leaves_ripe"
+    },
+    "kh_star_anise_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_anise_fruit_leaves_ripe_grey"
+    },
+    "kh_cinnamon_sapling_stage0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/cinnamon_sapling"
+    },
+    "kh_cinnamon_sapling_stage1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/cinnamon_sapling"
+    },
+    "kh_cinnamon_sapling_stage2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/cinnamon_sapling"
+    },
+    "kh_cinnamon_sapling_stage3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/cinnamon_sapling"
+    },
+    "kh_cinnamon_fruit_leaves_none": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_bare"
+    },
+    "kh_cinnamon_fruit_leaves_none_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_none_grey"
+    },
+    "kh_cinnamon_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_blossom"
+    },
+    "kh_cinnamon_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_blossom_grey"
+    },
+    "kh_cinnamon_fruit_leaves_green": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_unripe"
+    },
+    "kh_cinnamon_fruit_leaves_green_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_green_grey"
+    },
+    "kh_cinnamon_fruit_leaves_ripe": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/cinnamon_leaves_ripe"
+    },
+    "kh_cinnamon_fruit_leaves_ripe_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_fruit_leaves_ripe_grey"
     },
     "kh_station_juicer": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/juicer"

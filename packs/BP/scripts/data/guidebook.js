@@ -13,7 +13,7 @@ import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
 import { VILLAGE_HOUSES, villageItems } from "./village.js";
-import { FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
+import { BANANA_TRUNK, FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
 import { toSimplified } from "./zh_cn.js";
 
 const CLIMATE_NAME = {
@@ -68,6 +68,7 @@ const FORM_LINE = {
   underground: ["種在耕地上。地上只看得到葉子，葉子轉黃就熟了；用鋤頭挖收成更多。", "Plant it on farmland. Only the leaves show; when they turn yellow it is ready, and a hoe digs up more."],
   repeatable: ["種在耕地上。熟了之後空手或拿著東西點它採收，它會退回幾個階段繼續長，不用重種。", "Plant it on farmland. Once ripe, use it to pick; it drops back a few stages and grows again, no replanting."],
   tall: ["種在耕地上，長到一半會長出第二格。打掉上下任一格，整株一起收成。", "Plant it on farmland. Halfway through it grows a second block; break either block to harvest the whole plant."],
+  bush: ["灌木，種在草地或泥土上（不用耕地）。熟了點它採收，會再結果，不用重種。", "A shrub: plant it on grass or dirt, no farmland needed. Use it when ripe to pick; it fruits again, no replanting."],
   trellis: ["先在耕地上放竹藤架，再拿種子點竹藤架種下。熟了點它採收，會再結果；打掉時竹藤架會還給你。", "Place a Bamboo Trellis on farmland, then use the seeds on it. Use the ripe vine to pick; it fruits again. Breaking it gives the trellis back."],
 };
 
@@ -80,6 +81,7 @@ const BIOME_NAME = {
   swamp: ["沼澤", "swamps"],
   desert: ["沙漠", "deserts"],
   taiga: ["針葉林", "taigas"],
+  roofed: ["黑森林", "dark forests"],
 };
 
 const HOUSE_NAME = {
@@ -95,6 +97,11 @@ export function villageLine(id) {
   const houses = VILLAGE_HOUSES.filter((house) => villageItems(house).some((row) => row.item === id)).map((h) => HOUSE_NAME[h]);
   if (!houses.length) return [];
   return [[`村莊：${houses.map((h) => h[0]).join("、")}村莊的民宅箱子裡有時找得到。`, `Villages: sometimes found in house chests of ${houses.map((h) => h[1]).join(", ")} villages.`]];
+}
+
+export function wildSaplingLine(biomes) {
+  const names = biomes.map((b) => BIOME_NAME[b]);
+  return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生樹苗，挖回來就能種。`, `In the wild: wild saplings grow now and then in ${names.map((n) => n[1]).join(" and ")}; dig one up to plant.`];
 }
 
 export function wildLine(wild) {
@@ -137,17 +144,22 @@ export function guideEntries() {
         ["種在草地或泥土上，長成一棵果樹。周圍要有空間，被擋住就會等到空出來。", "Plant it on grass or dirt and it grows into a fruit tree. It needs room; if something is in the way it waits."],
         climateLine(tree.climate),
         ["骨粉一次只推進一個階段。", "Bone meal moves it on one stage only."],
+        ...(tree.wild ? [wildSaplingLine(tree.wild)] : []),
         ...villageLine(saplingBlockId(tree)),
+        ...(tree.shape === "palm" ? [["香蕉長成單幹的香蕉假莖，頂上一圈果葉；假莖砍掉，果葉一樣會掉光。", "A banana grows a single banana trunk with a ring of fruit leaves on top; chop the trunk and the leaves fall."]] : []),
       ], { block: true })
     );
     rows.push(
       entry(tree.fruit, "trees", [
-        ["果葉會開花、結青果，再轉為熟果。點熟果採收，果葉回到無果，之後會再結果，不用重種。", "Fruit leaves blossom, set green fruit, then ripen. Use a ripe leaf to pick; it starts over and fruits again."],
+        tree.id === "cinnamon"
+          ? ["肉桂不結果：果葉長出紅褐色的嫩葉時，點它剝下一片肉桂皮，葉子回到原樣後會再長。", "Cinnamon bears no fruit: when its leaves put out red-brown new growth, use one to strip a piece of bark; it grows back again."]
+          : ["果葉會開花、結青果，再轉為熟果。點熟果採收，果葉回到無果，之後會再結果，不用重種。", "Fruit leaves blossom, set green fruit, then ripen. Use a ripe leaf to pick; it starts over and fruits again."],
         ...usesOf(tree.fruit),
       ])
     );
   }
   rows.push(entry(FRUIT_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，果葉會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the fruit leaves fall and the tree is gone."]], { block: true }));
+  rows.push(entry(BANANA_TRUNK.id, "trees", [["香蕉的假莖。砍下可得香蕉假莖，但沒了假莖，香蕉果葉會掉光。", "The trunk of a banana plant. It can be chopped, but without it the banana's fruit leaves fall."]], { block: true }));
 
   rows.push(
     entry(JUICER.id, "stations", [
@@ -196,6 +208,7 @@ function madeLine(row, id) {
 const VANILLA_NAMES = {
   "minecraft:wheat": ["小麥", "Wheat"],
   "minecraft:potato": ["馬鈴薯", "Potato"],
+  "minecraft:apple": ["蘋果", "Apple"],
   "minecraft:chicken": ["生雞肉", "Raw Chicken"],
   "minecraft:mutton": ["生羊肉", "Raw Mutton"],
   "minecraft:snowball": ["雪球", "Snowball"],
@@ -217,6 +230,7 @@ export function nameOf(id) {
   if (item) return [item.zh, item.en];
   if (bare === TRELLIS.id) return [TRELLIS.zh, TRELLIS.en];
   if (bare === FRUIT_LOG.id) return [FRUIT_LOG.zh, FRUIT_LOG.en];
+  if (bare === BANANA_TRUNK.id) return [BANANA_TRUNK.zh, BANANA_TRUNK.en];
   for (const station of [JUICER, PICKLING_JAR]) if (bare === station.id) return [station.zh, station.en];
   const tree = TREES.find((t) => saplingBlockId(t) === bare);
   if (tree) return [`${tree.zh}樹苗`, `${tree.en} Sapling`];

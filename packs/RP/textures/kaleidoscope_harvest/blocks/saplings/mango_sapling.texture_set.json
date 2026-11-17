@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "mango_sapling",
+    "normal": "mango_sapling_normal",
+    "metalness_emissive_roughness": "mango_sapling_mer"
+  }
+}

@@ -10,13 +10,15 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:bamboo_trellis.name",
-      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.bamboo_trellis",
       "minecraft:material_instances": {
         "*": {
-          "texture": "kh_bamboo_trellis",
-          "render_method": "alpha_test",
-          "face_dimming": false,
-          "ambient_occlusion": false
+          "texture": "kh_station_bamboo_trellis",
+          "render_method": "alpha_test"
+        },
+        "vine": {
+          "texture": "kh_station_juice_empty",
+          "render_method": "alpha_test"
         }
       },
       "minecraft:collision_box": false,

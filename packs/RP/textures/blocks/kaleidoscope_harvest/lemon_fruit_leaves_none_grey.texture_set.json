@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lemon_fruit_leaves_none_grey",
+    "normal": "lemon_fruit_leaves_none_grey_normal",
+    "metalness_emissive_roughness": "lemon_fruit_leaves_none_grey_mer"
+  }
+}

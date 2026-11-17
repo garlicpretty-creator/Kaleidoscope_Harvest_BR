@@ -1,0 +1,33 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:blueberry",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_blueberry",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:blueberry.name"
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:food": {
+        "nutrition": 1,
+        "saturation_modifier": 0.3
+      },
+      "minecraft:use_animation": "eat",
+      "minecraft:use_modifiers": {
+        "use_duration": 1.6,
+        "movement_modifier": 0.33
+      },
+      "minecraft:tags": {
+        "tags": [
+          "minecraft:is_food"
+        ]
+      }
+    }
+  }
+}
