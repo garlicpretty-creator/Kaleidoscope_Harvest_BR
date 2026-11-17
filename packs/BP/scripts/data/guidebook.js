@@ -366,7 +366,7 @@ export function guidebookPayload() {
     api: 1,
     version: VERSION,
     order: 210,
-    icon: iconPath("napa_cabbage"),
+    icon: "textures/kaleidoscope_harvest/ui/guidebook", // the series star, as every Kaleidoscope add-on shows in the guidebook list
     titleKey: "title",
     introKey: "intro",
     allKey: "all",
