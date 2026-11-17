@@ -1,0 +1,169 @@
+{
+ "format_version": "1.21.60",
+ "minecraft:geometry": [
+  {
+   "description": {
+    "identifier": "geometry.kaleidoscope_harvest.food_wine_1",
+    "texture_width": 64,
+    "texture_height": 16,
+    "visible_bounds_width": 2,
+    "visible_bounds_height": 2.5,
+    "visible_bounds_offset": [
+     0,
+     0.75,
+     0
+    ]
+   },
+   "bones": [
+    {
+     "name": "root",
+     "pivot": [
+      0,
+      0,
+      0
+     ],
+     "cubes": [
+      {
+       "origin": [
+        -3.5,
+        0,
+        -3.5
+       ],
+       "size": [
+        7,
+        6,
+        7
+       ],
+       "uv": {
+        "north": {
+         "uv": [
+          56,
+          0
+         ],
+         "uv_size": [
+          7,
+          6
+         ]
+        },
+        "south": {
+         "uv": [
+          0,
+          7
+         ],
+         "uv_size": [
+          7,
+          6
+         ]
+        },
+        "east": {
+         "uv": [
+          7,
+          7
+         ],
+         "uv_size": [
+          7,
+          6
+         ]
+        },
+        "west": {
+         "uv": [
+          14,
+          7
+         ],
+         "uv_size": [
+          7,
+          6
+         ]
+        },
+        "up": {
+         "uv": [
+          14,
+          0
+         ],
+         "uv_size": [
+          7,
+          7
+         ]
+        },
+        "down": {
+         "uv": [
+          21,
+          0
+         ],
+         "uv_size": [
+          7,
+          7
+         ]
+        }
+       }
+      },
+      {
+       "origin": [
+        -1.5,
+        6,
+        -1.5
+       ],
+       "size": [
+        3,
+        3,
+        3
+       ],
+       "uv": {
+        "north": {
+         "uv": [
+          29,
+          7
+         ],
+         "uv_size": [
+          3,
+          3
+         ]
+        },
+        "south": {
+         "uv": [
+          32,
+          7
+         ],
+         "uv_size": [
+          3,
+          3
+         ]
+        },
+        "east": {
+         "uv": [
+          35,
+          7
+         ],
+         "uv_size": [
+          3,
+          3
+         ]
+        },
+        "west": {
+         "uv": [
+          38,
+          7
+         ],
+         "uv_size": [
+          3,
+          3
+         ]
+        },
+        "up": {
+         "uv": [
+          41,
+          7
+         ],
+         "uv_size": [
+          3,
+          3
+         ]
+        }
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

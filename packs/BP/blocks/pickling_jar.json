@@ -22,7 +22,7 @@
       "minecraft:material_instances": {
         "*": {
           "texture": "kh_station_pickling_jar",
-          "render_method": "alpha_test"
+          "render_method": "alpha_test_single_sided"
         },
         "contents": {
           "texture": "kh_station_juice_empty",
@@ -78,11 +78,11 @@
           "minecraft:material_instances": {
             "*": {
               "texture": "kh_station_pickling_jar",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             },
             "contents": {
               "texture": "kh_station_contents_fresh",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             }
           }
         }
@@ -93,11 +93,11 @@
           "minecraft:material_instances": {
             "*": {
               "texture": "kh_station_pickling_jar",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             },
             "contents": {
               "texture": "kh_station_contents_fermenting",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             }
           }
         }
@@ -108,11 +108,11 @@
           "minecraft:material_instances": {
             "*": {
               "texture": "kh_station_pickling_jar",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             },
             "contents": {
               "texture": "kh_station_contents_done",
-              "render_method": "alpha_test"
+              "render_method": "alpha_test_single_sided"
             }
           }
         }

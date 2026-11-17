@@ -25,44 +25,35 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:lychee_wine.name",
-      "minecraft:geometry": {
-        "identifier": "geometry.kaleidoscope_harvest.food_wine",
-        "bone_visibility": {
-          "liquid": "q.block_state('kaleidoscope_cookery:food_stage') == 0"
-        }
-      },
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.food_wine_0",
       "minecraft:material_instances": {
         "*": {
           "texture": "kh_food_lychee_wine",
-          "render_method": "alpha_test"
-        },
-        "glass": {
-          "texture": "kh_food_lychee_wine",
-          "render_method": "blend"
+          "render_method": "alpha_test_single_sided"
         }
       },
       "minecraft:selection_box": {
         "origin": [
-          -4,
+          -3.5,
           0,
-          -4
+          -3.5
         ],
         "size": [
-          8,
-          11,
-          8
+          7,
+          10.5,
+          7
         ]
       },
       "minecraft:collision_box": {
         "origin": [
-          -4,
+          -3.5,
           0,
-          -4
+          -3.5
         ],
         "size": [
-          8,
-          11,
-          8
+          7,
+          10.5,
+          7
         ]
       },
       "minecraft:destructible_by_mining": {
@@ -99,8 +90,15 @@
     },
     "permutations": [
       {
-        "condition": "q.block_state('kaleidoscope_cookery:food_stage') > 0",
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 0",
         "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_wine_0"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_wine_1",
           "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_glass_bottle.json"
         }
       },

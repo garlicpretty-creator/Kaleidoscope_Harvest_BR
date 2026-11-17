@@ -25,23 +25,11 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:corn_chowder.name",
-      "minecraft:geometry": {
-        "identifier": "geometry.kaleidoscope_harvest.food_pot",
-        "bone_visibility": {
-          "soup_1": "q.block_state('kaleidoscope_cookery:food_stage') == 3",
-          "bits_1": "q.block_state('kaleidoscope_cookery:food_stage') == 3",
-          "soup_2": "q.block_state('kaleidoscope_cookery:food_stage') == 2",
-          "bits_2": "q.block_state('kaleidoscope_cookery:food_stage') == 2",
-          "soup_3": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
-          "bits_3": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
-          "soup_4": "q.block_state('kaleidoscope_cookery:food_stage') == 0",
-          "bits_4": "q.block_state('kaleidoscope_cookery:food_stage') == 0"
-        }
-      },
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_0",
       "minecraft:material_instances": {
         "*": {
           "texture": "kh_food_corn_chowder",
-          "render_method": "alpha_test"
+          "render_method": "alpha_test_single_sided"
         }
       },
       "minecraft:selection_box": {
@@ -52,7 +40,7 @@
         ],
         "size": [
           13,
-          8,
+          7,
           10
         ]
       },
@@ -64,7 +52,7 @@
         ],
         "size": [
           13,
-          8,
+          7,
           10
         ]
       },
@@ -102,8 +90,36 @@
     },
     "permutations": [
       {
-        "condition": "q.block_state('kaleidoscope_cookery:food_stage') > 0",
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 0",
         "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_0"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 1",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_1",
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_bowl.json"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 2",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_2",
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_bowl.json"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 3",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_3",
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_bowl.json"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') == 4",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.food_pot_4",
           "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_bowl.json"
         }
       },

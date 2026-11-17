@@ -51,5 +51,5 @@
 
 ## 留給實作
 
-- 模型仍由 `tools/art/station_models.py` 產生；動畫、渲染控制器、粒子、實體檔由 `tools/generate.mjs` 產生。
+- 模型由 `tools/art/stations.py` 產生（森羅廚房標準：榨汁機 5 個方塊、醃漬缸 8 個、各自的顯示實體 3–6 個，細節畫在貼圖上）；動畫、渲染控制器、粒子、實體檔由 `tools/generate.mjs` 產生。
 - 粒子用原版 `textures/particle/particles` 貼圖。

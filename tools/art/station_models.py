@@ -40,7 +40,9 @@ def bamboo_end(x, y):
 
 
 def wood(x, y):
-    grain = (x * 7 + (y // 4) * 3) % 11
+    if (x - 11) ** 2 + (y - 5) ** 2 <= 2:
+        return 0 if (x, y) == (11, 5) else 1  # a knot
+    grain = (x * 7 + (y // 4) * 3 + (1 if rnd(x, y // 3, 13) < 0.2 else 0)) % 11
     return 0 if grain == 0 else (1 if grain < 4 else (2 if grain < 9 else 3))
 
 
@@ -48,21 +50,37 @@ def plank_end(x, y):
     return 0 if y % 4 == 3 else (2 if (x + y) % 5 else 1)
 
 
+def rnd(x, y, salt=0):
+    """Deterministic 0..1 noise per pixel (same picture every run)."""
+    h = (x * 374761393 + y * 668265263 + salt * 2147483647) & 0xFFFFFFFF
+    h = ((h ^ (h >> 13)) * 1274126177) & 0xFFFFFFFF
+    return (h ^ (h >> 16)) / 0xFFFFFFFF
+
+
 def glaze(x, y):
-    # even dark-brown glaze: a lighter band where the glaze pooled at the top edge, sparse speckles
+    # dark-brown glaze: pooled light at the top edge, drips running down from it, a mottled body, iron speckles
     if y == 0:
         return 3
-    if y == 1:
-        return 2
-    return 0 if (x * 7 + y * 5) % 19 == 0 else 1
+    drip = 2 + int(rnd(x, 0, 1) * 6) if rnd(x, 1, 2) < 0.45 else 1
+    if y <= drip:
+        return 2 if y < drip else 3
+    if rnd(x, y, 3) < 0.08:
+        return 0
+    return 2 if rnd(x // 2, y // 2, 4) < 0.25 else 1
 
 
 def glaze_rim(x, y):
-    return 3 if (x + y) % 6 == 0 else 2
+    if rnd(x, y, 5) < 0.12:
+        return 3
+    return 1 if rnd(x // 2, y, 6) < 0.3 else 2
 
 
 def clay(x, y):
-    return 1 if (x * 5 + y * 3) % 7 else 0
+    # unglazed lid: light top edge, mottled body, grog
+    if y == 0:
+        return 3
+    r = rnd(x, y, 7)
+    return 0 if r < 0.1 else (2 if rnd(x // 2, y // 2, 8) < 0.35 else 1)
 
 
 def glass(x, y):
@@ -75,12 +93,24 @@ def glass(x, y):
 
 
 def steel(x, y):
-    return 3 if x in (2, 3) else (1 if (x + y) % 5 else 2)
+    # brushed steel: one bright highlight, horizontal brush streaks, a few scratches
+    if x in (2, 3):
+        return 3
+    if rnd(x, y, 9) < 0.05:
+        return 3
+    return 2 if rnd(0, y, 10) < 0.4 else 1
 
 
 def juice(x, y):
-    # a lighter surface band, a few darker flecks of pulp
-    return 2 if y < 2 else (0 if (x * 3 + y * 5) % 11 == 0 else 1)
+    # a lighter surface, bubbles, pulp flecks, a mottled body
+    if y < 2:
+        return 3 if y == 0 else 2
+    r = rnd(x, y, 11)
+    if r < 0.06:
+        return 3
+    if r < 0.13:
+        return 0
+    return 2 if rnd(x // 2, y // 2, 12) < 0.2 else 1
 
 
 SWATCHES = {
@@ -211,19 +241,14 @@ def pickling_jar_visual():
     return [("lid", lid, [0, 12, 3]), ("seal", [], [0, 0, 0], {"moat": [0, 12.25, 0]})]
 
 
-MODELS = {"bamboo_trellis": trellis, "juicer": juicer, "pickling_jar": pickling_jar}
+MODELS = {"bamboo_trellis": trellis}  # ## the juicer and pickling jar moved to tools/art/stations.py (painted per face)
 # Display entities (models/entity/<name>.geo.json, geometry.kaleidoscope_harvest.<name>): bones are
 # (name, cubes, pivot[, locators]); textured from the same atlas as the blocks.
-VISUALS = {"juicer_visual": juicer_visual, "pickling_jar_visual": pickling_jar_visual}
+VISUALS = {}  # ## now in tools/art/stations.py
 ENTITY_GEO = os.path.join(ROOT, "packs", "RP", "models", "entity")
 
 # Textures for the swapped parts: name -> colours (dark, mid, light)
-STATE_TEXTURES = {
-    "juice_empty": None,  # ## the jar's "empty" contents; the juice colours are atlas swatches now
-    "contents_fresh": ((150, 186, 92), (186, 214, 120), (226, 236, 176)),
-    "contents_fermenting": ((176, 150, 70), (204, 178, 92), (228, 208, 132)),
-    "contents_done": ((168, 48, 34), (200, 74, 46), (226, 116, 76)),
-}
+STATE_TEXTURES = {}  # ## the jar's mouth textures are drawn by tools/art/stations.py
 
 
 def paint_atlas():

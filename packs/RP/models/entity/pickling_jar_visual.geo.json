@@ -1,13 +1,13 @@
 {
- "format_version": "1.12.0",
+ "format_version": "1.21.60",
  "minecraft:geometry": [
   {
    "description": {
     "identifier": "geometry.kaleidoscope_harvest.pickling_jar_visual",
     "texture_width": 64,
-    "texture_height": 64,
+    "texture_height": 16,
     "visible_bounds_width": 2,
-    "visible_bounds_height": 2,
+    "visible_bounds_height": 2.5,
     "visible_bounds_offset": [
      0,
      0.75,
@@ -20,153 +20,143 @@
      "pivot": [
       0,
       12,
-      3
+      3.5
      ],
      "cubes": [
       {
        "origin": [
-        -3,
+        -3.5,
         12,
-        -3
+        -3.5
        ],
        "size": [
-        6,
-        1.5,
-        6
+        7,
+        1,
+        7
        ],
        "uv": {
         "north": {
          "uv": [
-          32,
-          16
+          21,
+          0
          ],
          "uv_size": [
-          6,
-          1.5
+          7,
+          1
          ]
         },
         "south": {
          "uv": [
-          32,
-          16
+          28,
+          0
          ],
          "uv_size": [
-          6,
-          1.5
+          7,
+          1
          ]
         },
         "east": {
          "uv": [
-          32,
-          16
+          35,
+          0
          ],
          "uv_size": [
-          6,
-          1.5
+          7,
+          1
          ]
         },
         "west": {
          "uv": [
-          32,
-          16
+          42,
+          0
          ],
          "uv_size": [
-          6,
-          1.5
+          7,
+          1
          ]
         },
         "up": {
          "uv": [
-          32,
-          16
+          0,
+          0
          ],
          "uv_size": [
-          6,
-          6
+          7,
+          7
          ]
         },
         "down": {
          "uv": [
-          32,
-          16
+          7,
+          0
          ],
          "uv_size": [
-          6,
-          6
+          7,
+          7
          ]
         }
        }
       },
       {
        "origin": [
-        -2,
-        13.5,
-        -2
+        -2.5,
+        13,
+        -2.5
        ],
        "size": [
-        4,
-        1.0,
-        4
+        5,
+        1,
+        5
        ],
        "uv": {
         "north": {
          "uv": [
-          32,
-          16
+          49,
+          0
          ],
          "uv_size": [
-          4,
-          1.0
+          5,
+          1
          ]
         },
         "south": {
          "uv": [
-          32,
-          16
+          54,
+          0
          ],
          "uv_size": [
-          4,
-          1.0
+          5,
+          1
          ]
         },
         "east": {
          "uv": [
-          32,
-          16
+          59,
+          0
          ],
          "uv_size": [
-          4,
-          1.0
+          5,
+          1
          ]
         },
         "west": {
          "uv": [
-          32,
-          16
+          0,
+          7
          ],
          "uv_size": [
-          4,
-          1.0
+          5,
+          1
          ]
         },
         "up": {
          "uv": [
-          32,
-          16
+          14,
+          0
          ],
          "uv_size": [
-          4,
-          4
-         ]
-        },
-        "down": {
-         "uv": [
-          32,
-          16
-         ],
-         "uv_size": [
-          4,
-          4
+          5,
+          5
          ]
         }
        }
@@ -174,19 +164,19 @@
       {
        "origin": [
         -1,
-        14.5,
+        14,
         -1
        ],
        "size": [
         2,
-        0.5,
+        0.75,
         2
        ],
        "uv": {
         "north": {
          "uv": [
-          32,
-          16
+          5,
+          7
          ],
          "uv_size": [
           2,
@@ -195,8 +185,8 @@
         },
         "south": {
          "uv": [
-          32,
-          16
+          7,
+          7
          ],
          "uv_size": [
           2,
@@ -205,8 +195,8 @@
         },
         "east": {
          "uv": [
-          32,
-          16
+          9,
+          7
          ],
          "uv_size": [
           2,
@@ -215,8 +205,8 @@
         },
         "west": {
          "uv": [
-          32,
-          16
+          11,
+          7
          ],
          "uv_size": [
           2,
@@ -225,18 +215,8 @@
         },
         "up": {
          "uv": [
-          32,
-          16
-         ],
-         "uv_size": [
-          2,
-          2
-         ]
-        },
-        "down": {
-         "uv": [
-          32,
-          16
+          19,
+          0
          ],
          "uv_size": [
           2,
@@ -254,11 +234,10 @@
       0,
       0
      ],
-     "cubes": [],
      "locators": {
       "moat": [
        0,
-       12.25,
+       10.75,
        0
       ]
      }
