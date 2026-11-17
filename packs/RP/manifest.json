@@ -6,8 +6,8 @@
     "uuid": "2f571dcb-3504-4aa7-be69-8968d0856f74",
     "pack_scope": "world",
     "version": [
-      0,
       1,
+      0,
       0
     ],
     "min_engine_version": [
@@ -30,8 +30,8 @@
       "type": "resources",
       "uuid": "86cdfb05-4d6d-4f4f-8a32-c64471438986",
       "version": [
-        0,
         1,
+        0,
         0
       ]
     }
@@ -40,8 +40,8 @@
     {
       "uuid": "ab8061d8-b130-4846-b0e0-59bf0f1c8651",
       "version": [
-        0,
         1,
+        0,
         0
       ]
     }

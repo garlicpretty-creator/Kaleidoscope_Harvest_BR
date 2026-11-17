@@ -237,6 +237,17 @@ def fruit_key(ramp, calyx=GD, extra=None):
 B = 7.5, 15.9  # plant base
 
 
+def yellow_tips(c, after, x0, y0, r1, r2, mid=YG, far=YEL):
+    """Ripening: leaf pixels of objects drawn after object `after` turn `mid` from r1 and `far` from r2 pixels
+    away from (x0, y0), so only the tips and outer parts of those leaves yellow."""
+    for (x, y), (ramp, lvl, mat, o, fixed) in list(c.p.items()):
+        if o <= after or mat != 'leaf':
+            continue
+        d = math.hypot(x + .5 - x0, y + .5 - y0)
+        if d >= r1:
+            c.p[(x, y)] = (far if d >= r2 else mid, lvl, mat, o, fixed)
+
+
 def sprout(c, ramp, size=3.0, h=2, width=2.2, shape='oval'):
     line(c, 7, 15, 7, 16 - h, ramp, 2, 'stem')
     leaf(c, 7.5, 16 - h + .5, 160, size, width, ramp, shape=shape)
@@ -384,24 +395,33 @@ def trifol(c, x, y, a, size, ramp):
 def soybean(c, s):
     if s == 0:
         return sprout(c, G, 3, width=2.6)
+    if s == 3:
+        return soybean_ripe(c)
     stems = {1: [(110, 4), (70, 4.5)],
-             2: [(125, 6), (55, 6), (95, 8), (150, 4), (30, 4)],
-             3: [(128, 8), (52, 8), (98, 10), (78, 10), (155, 5.5), (25, 5.5)]}[s]
-    ends = []
-    for i, (a, l) in enumerate(stems):
-        ex, ey = leaf(c, *B, a, l, 1, G if s < 3 else YG, shape='tube', mat='stem')
-        ends.append((ex, ey))
-        ramp = G if s < 3 else (YG if i % 2 == 0 else G)
-        trifol(c, ex, ey, a, 3.2 if s > 1 else 2.6, ramp)
+             2: [(125, 6), (55, 6), (95, 8), (150, 4), (30, 4)]}[s]
+    for a, l in stems:
+        ex, ey = leaf(c, *B, a, l, 1, G, shape='tube', mat='stem')
+        trifol(c, ex, ey, a, 3.2 if s > 1 else 2.6, G)
     if s == 2:
         for x, y in ((5, 11), (10, 10), (7, 8)):
             c.put(x, y, VIOLET, 3, 'flower', c.new(), True)
             c.put(x, y + 1, VIOLET, 1, 'flower', c.obj, True)
-    if s == 3:
-        pk = {'x': (TAN, 2, 'dry', False), 'h': (TAN, 4, 'dry', True), 'f': (FLW, 2, 'dry', True),
-              'd': (BROWN, 1, 'dry', True)}
-        for x, y in ((3, 9), (10, 8), (7, 11), (12, 12), (1, 12)):
-            stamp(c, x, y, ['fh.', 'xxf', 'xd.', 'fx.', '.d.'], pk)
+
+
+# three pods hanging side by side from one node: two in front, the middle one in their shade
+SOY_PODS = ['.s.', 'hsh', 'xDx', 'xdx', 'd.d']
+
+
+def soybean_ripe(c):
+    """A bushy plant, leaves just starting to yellow, with clusters of plump green-tan pods at the nodes."""
+    for a, l in ((158, 5.5), (22, 5.5), (132, 8), (48, 8), (104, 10.5), (76, 10.5), (90, 12)):
+        ex, ey = leaf(c, *B, a, l, 1, G, shape='tube', mat='stem')
+        trifol(c, ex, ey, a, 3.4, G)
+    yellow_tips(c, 0, *B, 12, 99)  # the leaf tips are just starting to turn
+    pk = {'s': (YG, 1, 'stem', True), 'h': (PODS, 3, 'fruit', True), 'x': (PODS, 2, 'fruit', True),
+          'd': (PODS, 1, 'fruit', True), 'D': (PODS, 0, 'fruit', True)}
+    for x, y in ((1, 9), (12, 8), (5, 6), (9, 11)):
+        stamp(c, x, y, SOY_PODS, pk)
 
 
 # ---------------------------------------------------------------- bulbs and tubes
@@ -454,37 +474,56 @@ def garlic(c, s):
     sz = {1: .6, 2: .9, 3: 1.15}[s]
     for y, a, l, d in ((14, 42, 8, 3), (13, 138, 8, 3), (12, 70, 11, 1.5), (11, 110, 11, 1.5), (10, 90, 12, 0)):
         y = neck + (y - 11) * sz
-        if s == 3:
-            r = YEL if a in (42, 138) else YG
-        else:
-            r = BLUEG
-        leaf(c, 8, y, a, l * sz, 2.0, r, droop=d * sz, shape='strap')
-        if s == 3:
-            ex = 8 + math.cos(math.radians(a)) * l
-            ey = y - math.sin(math.radians(a)) * l + d
-            c.put(ex, ey, TAN, 2, 'dry', c.obj, True)
+        first = c.obj
+        leaf(c, 8, y, a, l * sz, 2.0, BLUEG, droop=d * sz, shape='strap')
+        if s == 3:  # ripe: the outer leaves yellow from the tip, the inner ones only at the very tip
+            outer = a in (42, 138)
+            yellow_tips(c, first, 8, y, l * sz * (.45 if outer else .75), l * sz * (.8 if outer else 2))
+            if outer:
+                ex = 8 + math.cos(math.radians(a)) * l * sz
+                ey = y - math.sin(math.radians(a)) * l * sz + d * sz
+                c.put(ex, ey, TAN, 2, 'dry', c.obj, True)
 
 
 # ---------------------------------------------------------------- underground crops
+def peanut_leaf(c, a, l, size, ramp, lvl=2):
+    """A peanut leaf: a petiole from the base ending in two pairs of oval leaflets (pinnate, no end leaflet)."""
+    ux, uy = math.cos(math.radians(a)), -math.sin(math.radians(a))
+    ex, ey = leaf(c, *B, a, l, 1, G, lvl=1, shape='tube', mat='stem')
+    mx, my = B[0] + ux * (l - size * .7), B[1] + uy * (l - size * .7)
+    for x, y, spread, lv in ((mx, my, 80, lvl), (ex, ey, 30, lvl + 1)):
+        for side in (1, -1):
+            leaf(c, x, y, a + side * spread, size, size * .7, ramp, lvl=lv, shape='oval')
+
+
 def peanut(c, s):
     if s == 0:
-        return sprout(c, G, 2.6, h=1)
-    stems = {1: [(140, 4), (40, 4), (90, 4)],
-             2: [(165, 6), (15, 6), (130, 6), (50, 6), (95, 6)],
-             3: [(170, 7), (10, 7), (140, 7.5), (40, 7.5), (112, 8.5), (68, 8.5), (90, 6)]}[s]
-    for i, (a, l) in enumerate(stems):
-        ramp = G if s < 3 else (YG, YEL, YG)[i % 3]
-        ex, ey = leaf(c, *B, a, l, 1, G if s < 3 else YG, shape='tube', mat='stem', droop=-1 if a in (165, 15, 170, 10) else 0)
-        stamp(c, int(ex) - 2, int(ey) - 2, ['xx.xx', 'xx.xx', '..s..'],
-              {'x': (ramp, 2 + i % 2, 'leaf', False), 's': (G, 2, 'stem', True)})
-    if s == 2:
-        for x, y in ((4, 13), (11, 12), (7, 11)):
-            c.put(x, y, YFLW, 3, 'flower', c.new(), True)
-            c.put(x + 1, y, YFLW, 2, 'flower', c.obj, True)
+        sprout(c, G, 2.6, h=2, width=2)
+        return
+    spec = {1: [(135, 3.5), (45, 3.5), (90, 5)],
+            2: [(162, 5.5), (18, 5.5), (124, 7.5), (56, 7.5), (90, 10)],
+            3: [(164, 6.5), (16, 6.5), (124, 8.5), (56, 8.5), (90, 10.5)]}[s]
+    size = {1: 2.3, 2: 2.7, 3: 3.0}[s]
+    first = None
+    for i, (a, l) in enumerate(spec):
+        if s == 3 and i == 2:
+            first = c.obj
+        peanut_leaf(c, a, l, size, G)
+    if s == 2:  # small yellow pea flowers tucked low between the leaves
+        fk = {'y': (YFLW, 4, 'flower', True), 'Y': (YFLW, 2, 'flower', True), 'o': (ORANGE, 2, 'flower', True)}
+        for x, y in ((4, 13), (10, 13), (7, 11)):
+            stamp(c, x, y, ['yy', 'oY'], fk)
+    if s == 3:  # ripe: the low, older leaves turn yellow-green, their tips a little yellow
+        for (x, y), (ramp, lvl, mat, o, fixed) in list(c.p.items()):
+            if mat == 'leaf' and o <= first:
+                tip = math.hypot(x + .5 - B[0], y + .5 - B[1]) > 7.6
+                c.p[(x, y)] = (YEL if tip else YG, lvl, mat, o, fixed)
 
 
 HEART_UP = ['..x..', '.xxx.', 'xxvxx', 'xxvxx', '.x.x.']
 HEART_UP_S = ['.x.', 'xvx', 'x.x']
+HEART_DN = ['.xx.xx.', 'xxxxxxx', 'xxxvxxx', '.xxvxx.', '..xvx..', '...x...']  # hanging, notch at the top
+HEART_DN_S = ['x.x', 'xxx', '.x.']
 
 
 def sweet_potato(c, s):
@@ -493,8 +532,9 @@ def sweet_potato(c, s):
         stamp(c, 5, 11, HEART_UP_S, {'x': (G, 2, 'leaf', False), 'v': (SPP, 3, 'leaf', True)})
         stamp(c, 8, 12, HEART_UP_S, {'x': (SPP, 3, 'leaf', False), 'v': (SPP, 2, 'leaf', True)})
         return
-    old = YG if s == 3 else G
-    kg = {'x': (old, 2, 'leaf', False), 'v': (SPP, 3, 'leaf', True)}
+    if s == 3:
+        return sweet_potato_ripe(c)
+    kg = {'x': (G, 2, 'leaf', False), 'v': (SPP, 3, 'leaf', True)}
     kp = {'x': (SPP, 3, 'leaf', False), 'v': (SPP, 1, 'leaf', True)}
     vines = {1: [[(7, 15), (5, 13), (4, 12)], [(8, 15), (10, 13)]],
              2: [[(7, 15), (4, 14), (2, 12)], [(8, 15), (11, 14), (13, 12)], [(7, 15), (7, 11)]],
@@ -507,6 +547,20 @@ def sweet_potato(c, s):
         path(c, v, SPP, 2)
     for x, y, young in leaves:
         stamp(c, x, y, HEART_UP if s > 1 or not young else HEART_UP_S, kp if young else kg)
+
+
+def sweet_potato_ripe(c):
+    """Purple vines arching up and trailing out; separate heart-shaped leaves hang from them by the notch."""
+    for v in ([(7, 15), (6, 9), (5, 5), (4, 4), (3, 4)], [(8, 15), (9, 9), (10, 4), (11, 3), (12, 3)],
+              [(7, 15), (4, 12), (1, 12)], [(8, 15), (11, 12), (14, 12)]):
+        path(c, v, SPP, 2)
+    kg = {'x': (G, 2, 'leaf', False), 'v': (G, 1, 'leaf', True)}
+    ky = {'x': (YG, 2, 'leaf', False), 'v': (YG, 1, 'leaf', True)}
+    stamp(c, 0, 5, HEART_DN, ky)
+    stamp(c, 9, 4, HEART_DN, kg)
+    for x, y in ((0, 13), (13, 13)):
+        stamp(c, x, y, HEART_DN_S, kg)
+
 
 
 def ginger(c, s):
@@ -526,18 +580,20 @@ def ginger(c, s):
 def daikon(c, s):
     if s == 0:
         return sprout(c, G, 3, width=2.6)
-    ramp = YG if s == 3 else G
+    ramp = G
     spec = {1: [(120, 5), (60, 5), (92, 6)],
             2: [(140, 8), (40, 8), (110, 9), (70, 9), (92, 7)],
             3: [(150, 9), (30, 9), (118, 11), (62, 11), (92, 12)]}[s]
     base_y = {1: 15.9, 2: 13.6, 3: 12.6}[s]
     for i, (a, l) in enumerate(spec):
-        r = ramp if not (s == 3 and i < 2) else YEL
-        leaf(c, 7.5, base_y, a, l, 1.4, r, shape='tube', droop=1.5 if s > 1 else .5)
+        first = c.obj
+        leaf(c, 7.5, base_y, a, l, 1.4, ramp, shape='tube', droop=1.5 if s > 1 else .5)
         ux, uy = math.cos(math.radians(a)), -math.sin(math.radians(a))
         for j, t in enumerate(range(3, int(l) + 1, 3)):
             x, y = 7.5 + ux * t, base_y + uy * t + (1.5 if s > 1 else .5) * (t / l) ** 2
-            leaf(c, x, y, a + (55 if j % 2 else -55), 2.6, 2.2, r, shape='oval')
+            leaf(c, x, y, a + (55 if j % 2 else -55), 2.6, 2.2, ramp, shape='oval')
+        if s == 3:  # ripe: the outer leaves yellow towards their tips, the inner ones only at the very end
+            yellow_tips(c, first, 7.5, base_y, l * (.5 if i < 2 else .85), l * (.85 if i < 2 else 9))
     if s >= 2:
         w = 2 if s == 2 else 4
         x0 = 8 - w // 2
@@ -558,9 +614,7 @@ def taro(c, s):
         line(c, 7, 15, 7, 13, SPP)
         stamp(c, 6, 10, TARO_S, {'x': (GD, 2, 'leaf', False), 'v': (GD, 4, 'leaf', True)})
         return
-    lr = YG if s == 3 else GD
-    k = {'x': (lr, 2, 'leaf', False), 'v': (lr, 4, 'leaf', True)}
-    ky = {'x': (YEL, 2, 'leaf', False), 'v': (YEL, 4, 'leaf', True)}
+    k = {'x': (GD, 2, 'leaf', False), 'v': (GD, 4, 'leaf', True)}
     if s == 1:
         for (ex, ey), st in (((4, 8), TARO_S), ((10, 7), TARO_M)):
             line(c, 7, 15, ex, ey + 1, SPP, 3)
@@ -576,8 +630,10 @@ def taro(c, s):
         return
     for ex, ey in ((4, 3), (11, 2), (8, 8)):
         line(c, 7, 15, ex, ey, SPP, 3)
-    stamp(c, 0, 2, TARO_L, k)
-    stamp(c, 8, 1, TARO_L, ky)
+    # ripe: the oldest (left) leaf turns yellow-green with yellow lobe tips; the newer ones stay green
+    old = {'x': (YG, 2, 'leaf', False), 'v': (YG, 4, 'leaf', True), 'y': (YEL, 2, 'leaf', False)}
+    stamp(c, 0, 2, ['yy...yy', 'yxx.xxx', 'xxxvxxx', 'xxxvxxy', '.xxvxx.', '..xxx..', '...x...'], old)
+    stamp(c, 8, 1, ['yy...yy'] + TARO_L[1:], dict(k, y=(YG, 3, 'leaf', False)))
     stamp(c, 5, 8, TARO_M, k)
 
 
@@ -834,8 +890,8 @@ CROPS = {'napa_cabbage': napa_cabbage, 'bok_choy': bok_choy, 'spinach': spinach,
 # ---------------------------------------------------------------- trees
 # tree -> sapling look: (leaf length, width, ramp, droop, shape, stem ramp, young-leaf ramp or None)
 TREES = {
-    'mandarin':     dict(sap=(3, 2.4, GD, .3, 'oval', BROWN, None), leaf=(3, 2.4, GD, 'oval')),
-    'sweet_orange': dict(sap=(4, 2.8, G, .5, 'oval', BROWN, None), leaf=(4, 2.8, G, 'oval')),
+    'mandarin':     dict(sap=(2.4, 2.0, GD, .2, 'oval', BROWN, None), leaf=(3, 2.4, GD, 'oval')),
+    'sweet_orange': dict(sap=(4.6, 3.0, G, .8, 'oval', BROWN, None), leaf=(4, 2.8, G, 'oval')),
     'lemon':        dict(sap=(4, 2.4, GL, .5, 'lance', BROWN, SPP), leaf=(4, 2.4, GL, 'lance')),
     'peach':        dict(sap=(5.5, 1.6, GL, 2.0, 'lance', BRONZE, None), leaf=(5, 1.7, GL, 'lance')),
     'pear':         dict(sap=(3, 2.8, G, .2, 'oval', BARK, None), leaf=(3, 2.8, G, 'oval')),
@@ -861,6 +917,8 @@ def sapling(c, tree):
         leaf(c, 7.5, 9.5, 92, 8, 1.8, GL, lvl=3, shape='strap')
         return
     l, w, ramp, droop, shape, stem, young = TREES[tree]['sap']
+    if tree in ('mandarin', 'sweet_orange'):
+        return citrus_sapling(c, tree, l, w, ramp, droop, stem)
     line(c, 7, 15, 7, 6, stem, 2, 'stem')
     line(c, 7, 10, 5, 8, stem, 2, 'stem')
     line(c, 7, 9, 9, 7, stem, 2, 'stem')
@@ -872,6 +930,34 @@ def sapling(c, tree):
     for x, y, a in SAP_LEAVES:
         r = young if young is not None and y <= 5.5 else ramp
         leaf(c, x, y, a, l, w, r, droop=droop, shape=shape, rib=(r, 3) if w >= 2.4 else None)
+
+
+# mandarin: short trunk, a dense round head of small dark glossy leaves
+MANDARIN_LEAVES = [(5, 9, 160), (10, 9, 20), (4, 7, 140), (11, 7, 40), (6, 7, 175), (9, 7, 5), (5, 5, 120),
+                   (10, 5, 60), (7.5, 5.5, 150), (7.5, 5.5, 30), (6.5, 3.5, 110), (8.5, 3.5, 70), (7.5, 3, 90),
+                   (7.5, 8, 200), (7.5, 8, 340), (6.5, 6.5, 250), (8.5, 6.5, 290)]
+# sweet orange: taller and more open, fewer but larger, lighter leaves
+ORANGE_LEAVES = [(7.5, 9, 175), (7.5, 9, 5), (5, 6.5, 150), (10, 5.5, 30), (7.5, 4, 140), (7.5, 4, 40),
+                 (7.5, 3, 90)]
+
+
+def citrus_sapling(c, tree, l, w, ramp, droop, stem):
+    if tree == 'mandarin':
+        line(c, 7, 15, 7, 7, stem, 2, 'stem')
+        line(c, 7, 11, 5, 9, stem, 2, 'stem')
+        line(c, 7, 10, 10, 8, stem, 2, 'stem')
+        spots = MANDARIN_LEAVES
+    else:
+        line(c, 7, 15, 7, 2, stem, 3, 'stem')
+        line(c, 7, 9, 5, 7, stem, 2, 'stem')
+        line(c, 7, 7, 10, 5, stem, 2, 'stem')
+        spots = ORANGE_LEAVES
+    for x, y, a in spots:
+        leaf(c, x, y, a, l, w, ramp, lvl=3 if tree == 'sweet_orange' else 2, droop=droop, shape='oval',
+             rib=(ramp, 2) if tree == 'sweet_orange' else None)
+    if tree == 'mandarin':  # glossy: a bright glint on the upper leaves
+        for x, y in ((4, 6), (10, 4), (7, 2), (11, 8), (6, 9), (8, 6)):
+            c.put(x, y, GD, 4, 'leaf', c.new(), True)
 
 
 def leaves_base(c, tree):

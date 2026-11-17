@@ -29,13 +29,15 @@ function equal(actual, expected, message) {
 await import("../../packs/BP/scripts/main.js");
 const COMPONENTS = __registerComponents();
 __advance(2); // startup: api_ping and guidebook_ping go out
+/** Every script event sent while the packs started. */
+const STARTUP = system.sentEvents.map((e) => e.id);
 const PINGED = ["kaleidoscope_cookery:api_ping", "kaleidoscope_cookery:guidebook_ping"].every((id) => system.sentEvents.some((e) => e.id === id));
 const { setRandom } = await import("../../packs/BP/scripts/utils/blocks.js");
 const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
 const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
 const { ITEMS } = await import("../../packs/BP/scripts/data/items.js");
 const { climateMultiplier, climateOfBiome } = await import("../../packs/BP/scripts/data/climate.js");
-const { guideEntries } = await import("../../packs/BP/scripts/data/guidebook.js");
+const { guideEntries, guidebookPayload } = await import("../../packs/BP/scripts/data/guidebook.js");
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 const { brokeCrop } = await import("../../packs/BP/scripts/growth/crops.js");
@@ -762,6 +764,209 @@ test("every item and placeable block has a guidebook entry", () => {
   for (const item of ITEMS) assert(ids.has(item.id), `no entry for ${item.id}`);
   for (const id of ["bamboo_trellis", "mandarin_sapling", "fruitwood_log", "banana_trunk"]) assert(ids.has(id), `no entry for ${id}`);
   for (const crop of CROPS) assert(ids.has(crop.seed), `no entry for ${crop.seed}`);
+});
+
+// --- M5: partner packs ----------------------------------------------------------------------------------------
+
+const { feedPayloads, __resetRanching } = await import("../../packs/BP/scripts/api/ranching.js");
+const { herbalMessages, __resetHerbal } = await import("../../packs/BP/scripts/api/herbal.js");
+const { tavernClient } = await import("../../packs/BP/scripts/api/tavern.js");
+const { tavernPayload } = await import("../../packs/BP/scripts/data/tavern.js");
+const { packetsFor } = await import("../../packs/BP/scripts/api/tavernSdk/protocol.js");
+const { canonical, utf8Bytes } = await import("../../packs/BP/scripts/api/tavernSdk/util.js");
+const { RANCHING_FEEDS, HERBAL_HEAT, HERBAL_ADJUVANTS, TAVERN_WINES } = await import("../../packs/BP/scripts/data/integrations.js");
+const { langProblems } = await import("../lang.mjs");
+const { hardOutliers } = await import("../balance.mjs");
+
+/** Script events carry at most 2048 characters (Ranching and Herbal docs/API.md). */
+const SCRIPT_EVENT_LIMIT = 2048;
+const sent = (id) => system.sentEvents.filter((e) => e.id === id);
+const sentJson = (id) => sent(id).map((e) => JSON.parse(e.message));
+/** Runs body and returns what it wrote to console.warn. */
+function warnings(body) {
+  const original = console.warn;
+  const lines = [];
+  console.warn = (...args) => lines.push(args.join(" "));
+  try {
+    body();
+  } finally {
+    console.warn = original;
+  }
+  return lines;
+}
+const fire = (id, message, sourceType = "Server") => system.afterEvents.scriptEventReceive.fire({ id, message: typeof message === "string" ? message : JSON.stringify(message), sourceType });
+
+test("startup pings Ranching, Herbal and Tavern, and registers nothing before they answer", () => {
+  for (const id of ["kaleidoscope_ranching:api_ping", "kaleidoscope_herbal:api_ping", "kaleidoscope_tavern:api_ping"]) assert(STARTUP.includes(id), `${id} sent at startup`);
+  for (const id of ["kaleidoscope_ranching:register_feed", "kaleidoscope_herbal:heat_register", "kaleidoscope_herbal:adjuvant_register", "kaleidoscope_tavern:extension_begin"]) assert(!STARTUP.includes(id), `${id} waits for api_ready`);
+});
+
+test("Ranching: feeds go out only once api_ready lists register_feed", () => {
+  __resetRanching();
+  system.sendScriptEvent("kaleidoscope_ranching:api_ready", JSON.stringify({ api: 1, version: "1.0.0", capabilities: ["register_animal", "api_result"] }));
+  equal(sent("kaleidoscope_ranching:register_feed").length, 0, "no register_feed without the capability");
+  system.sendScriptEvent("kaleidoscope_ranching:api_ready", "not json");
+  equal(sent("kaleidoscope_ranching:register_feed").length, 0, "a broken api_ready is ignored");
+  system.sendScriptEvent("kaleidoscope_ranching:api_ready", JSON.stringify({ api: 1, version: "1.1.0", capabilities: ["register_feed", "api_result", "feed_1_1"] }));
+  const feeds = sentJson("kaleidoscope_ranching:register_feed");
+  equal(feeds.length, RANCHING_FEEDS.length, "one message per feed");
+  for (const feed of feeds) {
+    assert(feed.item.startsWith(`${NS}:`), `${feed.item} is in Harvest's namespace`);
+    assert(["grass", "grain", "veg", "mixed", "concentrate"].includes(feed.kind), `${feed.item} kind`);
+    assert(Number.isInteger(feed.units) && feed.units >= 1 && feed.units <= 9, `${feed.item} units`);
+  }
+  for (const e of sent("kaleidoscope_ranching:register_feed")) assert(e.message.length < SCRIPT_EVENT_LIMIT, "under 2048 characters");
+  const corn = feeds.find((f) => f.item === r("corn"));
+  equal(corn.kind, "grain", "corn is grain");
+  equal(corn.units, 2, "corn counts twice");
+  equal(feeds.find((f) => f.item === r("okara")).kind, "mixed", "okara is mixed feed");
+  // ## Registering again on the next api_ready is safe (Ranching docs/API.md).
+  system.sendScriptEvent("kaleidoscope_ranching:api_ready", JSON.stringify({ api: 1, capabilities: ["register_feed"] }));
+  equal(sent("kaleidoscope_ranching:register_feed").length, 2 * RANCHING_FEEDS.length, "sent again on the second api_ready");
+  equal(feedPayloads([]).length, 0, "no capabilities, no feeds");
+});
+
+test("Ranching: only Harvest's own refusals are logged, once, and never shown to players", () => {
+  __resetRanching();
+  const lines = warnings(() => {
+    fire("kaleidoscope_ranching:api_result", { event: "register_feed", id: "other_pack:oats", ok: false, error: "nope" });
+    fire("kaleidoscope_ranching:api_result", { event: "register_feed", id: r("corn"), ok: true });
+    fire("kaleidoscope_ranching:api_result", { event: "register_feed", id: r("okara"), ok: false, error: "unknown feed kind" });
+    fire("kaleidoscope_ranching:api_result", { event: "register_feed", id: r("okara"), ok: false, error: "unknown feed kind" });
+    fire("kaleidoscope_ranching:api_result", "{broken");
+  });
+  equal(lines.length, 1, "one log line");
+  assert(lines[0].includes(r("okara")) && !lines[0].includes("other_pack"), "about our okara only");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("Herbal: heat and adjuvants wait for API 1 and their capabilities", () => {
+  __resetHerbal();
+  fire("kaleidoscope_herbal:api_ready", { api: 2, capabilities: ["external_heat", "external_adjuvants"] });
+  fire("kaleidoscope_herbal:api_ready", { api: 1, source: "kaleidoscope_herbal", capabilities: ["events"] });
+  equal(sent("kaleidoscope_herbal:heat_register").length + sent("kaleidoscope_herbal:adjuvant_register").length, 0, "nothing without the capabilities");
+  fire("kaleidoscope_herbal:api_ready", { api: 1, source: "kaleidoscope_herbal", capabilities: ["external_heat"] });
+  assert(sent("kaleidoscope_herbal:heat_register").length >= 1, "heat sent");
+  equal(sent("kaleidoscope_herbal:adjuvant_register").length, 0, "no adjuvants without external_adjuvants");
+  system.sentEvents = [];
+  fire("kaleidoscope_herbal:api_ready", { api: 1, source: "kaleidoscope_herbal", version: "1.1.0", capabilities: ["external_heat", "external_adjuvants"], limits: { itemsPerMessage: 32, adjuvantServingsMax: 1 } });
+  const heat = sentJson("kaleidoscope_herbal:heat_register").flatMap((m) => {
+    equal(m.api, 1, "api");
+    equal(m.source, NS, "source");
+    return m.items;
+  });
+  equal(heat.length, HERBAL_HEAT.length, "every heat row");
+  for (const row of heat) {
+    assert(row.id.startsWith(`${NS}:`), `${row.id} in our namespace`);
+    assert(Number.isInteger(row.heat) && row.heat >= -100 && row.heat <= 100 && row.heat !== 0, `${row.id} heat`);
+  }
+  assert(heat.find((h) => h.id === r("ginger_tea")).heat > 0, "ginger tea warms");
+  assert(heat.find((h) => h.id === r("mango_shaved_ice")).heat < 0, "shaved ice cools");
+  const adjuvants = sentJson("kaleidoscope_herbal:adjuvant_register").flatMap((m) => m.items);
+  equal(adjuvants.map((a) => a.id).sort().join(), [r("cinnamon_bark"), r("dried_tangerine_peel")].join(), "only cinnamon bark and dried tangerine peel");
+  assert(adjuvants.every((a) => a.servings === 1), "one serving each");
+  for (const e of [...sent("kaleidoscope_herbal:heat_register"), ...sent("kaleidoscope_herbal:adjuvant_register")]) assert(e.message.length < SCRIPT_EVENT_LIMIT, "under 2048 characters");
+});
+
+test("Herbal: messages follow limits.itemsPerMessage and stay under 2048 characters", () => {
+  const messages = herbalMessages({ api: 1, capabilities: ["external_heat"], limits: { itemsPerMessage: 5 } });
+  const items = messages.map(([, m]) => JSON.parse(m).items);
+  assert(items.every((batch) => batch.length >= 1 && batch.length <= 5), "at most 5 per message");
+  equal(items.flat().length, HERBAL_HEAT.length, "nothing dropped");
+  assert(messages.every(([, m]) => m.length < SCRIPT_EVENT_LIMIT), "under 2048 characters");
+  equal(herbalMessages(null).length, 0, "nothing before api_ready");
+});
+
+test("Herbal: only acks addressed to Harvest, sent by a script, are logged", () => {
+  __resetHerbal();
+  const lines = warnings(() => {
+    fire("kaleidoscope_herbal:heat_ack", { api: 1, to: "other_pack", ok: true, accepted: 0, rejected: [{ id: "other_pack:tea", code: "TAKEN" }] });
+    fire("kaleidoscope_herbal:heat_ack", { api: 1, to: NS, ok: true, accepted: 19, rejected: [{ id: r("lychee"), code: "TAKEN" }] }, "Entity");
+    fire("kaleidoscope_herbal:heat_ack", { api: 1, to: NS, ok: true, accepted: 19, rejected: [{ id: r("lychee"), code: "TAKEN" }] });
+    fire("kaleidoscope_herbal:adjuvant_ack", { api: 1, to: NS, ok: true, accepted: 2, rejected: [] });
+    fire("kaleidoscope_herbal:heat_ack", { api: 1, to: NS, ok: true, accepted: 19, rejected: [{ id: r("lychee"), code: "TAKEN" }] });
+  });
+  equal(lines.length, 1, "one line");
+  assert(lines[0].includes(r("lychee")) && lines[0].includes("TAKEN"), "the lychee refusal");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("Tavern: the payload registers both wines as barrel recipes with pages in three languages", () => {
+  const payload = tavernPayload();
+  equal(payload.api, 1, "api");
+  equal(payload.source, NS, "source");
+  equal(payload.recipes.length, TAVERN_WINES.length, "one recipe per wine");
+  equal(payload.recipes.map((rc) => rc.output.item).sort().join(), [r("lychee_wine"), r("peach_wine")].join(), "lychee and peach wine");
+  assert(!JSON.stringify(payload).includes("grape"), "no grape wine: that is Tavern's own");
+  for (const recipe of payload.recipes) {
+    equal(recipe.kind, "barrel", "barrel");
+    assert(recipe.id.startsWith(`${NS}:barrel/`), "own recipe id");
+    for (const [id] of recipe.ingredients) assert(id.startsWith("minecraft:") || ITEMS.some((i) => r(i.id) === id), `${id} exists`);
+    assert(ITEMS.some((i) => r(i.id) === recipe.output.item), "output exists");
+  }
+  for (const page of payload.pages) for (const locale of ["zh_TW", "zh_CN", "en_US"]) assert(page.title[locale] && page.body[locale], `${page.id} ${locale}`);
+  // ## The pickling jar keeps making them too.
+  for (const wine of TAVERN_WINES) assert(RECIPES.some((row) => row.result === wine.id && row.station === "pickling_jar"), `${wine.id} jar recipe`);
+});
+
+test("Tavern: packets are begin / chunks / commit, each under the SDK's 1900 bytes, and read back as the payload", () => {
+  const packets = packetsFor(tavernPayload(), "r1");
+  equal(packets[0].id, "kaleidoscope_tavern:extension_begin", "begin first");
+  equal(packets.at(-1).id, "kaleidoscope_tavern:extension_commit", "commit last");
+  const begin = JSON.parse(packets[0].message);
+  const chunks = packets.slice(1, -1);
+  equal(chunks.length, begin.parts, "part count");
+  for (const p of packets) assert(utf8Bytes(p.message) <= 1900 && p.message.length < SCRIPT_EVENT_LIMIT, `${p.id} small enough`);
+  const data = chunks.map((p) => JSON.parse(p.message)).sort((a, b) => a.index - b.index).map((c) => c.data).join("");
+  equal(data, canonical(tavernPayload()), "chunks join back into the payload");
+});
+
+test("Tavern: guidebook shows the partner uses, in all three languages", () => {
+  const { entries } = guidebookPayload();
+  const lines = (id) => entries.find((e) => e.id === r(id)).mechanicsByLocale;
+  for (const [id, word] of [["corn", "樂牧"], ["ginger_tea", "草本"], ["dried_tangerine_peel", "佐使"], ["lychee_wine", "酒館"]]) assert(lines(id).zh_TW.some((l) => l.includes(word)), `${id} mentions ${word}`);
+  assert(lines("lychee_wine").en_US.some((l) => l.includes("Tavern")), "English line");
+  assert(lines("lychee_wine").zh_CN.some((l) => l.includes("酒馆")), "Simplified line");
+  for (const e of entries) for (const locale of ["en_US", "zh_TW", "zh_CN"]) equal(e.mechanicsByLocale[locale].length, e.mechanics.length, `${e.id} ${locale} line count`);
+});
+
+test("languages: every zh_TW key is in en_US and zh_CN with text, in both packs", () => {
+  for (const pack of ["packs/BP", "packs/RP"]) {
+    const files = Object.fromEntries(["en_US", "zh_TW", "zh_CN"].map((l) => [l, readFileSync(`${pack}/texts/${l}.lang`, "utf8")]));
+    equal(langProblems(files, pack).length, 0, `${pack} complete`);
+  }
+  const broken = langProblems({ zh_TW: "a=甲\nb=乙\nc=", en_US: "a=A\nc=C\nd=D", zh_CN: "a=甲\nb=\nc=丙" });
+  for (const want of ["en_US.lang: b missing", "zh_CN.lang: b is empty", "zh_TW.lang: c is empty", "en_US.lang: d is not in zh_TW"]) assert(broken.some((p) => p.includes(want)), `reports "${want}"`);
+});
+
+test("balance: no food gives far more than its ingredients or less than one of them", () => {
+  equal(hardOutliers().map((row) => row.id).join(), "", "hard outliers");
+});
+
+test("Tavern: the SDK waits for the required capabilities, then sends the payload and stops at the ack", () => {
+  const client = tavernClient();
+  const lines = warnings(() => {
+    system.sendScriptEvent("kaleidoscope_tavern:api_ready", JSON.stringify({ api: 1, capabilities: ["barrel_recipes"] }));
+    __advance(20);
+  });
+  equal(sent("kaleidoscope_tavern:extension_begin").length, 0, "nothing without guide_product_pages, chunk_transport, acknowledgements");
+  assert(lines.some((l) => l.includes("lacks required capabilities")), "logged to the console");
+  system.sentEvents = [];
+  system.sendScriptEvent("kaleidoscope_tavern:api_ready", JSON.stringify({ api: 1, capabilities: ["barrel_recipes", "guide_product_pages", "chunk_transport", "acknowledgements"] }));
+  __advance(40);
+  const ids = system.sentEvents.map((e) => e.id).filter((id) => id.startsWith("kaleidoscope_tavern:extension_"));
+  equal(ids[0], "kaleidoscope_tavern:extension_begin", "begin first");
+  equal(ids.at(-1), "kaleidoscope_tavern:extension_commit", "commit last");
+  for (const e of system.sentEvents.filter((e) => e.id.startsWith("kaleidoscope_tavern:"))) assert(utf8Bytes(e.message) <= 1900, "packet size");
+  const { revision, source } = JSON.parse(sent("kaleidoscope_tavern:extension_begin")[0].message);
+  equal(source, NS, "source");
+  const quiet = warnings(() => system.sendScriptEvent("kaleidoscope_tavern:extension_ack", JSON.stringify({ source: NS, revision, ok: true })));
+  assert(client.registered, "registered after the ack");
+  equal(quiet.length, 0, "success is not logged");
+  system.sentEvents = [];
+  __advance(300);
+  equal(sent("kaleidoscope_tavern:extension_begin").length, 0, "no resend after the ack");
+  equal(world.messages.length, 0, "no chat text");
 });
 
 // --- Report ------------------------------------------------------------------------------------------------------

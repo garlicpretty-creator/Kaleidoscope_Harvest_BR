@@ -318,6 +318,7 @@ export class Player {
 // --- System ---------------------------------------------------------------------------------
 
 let currentTick = 0;
+let lastHandle = 0;
 const scheduled = [];
 
 export const system = {
@@ -327,10 +328,16 @@ export const system = {
   beforeEvents: { startup: new Signal() },
   afterEvents: { scriptEventReceive: new Signal() },
   run(fn) {
-    scheduled.push({ at: currentTick + 1, fn });
+    return system.runTimeout(fn, 1);
   },
   runTimeout(fn, ticks = 1) {
-    scheduled.push({ at: currentTick + ticks, fn });
+    const handle = ++lastHandle;
+    scheduled.push({ at: currentTick + ticks, fn, handle });
+    return handle;
+  },
+  clearRun(handle) {
+    const i = scheduled.findIndex((t) => t.handle === handle);
+    if (i >= 0) scheduled.splice(i, 1);
   },
   /** Every script event sent, oldest first (tests read it). */
   sentEvents: [],
@@ -345,7 +352,9 @@ export function __advance(ticks) {
   for (let i = 0; i < ticks; i++) {
     currentTick++;
     for (const task of scheduled.filter((t) => t.at <= currentTick)) {
-      scheduled.splice(scheduled.indexOf(task), 1);
+      const i = scheduled.indexOf(task);
+      if (i < 0) continue; // cleared by an earlier task this tick
+      scheduled.splice(i, 1);
       task.fn();
     }
   }

@@ -2,11 +2,14 @@
 //   1. every JSON file under packs/ parses;
 //   2. the data tables agree with each other;
 //   3. every texture, language key and loot table the generated files name exists;
-//   4. the manifests point at each other and at Cookery.
+//   4. the manifests point at each other and at Cookery, and carry data/version.js's version;
+//   5. M5: every language has every text, the partner tables name real items, no balance outlier.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { hardOutliers } from "./balance.mjs";
+import { LANG_LOCALES, langProblems } from "./lang.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BP = join(root, "packs", "BP");
@@ -115,6 +118,23 @@ if (payload) {
     for (const line of entry.mechanicsByLocale.zh_CN) for (const c of line) if (HINTS.has(c)) fail(`guidebook ${entry.id}: zh_CN still has 「${c}」 (add it to data/zh_cn.js)`);
   }
   for (const value of Object.values(payload.text.zh_CN)) for (const c of value) if (HINTS.has(c)) fail(`guidebook text: zh_CN still has 「${c}」`);
+  // ## The chapter in all three languages: the same lines, names and labels in each.
+  const LOCALES = ["en_US", "zh_TW", "zh_CN"];
+  for (const entry of payload.entries) {
+    for (const locale of LOCALES) {
+      const lines = entry.mechanicsByLocale[locale];
+      if (!Array.isArray(lines) || lines.length !== entry.mechanics.length) fail(`guidebook ${entry.id}: ${locale} has ${lines?.length ?? 0} lines, en has ${entry.mechanics.length}`);
+      else if (lines.some((line) => typeof line !== "string" || !line.trim())) fail(`guidebook ${entry.id}: an empty ${locale} line`);
+    }
+  }
+  for (const table of ["names", "text"]) {
+    const keys = Object.keys(payload[table].zh_TW).sort().join();
+    for (const locale of LOCALES) {
+      if (Object.keys(payload[table][locale] ?? {}).sort().join() !== keys) fail(`guidebook ${table}: ${locale} keys differ from zh_TW`);
+      // ## language_note is empty on purpose in every language (Cookery then shows none).
+      for (const [key, value] of Object.entries(payload[table][locale] ?? {})) if (!value && key !== "language_note") fail(`guidebook ${table}.${locale}.${key} is empty`);
+    }
+  }
 }
 
 // --- 3. Generated files and what they name -------------------------------------------------------
@@ -141,6 +161,15 @@ if (!existsSync(join(BP, "blocks")) || !existsSync(join(RP, "textures", "terrain
         .map((line) => line.slice(0, line.indexOf("=")))
     );
   const rpLang = Object.fromEntries(["en_US", "zh_TW", "zh_CN"].map((l) => [l, langKeys(RP, l)]));
+  // ## Three languages (企劃書：zh_TW、zh_CN、en_US): every key zh_TW has must be in the other two,
+  // ## with some text, in both packs; and neither may have keys zh_TW lacks.
+  for (const pack of [BP, RP]) {
+    const where = relative(root, pack);
+    const files = Object.fromEntries(LANG_LOCALES.map((l) => [l, readFileSync(join(pack, "texts", `${l}.lang`), "utf8")]));
+    for (const problem of langProblems(files, where)) fail(problem);
+    const listed = readJson(join(pack, "texts", "languages.json"));
+    for (const locale of ["en_US", "zh_TW", "zh_CN"]) if (!listed.includes(locale)) fail(`${where} languages.json: ${locale} missing`);
+  }
   for (const line of readFileSync(join(RP, "texts", "zh_CN.lang"), "utf8").split("\n")) for (const c of line.slice(line.indexOf("=") + 1)) if (HINTS.has(c)) fail(`RP zh_CN.lang: 「${c}」 not converted in "${line}"`);
 
   const textures = (material) => Object.values(material ?? {}).map((m) => m.texture);
@@ -235,6 +264,59 @@ if (!deps(rp).includes(bp.header.uuid)) fail("RP manifest does not depend on the
 if (!deps(bp).includes(COOKERY_BP)) fail("BP manifest does not depend on Cookery");
 const uuids = [bp.header.uuid, rp.header.uuid, ...bp.modules.map((m) => m.uuid), ...rp.modules.map((m) => m.uuid)];
 if (new Set(uuids).size !== uuids.length) fail("manifest UUIDs are not unique");
+
+const { VERSION } = await load("version.js");
+const versionOf = (v) => (Array.isArray(v) ? v.join(".") : String(v));
+for (const [name, m] of [["BP", bp], ["RP", rp]]) {
+  if (versionOf(m.header.version) !== VERSION) fail(`${name} manifest version ${versionOf(m.header.version)} is not data/version.js's ${VERSION}`);
+  for (const mod of m.modules) if (versionOf(mod.version) !== VERSION) fail(`${name} manifest module ${mod.type}: version ${versionOf(mod.version)} is not ${VERSION}`);
+}
+const npmVersion = readJson(join(root, "package.json")).version;
+if (npmVersion !== VERSION) fail(`package.json version ${npmVersion} is not data/version.js's ${VERSION}`);
+for (const [m, other] of [[bp, rp], [rp, bp]]) {
+  const dep = m.dependencies.find((d) => d.uuid === other.header.uuid);
+  if (dep && versionOf(dep.version) !== VERSION) fail(`manifest dependency on ${other.header.uuid}: version ${versionOf(dep.version)} is not ${VERSION}`);
+}
+
+// --- 5. M5: partner tables and balance -----------------------------------------------------------------
+
+const { RANCHING_FEEDS, HERBAL_HEAT, HERBAL_ADJUVANTS, TAVERN_WINES } = await load("integrations.js");
+const { tavernPayload } = await load("tavern.js");
+const itemOf = (id) => ITEMS.find((i) => i.id === id);
+const FEED_KINDS = ["grass", "grain", "veg", "mixed", "concentrate", "ruminant", "calcium"];
+for (const feed of RANCHING_FEEDS) {
+  if (!itemOf(feed.item)) fail(`Ranching feed ${feed.item}: not a Harvest item`);
+  if (!FEED_KINDS.includes(feed.kind)) fail(`Ranching feed ${feed.item}: unknown kind ${feed.kind}`);
+  if (!(Number.isInteger(feed.units) && feed.units >= 1 && feed.units <= 9)) fail(`Ranching feed ${feed.item}: units must be 1–9`);
+}
+for (const row of HERBAL_HEAT) {
+  // ## Herbal applies 寒熱 when an item is eaten, so it must be food.
+  if (!itemOf(row.id)?.food) fail(`Herbal heat ${row.id}: not a Harvest food or drink`);
+  if (!(Number.isInteger(row.heat) && row.heat !== 0 && Math.abs(row.heat) <= 100)) fail(`Herbal heat ${row.id}: heat must be a non-zero integer −100..100`);
+  if (!row.why) fail(`Herbal heat ${row.id}: say why (data/integrations.js)`);
+}
+if (HERBAL_HEAT.length > 32) fail(`Herbal heat: ${HERBAL_HEAT.length} rows; keep the list modest`);
+// ## Herbal's adjuvant limit (32) is shared by every pack.
+if (HERBAL_ADJUVANTS.length > 4) fail(`Herbal adjuvants: ${HERBAL_ADJUVANTS.length}; all packs together get 32, keep Harvest's to a few`);
+for (const row of HERBAL_ADJUVANTS) if (!itemOf(row.id)) fail(`Herbal adjuvant ${row.id}: not a Harvest item`);
+for (const table of [RANCHING_FEEDS.map((f) => f.item), HERBAL_HEAT.map((h) => h.id), HERBAL_ADJUVANTS.map((a) => a.id)])
+  if (new Set(table).size !== table.length) fail(`partner table lists an item twice: ${table.join(", ")}`);
+for (const wine of TAVERN_WINES) {
+  if (itemOf(wine.id)?.kind !== "drink") fail(`Tavern wine ${wine.id}: not a Harvest drink`);
+  for (const id of wine.ingredients) if (!id.includes(":") && !itemOf(id)) fail(`Tavern wine ${wine.id}: unknown ingredient ${id}`);
+  if (!RECIPES.some((r) => r.result === wine.id && r.station === "pickling_jar")) fail(`Tavern wine ${wine.id}: keep its pickling-jar recipe`);
+}
+const tavern = tavernPayload();
+for (const page of tavern.pages)
+  for (const field of ["title", "body"])
+    for (const locale of ["zh_TW", "zh_CN", "en_US"]) {
+      const text = page[field]?.[locale];
+      if (typeof text !== "string" || !text.trim()) fail(`Tavern page ${page.id}: ${field}.${locale} is empty`);
+      else if (locale === "zh_CN") for (const c of text) if (HINTS.has(c)) fail(`Tavern page ${page.id}: zh_CN still has 「${c}」`);
+    }
+for (const recipe of tavern.recipes) for (const locale of ["zh_TW", "zh_CN", "en_US"]) if (!recipe.title?.[locale]) fail(`Tavern recipe ${recipe.id}: no ${locale} title`);
+
+for (const row of hardOutliers()) fail(`balance: ${row.id} ${row.flags.join(" ")} (npm run balance)`);
 
 if (errors.length) {
   for (const message of errors) console.error(`✗ ${message}`);

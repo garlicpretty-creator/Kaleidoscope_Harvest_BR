@@ -51,7 +51,7 @@ export const MENU = [
   ing("peanut_butter", "花生醬", "Peanut Butter", ["powder", [176, 120, 60]], { station: "millstone", input: "peanut", outputs: [["peanut_butter", 1], ["peanut_oil", 1, 0.5]] }),
   ing("peanut_oil", "花生油", "Peanut Oil", ["bottle", [230, 190, 80]], null, { oil: true }),
   ing("soy_milk", "豆漿", "Soy Milk", ["bottle", [244, 238, 220]], { station: "millstone", input: "soybean", outputs: [["soy_milk", 1], ["okara", 1]] }, { food: [3, 0.4], converts: mc("glass_bottle") }),
-  // ## 豆渣: left over from soy milk; Ranching's feed mixer takes it once its feed API is out (M5).
+  // ## 豆渣: left over from soy milk; with Ranching it is trough feed (data/integrations.js, M5).
   ing("okara", "豆渣", "Okara", ["powder", [236, 226, 196]], null),
   ing("ground_black_pepper", "黑胡椒粉", "Ground Black Pepper", ["powder", [70, 60, 56]], { station: "millstone", input: "black_peppercorns", outputs: [["ground_black_pepper", 2]] }),
   ing("ground_cumin", "孜然粉", "Ground Cumin", ["powder", [160, 120, 70]], { station: "millstone", input: "cumin", outputs: [["ground_cumin", 2]] }),
@@ -72,8 +72,8 @@ export const MENU = [
   ing("blueberry_jam", "藍莓果醬", "Blueberry Jam", ["bottle", [60, 50, 120]], { station: "pickling_jar", inputs: ["blueberry", "blueberry", mc("sugar")], time: DAY / 2, count: 2 }, { food: [4, 0.3], converts: mc("glass_bottle") }),
   ing("persimmon_jam", "柿子果醬", "Persimmon Jam", ["bottle", [230, 120, 40]], { station: "pickling_jar", inputs: ["persimmon", "persimmon", mc("sugar")], time: DAY / 2, count: 2 }, { food: [4, 0.3], converts: mc("glass_bottle") }),
   // ## Harvest's own fruit wines; M5 registers them with Tavern (企劃書：豐收自己的果酒透過握手登記到酒館).
-  drink("lychee_wine", "荔枝酒", "Lychee Wine", [2, 0.2], ["bottle", [246, 220, 220]], { station: "pickling_jar", inputs: ["lychee", "lychee", mc("sugar")], time: 5 * DAY, count: 2 }, mc("glass_bottle")),
-  drink("peach_wine", "桃子酒", "Peach Wine", [2, 0.2], ["bottle", [250, 190, 160]], { station: "pickling_jar", inputs: ["peach", "peach", mc("sugar")], time: 5 * DAY, count: 2 }, mc("glass_bottle")),
+  drink("lychee_wine", "荔枝酒", "Lychee Wine", [3, 0.3], ["bottle", [246, 220, 220]], { station: "pickling_jar", inputs: ["lychee", "lychee", mc("sugar")], time: 5 * DAY, count: 2 }, mc("glass_bottle")),
+  drink("peach_wine", "桃子酒", "Peach Wine", [4, 0.3], ["bottle", [250, 190, 160]], { station: "pickling_jar", inputs: ["peach", "peach", mc("sugar")], time: 5 * DAY, count: 2 }, mc("glass_bottle")),
   ing("orange_marmalade", "橙皮果醬", "Orange Marmalade", ["bottle", [240, 140, 30]], { station: "pickling_jar", inputs: ["sweet_orange", "sweet_orange", mc("sugar")], time: DAY / 2, count: 2 }, { food: [4, 0.3], converts: mc("glass_bottle") }),
 
   // --- Drinks -----------------------------------------------------------------------------------
@@ -128,16 +128,16 @@ export const MENU = [
 
   // --- Steamer ---------------------------------------------------------------------------------------
   dish("steamed_corn", "蒸玉米", "Steamed Corn", [5, 0.6], ["cob", [250, 220, 100]], { station: "steamer", input: "corn", time: 200 }),
-  dish("steamed_sweet_potato", "蒸地瓜", "Steamed Sweet Potato", [6, 0.6], ["root", [230, 140, 70]], { station: "steamer", input: "sweet_potato", time: 300 }),
+  dish("steamed_sweet_potato", "蒸地瓜", "Steamed Sweet Potato", [5, 0.7], ["root", [230, 140, 70]], { station: "steamer", input: "sweet_potato", time: 300 }),
   dish("taro_paste", "芋泥", "Taro Paste", [6, 0.6], ["bowl", [190, 170, 210]], { station: "steamer", input: "taro", time: 300 }),
 
   // --- Chopping board ---------------------------------------------------------------------------------
   dish("smashed_cucumber", "拍黃瓜", "Smashed Cucumber Salad", [4, 0.5], ["bowl", [96, 160, 76]], { station: "chopping_board", input: "cucumber", count: 1, cuts: 3 }),
 
   // --- Crafting table and furnace ------------------------------------------------------------------------
-  dish("roasted_sweet_potato", "烤地瓜", "Roasted Sweet Potato", [6, 0.7], ["root", [200, 110, 60]], { station: "furnace", input: "sweet_potato" }),
+  dish("roasted_sweet_potato", "烤地瓜", "Roasted Sweet Potato", [5, 0.6], ["root", [200, 110, 60]], { station: "furnace", input: "sweet_potato" }),
   dish("scallion_pancake", "蔥油餅", "Scallion Pancake", [6, 0.6], ["round", [230, 190, 110]], { station: "crafting", inputs: [mc("wheat"), mc("wheat"), "chopped_scallion", "peanut_oil"] }),
-  dish("pepper_bun", "胡椒餅", "Pepper Bun", [7, 0.7], ["round", [210, 160, 90]], { station: "crafting", inputs: [mc("wheat"), mc("porkchop"), "ground_black_pepper", "chopped_scallion", "sesame"] }),
+  dish("pepper_bun", "胡椒餅", "Pepper Bun", [9, 0.7], ["round", [210, 160, 90]], { station: "crafting", inputs: [mc("wheat"), mc("porkchop"), "ground_black_pepper", "chopped_scallion", "sesame"] }),
   dish("strawberry_daifuku", "草莓大福", "Strawberry Daifuku", [5, 0.5], ["round", [246, 236, 236]], { station: "crafting", inputs: ["strawberry", mc("wheat"), mc("sugar")] }),
   dish("blueberry_pie", "藍莓派", "Blueberry Pie", [8, 0.3], ["round", [80, 60, 120]], { station: "crafting", inputs: ["blueberry", "blueberry", mc("wheat"), mc("egg"), mc("sugar")] }),
   dish("pineapple_cake", "鳳梨酥", "Pineapple Cake", [6, 0.5], ["round", [230, 180, 80]], { station: "crafting", inputs: ["pineapple", mc("wheat"), mc("egg"), mc("sugar")] }),
