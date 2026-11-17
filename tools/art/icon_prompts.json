@@ -339,39 +339,39 @@
     },
     "mandarin_juice": {
       "zh": "橘子汁",
-      "prompt": "glass of orange tangerine juice with a slice on the rim"
+      "prompt": "square glass bottle with a cork stopper, full of deep orange tangerine juice, a brown kraft paper label band around the middle"
     },
     "orange_juice": {
       "zh": "柳橙汁",
-      "prompt": "tall glass of bright orange juice with an orange slice on the rim"
+      "prompt": "square glass bottle with a cork stopper, full of bright orange juice, a brown kraft paper label band around the middle"
     },
     "grape_juice": {
       "zh": "葡萄汁",
-      "prompt": "glass of dark purple grape juice with a small bunch of grapes beside it"
+      "prompt": "square glass bottle with a cork stopper, full of dark purple grape juice, a brown kraft paper label band around the middle"
     },
     "mango_juice": {
       "zh": "芒果汁",
-      "prompt": "glass of thick yellow mango juice with a mango cube on the rim"
+      "prompt": "square glass bottle with a cork stopper, full of thick golden yellow mango juice, a brown kraft paper label band around the middle"
     },
     "lemon_tea": {
       "zh": "檸檬茶",
-      "prompt": "glass of iced amber tea with a lemon slice"
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of pale yellow lemon tea, steam rising"
     },
     "passion_fruit_tea": {
       "zh": "百香果茶",
-      "prompt": "glass of golden yellow passion fruit tea with black seeds floating"
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of orange gold passion fruit tea, steam rising"
     },
     "ginger_tea": {
       "zh": "薑母茶",
-      "prompt": "brown clay cup of dark brown ginger tea with ginger slices, steam rising"
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of golden brown ginger tea, steam rising"
     },
     "lychee_wine": {
       "zh": "荔枝酒",
-      "prompt": "round glass bottle with a cork, clear pale pink liquor with white lychees inside"
+      "prompt": "squat square glass bottle sealed with red paper and gold string, clear pale cream liquor inside, a red diamond paper label on the front"
     },
     "peach_wine": {
       "zh": "桃子酒",
-      "prompt": "round glass bottle with a cork, pale peach colored liquor with a pink peach label"
+      "prompt": "squat square glass bottle sealed with red paper and gold string, pale peach pink liquor inside, a red diamond paper label on the front"
     },
     "cabbage_pork_stew": {
       "zh": "白菜燉肉",
@@ -567,7 +567,7 @@
     },
     "cinnamon_tea": {
       "zh": "肉桂茶",
-      "prompt": "clay cup of reddish brown cinnamon tea with a cinnamon stick, steam rising"
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of reddish brown cinnamon tea, steam rising"
     },
     "cumin_potatoes": {
       "zh": "孜然馬鈴薯",
@@ -603,11 +603,11 @@
     },
     "mixed_juice": {
       "zh": "綜合果汁",
-      "prompt": "tall glass of layered orange, red and purple fruit juice with a straw"
+      "prompt": "square glass bottle with a cork stopper, full of coral red mixed fruit juice, a brown kraft paper label band around the middle"
     },
     "passion_fruit_juice": {
       "zh": "百香果汁",
-      "prompt": "glass of bright yellow passion fruit juice with black seeds and half a purple passion fruit on the rim"
+      "prompt": "square glass bottle with a cork stopper, full of yellow passion fruit juice, a brown kraft paper label band around the middle, a small purple stamp on the label"
     },
     "persimmon_jam": {
       "zh": "柿子果醬",
