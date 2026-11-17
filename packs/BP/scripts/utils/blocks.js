@@ -1,7 +1,8 @@
 // Small helpers with no lifecycle of their own: block states, the player's
 // hand, dropping items, sounds and particles.
 
-import { EquipmentSlot, GameMode, ItemStack } from "@minecraft/server";
+import { EquipmentSlot, GameMode, ItemStack, MolangVariableMap } from "@minecraft/server";
+import { PARTICLE_VARIABLES } from "../data/feedback.js";
 import { state } from "../data/ns.js";
 
 // --- Randomness (tests replace it) ---------------------------------------------------
@@ -82,7 +83,17 @@ export function playAt(block, sound) {
 
 export function particleAt(block, particle) {
   try {
-    block.dimension.spawnParticle(particle, centre(block.location));
+    const wants = PARTICLE_VARIABLES[particle];
+    if (!wants) {
+      block.dimension.spawnParticle(particle, centre(block.location));
+      return;
+    }
+    const vars = new MolangVariableMap();
+    const [red, green, blue, alpha] = wants.color.rgba;
+    vars.setColorRGBA(wants.color.variable, { red, green, blue, alpha });
+    const [x, y, z] = wants.vector.xyz;
+    vars.setVector3(wants.vector.variable, { x, y, z });
+    block.dimension.spawnParticle(particle, centre(block.location), vars);
   } catch {
     // ## Same for particles: an unloaded chunk or a bad id is not worth an error.
   }

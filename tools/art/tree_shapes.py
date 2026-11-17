@@ -51,16 +51,19 @@ def tag(t, op='=='):
 # ---------------------------------------------------------------- the shape table
 # trunk kinds:  trunk (straight, height range) | acacia (base + intervals, optional lean / branch) | fancy (big-oak style)
 # canopy kinds: random_spread | canopy (oak blob) | acacia | fancy | roofed | mega | spruce | pine
+# ## random_spread only works on an acacia trunk (vanilla azalea pairs them the same way): on a plain
+# ## `trunk` the game places the logs, no leaves, and reports the feature as failed (found in game, 1.0.0).
+# ## A straight acacia trunk is base + intervals with no lean, e.g. base 3, intervals [2] -> 3 or 4 logs.
 # wild: biome filter (list = all must pass) and per-chunk chance (one attempt per chunk); None = no wild rule.
 TREES = {
     'mandarin': dict(
         zh='柑橘', note='矮幹、3 寬緊密圓冠',
-        trunk=dict(kind='trunk', height=(3, 4)),
+        trunk=dict(kind='acacia', base=3, intervals=[2]),
         canopy=dict(kind='random_spread', height=2, radius=2, attempts=40),
         wild=None),
     'sweet_orange': dict(
         zh='柳橙', note='矮幹、5 寬圓球冠',
-        trunk=dict(kind='trunk', height=(3, 4)),
+        trunk=dict(kind='acacia', base=3, intervals=[2]),
         canopy=dict(kind='random_spread', height=3, radius=3, attempts=70),
         wild=dict(filter=[tag('plains')], chance=(1, 4), biomes='plains（平原、向日葵平原）')),
     'lemon': dict(
@@ -102,7 +105,7 @@ TREES = {
                   biomes='jungle，排除 edge / bamboo（叢林）')),
     'banana': dict(
         zh='香蕉', note='香蕉莖、頂端稀疏扇葉叢',
-        trunk=dict(kind='trunk', height=(3, 4), block='banana_trunk'),
+        trunk=dict(kind='acacia', base=3, intervals=[2], block='banana_trunk'),
         canopy=dict(kind='random_spread', height=2, radius=3, attempts=30),
         wild=dict(filter=[tag('jungle')], chance=(1, 3), biomes='jungle（叢林、稀疏叢林、竹林）')),
     'star_anise': dict(
@@ -194,6 +197,8 @@ def canopy_json(c, leaf):
 
 def feature_json(tid):
     d = TREES[tid]
+    if d['canopy']['kind'] == 'random_spread' and d['trunk']['kind'] != 'acacia':
+        raise ValueError(f'{tid}: random_spread canopy needs an acacia trunk (the game places no leaves otherwise)')
     log = f"{NS}:{d['trunk'].get('block', 'fruitwood_log')}"
     leaf = f'{NS}:{tid}_leaves'
     tk, tb = trunk_json(d['trunk'], log)

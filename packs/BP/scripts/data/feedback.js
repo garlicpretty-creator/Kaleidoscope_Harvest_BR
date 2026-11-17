@@ -24,5 +24,12 @@ export const PARTICLE = {
   pick: "minecraft:villager_happy",
 };
 
+// ## Vanilla particles that read Molang variables log an error on every frame without them
+// ## (wax_particle wants variable.color and variable.direction; found in game, 1.0.0).
+// ## color: RGBA 0..1, a warm ripe glint; direction: a slow drift upward.
+export const PARTICLE_VARIABLES = {
+  "minecraft:wax_particle": { color: { variable: "variable.color", rgba: [1, 0.82, 0.35, 1] }, vector: { variable: "variable.direction", xyz: [0, 0.6, 0] } },
+};
+
 /** Chance, per random tick, that a ripe crop or hanging fruit gives off a particle. */
 export const RIPE_PARTICLE_CHANCE = 0.35;

@@ -48,6 +48,17 @@ class Signal {
 }
 
 export const EquipmentSlot = { Mainhand: "Mainhand", Offhand: "Offhand" };
+export class MolangVariableMap {
+  constructor() {
+    this.values = {};
+  }
+  setColorRGBA(name, color) {
+    this.values[name] = { ...color };
+  }
+  setVector3(name, vector) {
+    this.values[name] = { ...vector };
+  }
+}
 export const GameMode = { Survival: "Survival", Creative: "Creative" };
 
 // --- Items ------------------------------------------------------------------------------
@@ -220,8 +231,8 @@ class Dimension {
   playSound(id, location) {
     this.sounds.push({ id, location });
   }
-  spawnParticle(id, location) {
-    this.particles.push({ id, location });
+  spawnParticle(id, location, variables) {
+    this.particles.push({ id, location, variables: variables?.values });
   }
   runCommand(command) {
     const m = command.match(/^setblock (-?\d+) (-?\d+) (-?\d+) air destroy$/);

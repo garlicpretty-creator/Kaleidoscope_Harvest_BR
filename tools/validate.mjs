@@ -36,6 +36,43 @@ for (const path of walk(join(root, "packs")).filter((p) => p.endsWith(".json")))
   }
 }
 
+// --- 1b. Things the game rejects that JSON syntax does not show (found in game, 1.0.0) -------
+
+// ## Java Edition names that do not exist in Bedrock: the game drops the filter entry or the
+// ## whole feature. Bedrock name in the message.
+const JAVA_ONLY_BLOCKS = { "minecraft:rooted_dirt": "minecraft:dirt_with_roots" };
+// ## A block component and the lowest block format_version that accepts it without the
+// ## "Upcoming Creator Features" toggle; below it the whole block fails to load.
+const COMPONENT_MIN_FORMAT = { "minecraft:movable": [1, 21, 100] };
+const formatOf = (text) => String(text).split(".").map(Number);
+const below = (a, b) => {
+  for (let i = 0; i < 3; i++) if ((a[i] ?? 0) !== b[i]) return (a[i] ?? 0) < b[i];
+  return false;
+};
+for (const path of walk(join(root, "packs")).filter((p) => p.endsWith(".json"))) {
+  const text = readFileSync(path, "utf8");
+  for (const [java, bedrock] of Object.entries(JAVA_ONLY_BLOCKS)) {
+    if (text.includes(`"${java}"`)) fail(`${relative(root, path)}: ${java} does not exist in Bedrock, use ${bedrock}`);
+  }
+}
+for (const path of walk(join(BP, "blocks")).filter((p) => p.endsWith(".json"))) {
+  const block = readJson(path);
+  const format = formatOf(block.format_version);
+  const used = new Set([
+    ...Object.keys(block["minecraft:block"]?.components ?? {}),
+    ...(block["minecraft:block"]?.permutations ?? []).flatMap((p) => Object.keys(p.components ?? {})),
+  ]);
+  for (const [component, min] of Object.entries(COMPONENT_MIN_FORMAT)) {
+    if (used.has(component) && below(format, min)) fail(`${relative(root, path)}: ${component} needs format_version ${min.join(".")} or later (has ${block.format_version})`);
+  }
+}
+for (const path of walk(join(BP, "scripts")).filter((p) => p.endsWith(".js"))) {
+  const text = readFileSync(path, "utf8");
+  for (const [java, bedrock] of Object.entries(JAVA_ONLY_BLOCKS)) {
+    if (text.includes(`"${java}"`)) fail(`${relative(root, path)}: ${java} does not exist in Bedrock, use ${bedrock}`);
+  }
+}
+
 // --- 2. Data tables -------------------------------------------------------------------------
 
 const { NAMESPACE, rid } = await load("ns.js");
@@ -253,7 +290,16 @@ for (const dir of ["features", "feature_rules"]) {
 }
 if (unknownPlaced.size) fail(`world generation names ${unknownPlaced.size} block id(s) the packs do not define: ${[...unknownPlaced.keys()].sort().join(", ")}`);
 
+// ## Found in game (1.0.0): a random_spread_canopy on anything but an acacia_trunk places only the
+// ## logs and the feature reports failure, so those trees never got leaves.
+for (const path of walk(join(BP, "features")).filter((p) => p.endsWith(".json"))) {
+  const body = readJson(path)["minecraft:tree_feature"];
+  if (body?.random_spread_canopy && !body.acacia_trunk)
+    fail(`${relative(root, path)}: random_spread_canopy needs an acacia_trunk (the game places no leaves otherwise)`);
+}
+
 // --- 4. Manifests ---------------------------------------------------------------------------------
+for (const pack of [BP, RP]) if (!existsSync(join(pack, "pack_icon.png"))) fail(`${relative(root, pack)}/pack_icon.png missing (the game shows a blank icon)`);
 
 const COOKERY_BP = "9944f731-cc4c-4299-bdd5-f8799c1d832e";
 const bp = readJson(join(BP, "manifest.json"));
