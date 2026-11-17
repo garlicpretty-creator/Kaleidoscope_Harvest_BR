@@ -789,8 +789,6 @@ for (const pack of [BP, RP]) {
   writeJson(join(pack, "texts", "languages.json"), ["en_US", "zh_TW", "zh_CN"]);
 }
 
-// ## No pack icon until one is drawn (the game shows its default).
-for (const pack of [BP, RP]) rmSync(join(pack, "pack_icon.png"), { force: true });
 // Copies of the icons used to live here; the item atlas now points at the drawn icons.
 rmSync(join(RP, "textures", "items", NS), { recursive: true, force: true });
 
