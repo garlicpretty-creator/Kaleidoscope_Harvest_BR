@@ -819,6 +819,69 @@
     },
     "kh_station_contents_done": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_done"
+    },
+    "kh_food_cabbage_pork_stew": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/cabbage_pork_stew"
+    },
+    "kh_food_daikon_beef_brisket": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/daikon_beef_brisket"
+    },
+    "kh_food_braised_pork": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/braised_pork"
+    },
+    "kh_food_corn_chowder": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/corn_chowder"
+    },
+    "kh_food_taro_spare_ribs": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/taro_spare_ribs"
+    },
+    "kh_food_tofu_vegetable_soup": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/tofu_vegetable_soup"
+    },
+    "kh_food_blueberry_pie": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/blueberry_pie"
+    },
+    "kh_food_pineapple_cake": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/pineapple_cake"
+    },
+    "kh_food_fruit_platter": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/fruit_platter"
+    },
+    "kh_food_mandarin_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mandarin_juice"
+    },
+    "kh_food_orange_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/orange_juice"
+    },
+    "kh_food_grape_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/grape_juice"
+    },
+    "kh_food_mango_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mango_juice"
+    },
+    "kh_food_mixed_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mixed_juice"
+    },
+    "kh_food_passion_fruit_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/passion_fruit_juice"
+    },
+    "kh_food_lychee_wine": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/lychee_wine"
+    },
+    "kh_food_peach_wine": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/peach_wine"
+    },
+    "kh_food_cinnamon_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/cinnamon_tea"
+    },
+    "kh_food_ginger_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/ginger_tea"
+    },
+    "kh_food_lemon_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/lemon_tea"
+    },
+    "kh_food_passion_fruit_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/passion_fruit_tea"
     }
   }
 }

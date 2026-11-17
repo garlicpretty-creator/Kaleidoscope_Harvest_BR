@@ -1,0 +1,157 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:mandarin_juice",
+      "menu_category": {
+        "category": "none"
+      },
+      "states": {
+        "kaleidoscope_cookery:food_stage": {
+          "values": {
+            "min": 0,
+            "max": 1
+          }
+        }
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction"
+          ],
+          "y_rotation_offset": 180
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:mandarin_juice.name",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.food_bottle",
+        "bone_visibility": {
+          "liquid": "q.block_state('kaleidoscope_cookery:food_stage') == 0"
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_food_mandarin_juice",
+          "render_method": "alpha_test"
+        },
+        "glass": {
+          "texture": "kh_food_mandarin_juice",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -3,
+          0,
+          -3
+        ],
+        "size": [
+          6,
+          12,
+          6
+        ]
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -3,
+          0,
+          -3
+        ],
+        "size": [
+          6,
+          12,
+          6
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.3
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": {
+        "movement_type": "immovable"
+      },
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_cookery:placeable_food_placement_guard": {},
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_mandarin_juice_full.json",
+      "kaleidoscope_cookery:food_bite": {
+        "state": "kaleidoscope_cookery:food_stage",
+        "max_stage": 1,
+        "nutrition": 4,
+        "saturation_modifier": 0.4,
+        "always_eat": true,
+        "return_items": [
+          "minecraft:glass_bottle"
+        ]
+      }
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_cookery:food_stage') > 0",
+        "components": {
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/placed_glass_bottle.json"
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'north'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'east'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              270,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'south'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              180,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('minecraft:cardinal_direction') == 'west'",
+        "components": {
+          "minecraft:transformation": {
+            "rotation": [
+              0,
+              90,
+              0
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
