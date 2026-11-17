@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "dried_tangerine_peel",
+    "normal": "dried_tangerine_peel_normal",
+    "metalness_emissive_roughness": "dried_tangerine_peel_mer"
+  }
+}

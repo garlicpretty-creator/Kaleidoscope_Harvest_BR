@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "homestyle_tofu",
+    "normal": "homestyle_tofu_normal",
+    "metalness_emissive_roughness": "homestyle_tofu_mer"
+  }
+}

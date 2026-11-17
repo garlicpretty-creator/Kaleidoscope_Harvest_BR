@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "spinach_dumplings",
+    "normal": "spinach_dumplings_normal",
+    "metalness_emissive_roughness": "spinach_dumplings_mer"
+  }
+}

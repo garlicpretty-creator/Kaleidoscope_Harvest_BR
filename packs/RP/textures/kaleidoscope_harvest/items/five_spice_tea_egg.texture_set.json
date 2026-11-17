@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "five_spice_tea_egg",
+    "normal": "five_spice_tea_egg_normal",
+    "metalness_emissive_roughness": "five_spice_tea_egg_mer"
+  }
+}

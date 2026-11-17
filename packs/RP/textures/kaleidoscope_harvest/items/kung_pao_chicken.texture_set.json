@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "kung_pao_chicken",
+    "normal": "kung_pao_chicken_normal",
+    "metalness_emissive_roughness": "kung_pao_chicken_mer"
+  }
+}

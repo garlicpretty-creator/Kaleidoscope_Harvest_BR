@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "five_spice_powder",
+    "normal": "five_spice_powder_normal",
+    "metalness_emissive_roughness": "five_spice_powder_mer"
+  }
+}

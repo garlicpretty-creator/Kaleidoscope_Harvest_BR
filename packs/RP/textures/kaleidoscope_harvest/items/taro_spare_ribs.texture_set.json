@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "taro_spare_ribs",
+    "normal": "taro_spare_ribs_normal",
+    "metalness_emissive_roughness": "taro_spare_ribs_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "scallion_omelette",
+    "normal": "scallion_omelette_normal",
+    "metalness_emissive_roughness": "scallion_omelette_mer"
+  }
+}

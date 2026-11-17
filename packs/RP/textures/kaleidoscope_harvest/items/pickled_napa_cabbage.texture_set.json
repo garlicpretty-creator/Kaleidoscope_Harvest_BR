@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pickled_napa_cabbage",
+    "normal": "pickled_napa_cabbage_normal",
+    "metalness_emissive_roughness": "pickled_napa_cabbage_mer"
+  }
+}

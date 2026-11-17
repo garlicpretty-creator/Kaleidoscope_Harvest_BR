@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lemon_tea",
+    "normal": "lemon_tea_normal",
+    "metalness_emissive_roughness": "lemon_tea_mer"
+  }
+}

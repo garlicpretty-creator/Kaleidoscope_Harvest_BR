@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "coriander_seeds",
+    "normal": "coriander_seeds_normal",
+    "metalness_emissive_roughness": "coriander_seeds_mer"
+  }
+}

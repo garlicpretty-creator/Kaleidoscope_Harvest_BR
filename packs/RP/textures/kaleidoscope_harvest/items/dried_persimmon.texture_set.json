@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "dried_persimmon",
+    "normal": "dried_persimmon_normal",
+    "metalness_emissive_roughness": "dried_persimmon_mer"
+  }
+}

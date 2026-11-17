@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "eggplant_seeds",
+    "normal": "eggplant_seeds_normal",
+    "metalness_emissive_roughness": "eggplant_seeds_mer"
+  }
+}

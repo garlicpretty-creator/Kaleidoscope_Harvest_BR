@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "grape_cutting",
+    "normal": "grape_cutting_normal",
+    "metalness_emissive_roughness": "grape_cutting_mer"
+  }
+}

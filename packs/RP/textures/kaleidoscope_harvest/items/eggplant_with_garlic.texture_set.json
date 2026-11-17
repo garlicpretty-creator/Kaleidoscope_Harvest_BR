@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "eggplant_with_garlic",
+    "normal": "eggplant_with_garlic_normal",
+    "metalness_emissive_roughness": "eggplant_with_garlic_mer"
+  }
+}

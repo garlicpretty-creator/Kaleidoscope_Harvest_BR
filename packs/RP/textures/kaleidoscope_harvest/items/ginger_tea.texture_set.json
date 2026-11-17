@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "ginger_tea",
+    "normal": "ginger_tea_normal",
+    "metalness_emissive_roughness": "ginger_tea_mer"
+  }
+}

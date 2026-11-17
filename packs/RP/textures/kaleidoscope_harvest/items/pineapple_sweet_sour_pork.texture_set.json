@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pineapple_sweet_sour_pork",
+    "normal": "pineapple_sweet_sour_pork_normal",
+    "metalness_emissive_roughness": "pineapple_sweet_sour_pork_mer"
+  }
+}

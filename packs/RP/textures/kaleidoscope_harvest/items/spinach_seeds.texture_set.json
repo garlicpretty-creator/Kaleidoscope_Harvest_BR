@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "spinach_seeds",
+    "normal": "spinach_seeds_normal",
+    "metalness_emissive_roughness": "spinach_seeds_mer"
+  }
+}

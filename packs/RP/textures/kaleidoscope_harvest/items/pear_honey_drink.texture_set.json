@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pear_honey_drink",
+    "normal": "pear_honey_drink_normal",
+    "metalness_emissive_roughness": "pear_honey_drink_mer"
+  }
+}

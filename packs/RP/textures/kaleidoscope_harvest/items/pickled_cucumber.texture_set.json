@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pickled_cucumber",
+    "normal": "pickled_cucumber_normal",
+    "metalness_emissive_roughness": "pickled_cucumber_mer"
+  }
+}

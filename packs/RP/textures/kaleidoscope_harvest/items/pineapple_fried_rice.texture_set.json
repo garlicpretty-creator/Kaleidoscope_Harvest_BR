@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pineapple_fried_rice",
+    "normal": "pineapple_fried_rice_normal",
+    "metalness_emissive_roughness": "pineapple_fried_rice_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "soy_milk",
+    "normal": "soy_milk_normal",
+    "metalness_emissive_roughness": "soy_milk_mer"
+  }
+}

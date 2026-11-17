@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "juice_empty",
+    "normal": "juice_empty_normal",
+    "metalness_emissive_roughness": "juice_empty_mer"
+  }
+}

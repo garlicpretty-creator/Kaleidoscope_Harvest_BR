@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "contents_done",
+    "normal": "contents_done_normal",
+    "metalness_emissive_roughness": "contents_done_mer"
+  }
+}

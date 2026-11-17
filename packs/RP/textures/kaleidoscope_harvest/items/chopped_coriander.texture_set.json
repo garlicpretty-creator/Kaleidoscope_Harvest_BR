@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "chopped_coriander",
+    "normal": "chopped_coriander_normal",
+    "metalness_emissive_roughness": "chopped_coriander_mer"
+  }
+}

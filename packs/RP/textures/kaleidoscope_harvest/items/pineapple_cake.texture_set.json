@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "pineapple_cake",
+    "normal": "pineapple_cake_normal",
+    "metalness_emissive_roughness": "pineapple_cake_mer"
+  }
+}

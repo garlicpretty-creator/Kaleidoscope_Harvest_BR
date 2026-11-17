@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "corn_chowder",
+    "normal": "corn_chowder_normal",
+    "metalness_emissive_roughness": "corn_chowder_mer"
+  }
+}

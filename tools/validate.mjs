@@ -321,6 +321,21 @@ for (const path of featurePaths) {
 // --- 4. Manifests ---------------------------------------------------------------------------------
 for (const pack of [BP, RP]) if (!existsSync(join(pack, "pack_icon.png"))) fail(`${relative(root, pack)}/pack_icon.png missing (the game shows a blank icon)`);
 
+// PBR: the pack declares it, so every colour texture has its texture set and the set's layers exist
+// (tools/art/pbr_maps.py makes them for icons, placed foods and stations; the painters for the rest).
+// Flat UI art (the guidebook's star) is never lit and has none.
+{
+  const dir = join(RP, "textures", NAMESPACE);
+  const files = walk(dir);
+  const isLayer = (path) => /_(mer|normal)\.png$/.test(path);
+  for (const png of files.filter((path) => path.endsWith(".png") && !isLayer(path) && !/[\\/]ui[\\/]/.test(path))) {
+    const base = png.replace(/\.png$/, "");
+    if (!existsSync(`${base}.texture_set.json`)) fail(`${relative(root, png)}: no PBR texture set, run python tools/art/pbr_maps.py`);
+    for (const layer of ["_normal", "_mer"]) if (!existsSync(`${base}${layer}.png`)) fail(`${relative(root, png)}: no ${layer} map, run python tools/art/pbr_maps.py`);
+  }
+  for (const layer of files.filter(isLayer)) if (!existsSync(layer.replace(/_(mer|normal)\.png$/, ".png"))) fail(`${relative(root, layer)}: PBR map without a colour texture`);
+}
+
 const COOKERY_BP = "9944f731-cc4c-4299-bdd5-f8799c1d832e";
 const bp = readJson(join(BP, "manifest.json"));
 const rp = readJson(join(RP, "manifest.json"));

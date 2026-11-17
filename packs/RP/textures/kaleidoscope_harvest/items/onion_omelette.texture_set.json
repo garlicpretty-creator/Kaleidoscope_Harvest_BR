@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "onion_omelette",
+    "normal": "onion_omelette_normal",
+    "metalness_emissive_roughness": "onion_omelette_mer"
+  }
+}

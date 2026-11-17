@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "orange_marmalade",
+    "normal": "orange_marmalade_normal",
+    "metalness_emissive_roughness": "orange_marmalade_mer"
+  }
+}

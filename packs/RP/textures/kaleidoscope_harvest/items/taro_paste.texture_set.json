@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "taro_paste",
+    "normal": "taro_paste_normal",
+    "metalness_emissive_roughness": "taro_paste_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "daikon_seeds",
+    "normal": "daikon_seeds_normal",
+    "metalness_emissive_roughness": "daikon_seeds_mer"
+  }
+}

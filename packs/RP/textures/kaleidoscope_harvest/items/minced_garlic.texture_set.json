@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "minced_garlic",
+    "normal": "minced_garlic_normal",
+    "metalness_emissive_roughness": "minced_garlic_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "strawberry_daifuku",
+    "normal": "strawberry_daifuku_normal",
+    "metalness_emissive_roughness": "strawberry_daifuku_mer"
+  }
+}

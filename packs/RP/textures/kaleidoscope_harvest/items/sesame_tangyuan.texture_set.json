@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "sesame_tangyuan",
+    "normal": "sesame_tangyuan_normal",
+    "metalness_emissive_roughness": "sesame_tangyuan_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "garlic_pork_slices",
+    "normal": "garlic_pork_slices_normal",
+    "metalness_emissive_roughness": "garlic_pork_slices_mer"
+  }
+}

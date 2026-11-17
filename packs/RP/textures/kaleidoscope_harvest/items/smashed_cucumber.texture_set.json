@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "smashed_cucumber",
+    "normal": "smashed_cucumber_normal",
+    "metalness_emissive_roughness": "smashed_cucumber_mer"
+  }
+}

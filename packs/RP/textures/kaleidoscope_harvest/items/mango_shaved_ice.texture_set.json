@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "mango_shaved_ice",
+    "normal": "mango_shaved_ice_normal",
+    "metalness_emissive_roughness": "mango_shaved_ice_mer"
+  }
+}

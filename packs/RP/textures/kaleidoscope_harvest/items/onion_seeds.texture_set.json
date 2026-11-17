@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "onion_seeds",
+    "normal": "onion_seeds_normal",
+    "metalness_emissive_roughness": "onion_seeds_mer"
+  }
+}
