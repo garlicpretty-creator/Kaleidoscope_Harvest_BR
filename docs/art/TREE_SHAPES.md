@@ -11,7 +11,7 @@ python tools/art/tree_shapes.py
 | 檔案 | 內容 |
 | --- | --- |
 | `packs/BP/features/trees/<果樹>_tree_feature.json` | `minecraft:tree_feature`，id `kaleidoscope_harvest:<果樹>_tree_feature`，11 個 |
-| `packs/BP/feature_rules/trees/<果樹>_tree_feature_rule.json` | 野生生成規則，10 個（柑橘只從村莊樹苗取得，不做） |
+| `packs/BP/feature_rules/trees/<果樹>_tree_feature_rule.json` | 野生生成規則，11 個。柑橘只從村莊樹苗取得，它的規則指向一個沒有生物群系帶有的標籤，永遠不會生成；但沒有規則參照的地物，遊戲根本不會註冊，柑橘樹苗就長不大 |
 | `art/previews/tree_shapes.png` | 等角體素預覽，無花果葉加上垂在葉下的果實，取各範圍中位數、固定種子 |
 
 樹幹用 `kaleidoscope_harvest:fruitwood_log`（香蕉用 `kaleidoscope_harvest:banana_trunk`），樹葉用 `kaleidoscope_harvest:<果樹>_leaves`。
@@ -20,15 +20,15 @@ python tools/art/tree_shapes.py
 
 | 果樹 | 樹幹（高度） | 樹冠 | 輪廓 | 預覽高 | 野生生物群系標籤 | 每區塊機率 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 柑橘 mandarin | `acacia_trunk` 3–4，不傾斜 | `random_spread_canopy` 高 2、半徑 2、40 次 | 矮幹、3 寬緊密圓冠 | 5 | 無（村莊樹苗） | — |
-| 柳橙 sweet_orange | `acacia_trunk` 3–4，不傾斜 | `random_spread_canopy` 高 3、半徑 3、70 次 | 矮幹、5 寬圓球冠 | 6 | `plains` | 1/4 |
-| 檸檬 lemon | `acacia_trunk` 3–4，傾斜 1 格 | `random_spread_canopy` 高 2、半徑 3、50 次 | 偏一側的鬆散不規則冠 | 5 | `savanna` | 1/4 |
+| 柑橘 mandarin | `trunk` 4–5 | `canopy` 偏移 −3..0，角落較常挖空（1/2） | 較矮的幹、稀疏小圓冠 | 5 | 無（村莊樹苗） | — |
+| 柳橙 sweet_orange | `trunk` 5–6 | `canopy` 偏移 −3..0，角落較少挖空（1/3） | 5 寬濃密圓球冠 | 6 | `plains` | 1/4 |
+| 檸檬 lemon | `acacia_trunk` 3–4，傾斜 1 格 | `acacia_canopy` 1 | 斜幹上偏一側的小平冠 | 5 | `savanna` | 1/4 |
 | 桃 peach | `acacia_trunk` 4–5，傾斜 2–3 格，2/3 機率長分枝 | `acacia_canopy` 2（分枝也是 2） | 開心形，兩片平展傘冠 | 7 | `flower_forest` | 1/3 |
 | 梨 pear | `fancy_trunk` 基 6、變化 2、比例 0.618 | `fancy_canopy` 高 3、半徑 2 | 大橡樹式分枝，多團不規則冠 | 7 | `forest`，排除 `taiga`、`roofed`、`mega`、`extreme_hills`、`cold` | 1/4 |
 | 柿子 persimmon | `trunk` 5–7 | `canopy` 偏移 −3..0（原版橡樹式） | 較高幹、圓冠 | 7 | `taiga`，排除 `cold`、`mega` | 1/5 |
 | 荔枝 lychee | `acacia_trunk` 4–5，不傾斜 | `roofed_canopy` 高 3、外 2、內 3 | 7 寬平頂濃密圓頂 | 6 | `jungle`，排除 `edge`、`bamboo` | 1/3 |
 | 芒果 mango | `trunk` 5–6 | `mega_canopy` 高 3、基半徑 1 | 上窄下寬的傘形大冠 | 6 | `jungle`，排除 `edge`、`bamboo` | 1/3 |
-| 香蕉 banana | `acacia_trunk` 3–4，不傾斜（香蕉莖） | `random_spread_canopy` 高 2、半徑 3、30 次 | 頂端稀疏扇葉叢 | 5 | `jungle` | 1/3 |
+| 香蕉 banana | `acacia_trunk` 3–4，不傾斜（香蕉莖） | `acacia_canopy` 1 | 頂端一片平展扇葉 | 5 | `jungle` | 1/3 |
 | 八角 star_anise | `trunk` 7–8 | `spruce_canopy` 下 2–3、上 0–1、最大半徑 2 | 直立分層尖塔 | 8 | `bamboo`，或 `jungle`＋`hills` | 1/3 |
 | 肉桂 cinnamon | `trunk` 6–7 | `pine_canopy` 高 5–6、基半徑 1 | 直立窄柱、尖頂 | 7 | `jungle`＋`edge` | 1/3 |
 
@@ -54,7 +54,7 @@ python tools/art/tree_shapes.py
 
 1. **`canopy`**：沒寫 `canopy_slope` 與 `min_width`，沿用原版橡樹的預設值，所以樹冠由上到下半徑是 1、1、2、2。`rise`／`run` 哪一個是每層增量官方文件沒寫清楚，因此刻意不用。`variation_chance` 依原版橡樹抄 1/2、1/2、1/2、1/1。官方說明寫的是「數字越大越密」，但原版的數值更像是「角落被挖掉的機率」，抄原版的組合在兩種解讀下都還好看。
 2. **範圍上限**：`range_max` 是否包含在內，文件沒寫。
-3. **`random_spread_canopy`**：只能接在 `acacia_trunk` 上（原版杜鵑樹也是這樣搭）。實機測試（1.0.0）發現接在一般 `trunk` 上時，遊戲只放樹幹、不放樹葉，整個地物算失敗，所以柑橘、柳橙、香蕉改用不傾斜的 `acacia_trunk`，`tools/art/tree_shapes.py` 和 `npm run validate` 都會擋這種搭法。預覽用舊版的 `rand(r) − rand(r)`，樹冠寬 2r−1。如果引擎用 −r..r，柑橘、檸檬、柳橙、香蕉的樹冠會各寬 2 格。
+3. **不用 `random_spread_canopy`**（實機測試 1.0.0）：接在一般 `trunk` 上時完全不放樹葉；改接 `acacia_trunk` 後，用腳本放樹（樹苗長大）會有葉子，但世界生成時仍然只剩光禿的樹幹。柑橘、柳橙改用原版橡樹式的 `canopy`，檸檬、香蕉改用 `acacia_canopy`；`canopy`、`acacia_canopy`、`fancy_canopy`、`mega_canopy` 都在野外確認長得出完整的樹。`canopy` 只在偏移 −3..0 加 4 個 `variation_chance`（與原版橡樹、柿子相同）的寫法下實機確認過，所以先固定這樣用；而且樹冠會從樹幹頂往下 3 格，樹幹太矮時樹會貼地像灌木，所以至少 4 格。`tools/art/tree_shapes.py` 與 `npm run validate` 都會擋這些情況。
 4. **`roofed_canopy`**：文件說 `canopy_height` 是「中間層數」，預覽把它當成總層數，另外畫了偶爾才出現的頂蓋。若照中間層解讀，荔枝會再高 2 層。
 5. **`mega_canopy`**：預覽把最上層放在樹幹頂上一格，往下每層半徑加 1。
 6. **`spruce_canopy`／`pine_canopy`**：預覽依原版雲杉、松樹的參數範圍推論。`trunk_height` 視為整棵樹的高度，`lower_offset` 視為底部光禿的樹幹長度，`upper_offset` 視為樹葉高出樹幹的格數。

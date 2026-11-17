@@ -290,12 +290,32 @@ for (const dir of ["features", "feature_rules"]) {
 }
 if (unknownPlaced.size) fail(`world generation names ${unknownPlaced.size} block id(s) the packs do not define: ${[...unknownPlaced.keys()].sort().join(", ")}`);
 
-// ## Found in game (1.0.0): a random_spread_canopy on anything but an acacia_trunk places only the
-// ## logs and the feature reports failure, so those trees never got leaves.
-for (const path of walk(join(BP, "features")).filter((p) => p.endsWith(".json"))) {
+// ## Found in game (1.0.0): random_spread_canopy left bare trunks in world generation (on a plain
+// ## trunk it placed no leaves at all), so it is not used.
+// ## Also found in game: the game only registers a feature some feature rule (or another feature)
+// ## references, so dimension.placeFeature cannot grow a sapling whose tree nothing references.
+const featurePaths = walk(join(BP, "features")).filter((p) => p.endsWith(".json"));
+const referencedFeatures = new Set();
+for (const path of [...featurePaths, ...walk(join(BP, "feature_rules")).filter((p) => p.endsWith(".json"))]) {
+  const text = readFileSync(path, "utf8");
+  for (const m of text.matchAll(/"(?:places_feature|feature)"\s*:\s*"([^"]+)"/g)) referencedFeatures.add(m[1]);
+  for (const m of text.matchAll(/"places_feature"\s*:\s*\[([^\]]*)\]/g)) for (const ref of m[1].matchAll(/"([^"]+)"/g)) referencedFeatures.add(ref[1]);
+}
+for (const path of featurePaths) {
+  const body = Object.entries(readJson(path)).find(([k]) => k.startsWith("minecraft:"))?.[1];
+  const id = body?.description?.identifier;
+  if (id && !referencedFeatures.has(id)) fail(`${relative(root, path)}: nothing references ${id}, so the game will not register it`);
+}
+// ## Found in game: the game rejects a scatter_chance whose numerator is not below its denominator.
+for (const path of walk(join(BP, "feature_rules")).filter((p) => p.endsWith(".json"))) {
+  const chance = readJson(path)["minecraft:feature_rules"]?.distribution?.scatter_chance;
+  if (chance && typeof chance === "object" && !(chance.numerator < chance.denominator))
+    fail(`${relative(root, path)}: scatter_chance ${chance.numerator}/${chance.denominator} needs numerator < denominator`);
+}
+for (const path of featurePaths) {
   const body = readJson(path)["minecraft:tree_feature"];
-  if (body?.random_spread_canopy && !body.acacia_trunk)
-    fail(`${relative(root, path)}: random_spread_canopy needs an acacia_trunk (the game places no leaves otherwise)`);
+  if (body?.random_spread_canopy)
+    fail(`${relative(root, path)}: random_spread_canopy leaves bare trunks in world generation; use another canopy`);
 }
 
 // --- 4. Manifests ---------------------------------------------------------------------------------

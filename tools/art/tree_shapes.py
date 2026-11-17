@@ -5,7 +5,8 @@ Usage: python tools/art/tree_shapes.py
 Each tree in TREES holds its shape as data (trunk kind + height range, canopy kind + size, lean/branches).
 From that table the script writes, deterministically:
   packs/BP/features/trees/<tree>_tree_feature.json            minecraft:tree_feature
-  packs/BP/feature_rules/trees/<tree>_tree_feature_rule.json  wild placement (not mandarin: village saplings only)
+  packs/BP/feature_rules/trees/<tree>_tree_feature_rule.json  wild placement (mandarin's never places: village saplings only,
+                                                              but without a rule the game does not register the feature)
   art/previews/tree_shapes.png                                isometric voxel render, bare leaves with fruit hanging below, fixed seed
 
 Schema: https://learn.microsoft.com/en-us/minecraft/creator/reference/content/featuresreference/examples/features/minecrafttree_feature
@@ -51,25 +52,29 @@ def tag(t, op='=='):
 # ---------------------------------------------------------------- the shape table
 # trunk kinds:  trunk (straight, height range) | acacia (base + intervals, optional lean / branch) | fancy (big-oak style)
 # canopy kinds: random_spread | canopy (oak blob) | acacia | fancy | roofed | mega | spruce | pine
-# ## random_spread only works on an acacia trunk (vanilla azalea pairs them the same way): on a plain
-# ## `trunk` the game places the logs, no leaves, and reports the feature as failed (found in game, 1.0.0).
-# ## A straight acacia trunk is base + intervals with no lean, e.g. base 3, intervals [2] -> 3 or 4 logs.
+# ## Do not use random_spread: in game (1.0.0) it placed no leaves on a plain `trunk` at all, and on an
+# ## acacia trunk only when a script placed the tree; world generation still left bare trunks. canopy,
+# ## acacia, fancy and mega were seen generating full trees in the wild.
+# ## acacia canopies need an acacia trunk; a straight one is base + intervals with no lean (3 or 4 logs).
+# ## A `canopy` is only confirmed in game with offset -3..0 and four variations (as vanilla oak and
+# ## persimmon), so keep to that. That crown hangs 3 blocks below the trunk
+# ## top, so the trunk needs 4 or more logs or the tree sits on the ground like a bush.
 # wild: biome filter (list = all must pass) and per-chunk chance (one attempt per chunk); None = no wild rule.
 TREES = {
     'mandarin': dict(
-        zh='柑橘', note='矮幹、3 寬緊密圓冠',
-        trunk=dict(kind='acacia', base=3, intervals=[2]),
-        canopy=dict(kind='random_spread', height=2, radius=2, attempts=40),
+        zh='柑橘', note='較矮的幹、稀疏小圓冠',
+        trunk=dict(kind='trunk', height=(4, 5)),
+        canopy=dict(kind='canopy', offset=(-3, 0), variation=[(1, 2), (1, 2), (1, 2), (1, 1)]),
         wild=None),
     'sweet_orange': dict(
-        zh='柳橙', note='矮幹、5 寬圓球冠',
-        trunk=dict(kind='acacia', base=3, intervals=[2]),
-        canopy=dict(kind='random_spread', height=3, radius=3, attempts=70),
+        zh='柳橙', note='5 寬濃密圓球冠',
+        trunk=dict(kind='trunk', height=(5, 6)),
+        canopy=dict(kind='canopy', offset=(-3, 0), variation=[(1, 3), (1, 3), (1, 3), (1, 1)]),
         wild=dict(filter=[tag('plains')], chance=(1, 4), biomes='plains（平原、向日葵平原）')),
     'lemon': dict(
         zh='檸檬', note='微斜幹、偏一側的鬆散不規則冠',
         trunk=dict(kind='acacia', base=3, intervals=[2], lean=dict(height=(1, 2), steps=(1, 1))),
-        canopy=dict(kind='random_spread', height=2, radius=3, attempts=50),
+        canopy=dict(kind='acacia', size=1),
         wild=dict(filter=[tag('savanna')], chance=(1, 4), biomes='savanna（熱帶草原、高原）')),
     'peach': dict(
         zh='桃', note='斜幹＋反向分枝、開心形兩片平展傘冠',
@@ -106,7 +111,7 @@ TREES = {
     'banana': dict(
         zh='香蕉', note='香蕉莖、頂端稀疏扇葉叢',
         trunk=dict(kind='acacia', base=3, intervals=[2], block='banana_trunk'),
-        canopy=dict(kind='random_spread', height=2, radius=3, attempts=30),
+        canopy=dict(kind='acacia', size=1),
         wild=dict(filter=[tag('jungle')], chance=(1, 3), biomes='jungle（叢林、稀疏叢林、竹林）')),
     'star_anise': dict(
         zh='八角', note='直立窄塔、雲杉式分層',
@@ -197,8 +202,12 @@ def canopy_json(c, leaf):
 
 def feature_json(tid):
     d = TREES[tid]
-    if d['canopy']['kind'] == 'random_spread' and d['trunk']['kind'] != 'acacia':
-        raise ValueError(f'{tid}: random_spread canopy needs an acacia trunk (the game places no leaves otherwise)')
+    if d['canopy']['kind'] == 'random_spread':
+        raise ValueError(f'{tid}: random_spread canopy leaves bare trunks in world generation; use another kind')
+    if d['canopy']['kind'] == 'canopy' and (tuple(d['canopy']['offset']) != (-3, 0) or len(d['canopy']['variation']) != 4):
+        raise ValueError(f'{tid}: keep canopy offset -3..0 with four variations (the only form confirmed in game)')
+    if d['canopy']['kind'] == 'acacia' and d['trunk']['kind'] != 'acacia':
+        raise ValueError(f'{tid}: an acacia canopy needs an acacia trunk')
     log = f"{NS}:{d['trunk'].get('block', 'fruitwood_log')}"
     leaf = f'{NS}:{tid}_leaves'
     tk, tb = trunk_json(d['trunk'], log)
@@ -224,8 +233,16 @@ def feature_json(tid):
     }
 
 
+# ## The game only registers a feature that some feature rule references; dimension.placeFeature then
+# ## says "cannot be found in the registry" and that tree's saplings never grow (found in game, 1.0.0:
+# ## mandarin, in a freshly started game; the registry stays cached for the life of the game process,
+# ## so test this after restarting the game). A tree with no wild spawn still gets a rule, whose biome
+# ## filter names a tag no biome has, so it never places.
+NEVER = dict(filter=[{'test': 'has_biome_tag', 'operator': '==', 'value': f'{NS}_never'}], chance=(1, 2))  # the game rejects 1/1
+
+
 def rule_json(tid):
-    w = TREES[tid]['wild']
+    w = TREES[tid]['wild'] or NEVER
     return {
         'format_version': RULE_FORMAT,
         'minecraft:feature_rules': {
@@ -601,10 +618,10 @@ def preview():
 def main():
     for tid in TREE_IDS:
         write_json(os.path.join(FEATURES, f'{tid}_tree_feature.json'), feature_json(tid))
-        if TREES[tid]['wild']:
-            write_json(os.path.join(RULES, f'{tid}_tree_feature_rule.json'), rule_json(tid))
+        write_json(os.path.join(RULES, f'{tid}_tree_feature_rule.json'), rule_json(tid))
     preview()
-    print('wrote', len(TREE_IDS), 'features,', sum(1 for t in TREE_IDS if TREES[t]['wild']), 'rules, preview', PREVIEW)
+    print('wrote', len(TREE_IDS), 'features and rules (', sum(1 for t in TREE_IDS if not TREES[t]['wild']),
+          'never place), preview', PREVIEW)
 
 
 if __name__ == '__main__':

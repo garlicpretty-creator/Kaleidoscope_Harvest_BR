@@ -25,16 +25,9 @@
         }
       }
     },
-    "random_spread_canopy": {
-      "canopy_height": 2,
-      "canopy_radius": 3,
-      "leaf_placement_attempts": 30,
-      "leaf_blocks": [
-        [
-          "kaleidoscope_harvest:banana_leaves",
-          1
-        ]
-      ]
+    "acacia_canopy": {
+      "canopy_size": 1,
+      "leaf_block": "kaleidoscope_harvest:banana_leaves"
     },
     "may_grow_on": [
       "minecraft:grass_block",
