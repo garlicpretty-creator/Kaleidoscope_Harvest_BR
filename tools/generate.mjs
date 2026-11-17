@@ -23,7 +23,7 @@ const load = (name) => import(pathToFileURL(join(BP, "scripts", "data", name)).h
 
 const { NAMESPACE, rid, state } = await load("ns.js");
 const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
-const { TREES, TRUNKS, FRUITWOOD_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId } = await load("trees.js");
+const { TREES, TRUNKS, FRUITWOOD_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId, wildSaplingFeature, saplingBiomes } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR } = await load("stations.js");
@@ -147,6 +147,8 @@ function addIcon(id) {
 
 /** How often a wild plant appears: tries per chunk and the chance of each. */
 const WILD_SPREAD = { iterations: 1, scatter_chance: 15 };
+/** Wild saplings are rarer than wild crops: whole trees already grow wild too. */
+const SAPLING_SPREAD = { iterations: 1, scatter_chance: 6 };
 
 const CROSS_GEO = `geometry.${NS}.cross`;
 const material = (texture) => ({ "*": { texture: `kh_${texture}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } });
@@ -339,7 +341,7 @@ function wildPlant(crop) {
 }
 
 /** World generation for one wild block: a rule per biome tag → a surface search → the block. */
-function wildFeature(name, blockId, soil, biomes) {
+function wildFeature(name, blockId, soil, biomes, spread = WILD_SPREAD) {
   const feature = `${name}_feature`;
   const search = `${name}_search`;
   writeJson(join(BP, "features", "wild", `${feature}.json`), {
@@ -373,7 +375,7 @@ function wildFeature(name, blockId, soil, biomes) {
           "minecraft:biome_filter": { any_of: [{ test: "has_biome_tag", operator: "==", value: biome }] },
         },
         distribution: {
-          ...WILD_SPREAD,
+          ...spread,
           x: { distribution: "uniform", extent: [0, 16] },
           y: "query.heightmap(variable.worldx, variable.worldz)",
           z: { distribution: "uniform", extent: [0, 16] },
@@ -481,6 +483,9 @@ for (const tree of TREES) {
   });
   blockSounds[rid(sap)] = { sound: "grass" };
   catalog.trees.push(rid(sap));
+  // ## Wild saplings, besides the whole wild trees of feature_rules/trees: a sapling to dig up
+  // and take home. Mandarin has none (village chests only).
+  if (tree.wild) wildFeature(wildSaplingFeature(tree), sap, SOIL, saplingBiomes(tree), SAPLING_SPREAD);
 
   for (const [, look] of LEAF_LOOKS)
     for (const grey of [false, true]) addTerrain(`${leaves}_${look}${grey ? "_grey" : ""}`, { from: `trees/${tree.id}_leaves_${look}`, grey });

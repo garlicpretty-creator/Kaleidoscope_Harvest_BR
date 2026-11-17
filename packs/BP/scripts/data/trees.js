@@ -12,8 +12,9 @@
 // Cinnamon has no fruit block (`bark: true`): its blossom is a flush of red-brown new
 // growth, and using it strips a piece of bark (企劃書：八角與肉桂歸在果樹，長成大樹後摘果或剝皮).
 //
-// wild: where the tree grows wild, for the guidebook. World generation itself is
-//   packs/BP/feature_rules/trees/ (tools/art/tree_shapes.py); the names here follow those rules.
+// wild: where the tree grows wild. Two kinds of world generation use it: whole trees from
+//   packs/BP/feature_rules/trees/ (tools/art/tree_shapes.py; the names here follow those rules),
+//   and a few wild saplings (tools/generate.mjs, like the wild crops), to dig up and take home.
 // village: see data/village.js.
 
 /** Hanging fruit stages (bones stage0 … stage2 of geometry.kaleidoscope_harvest.<tree>_fruit). */
@@ -59,6 +60,9 @@ export const TREE_BY_ID = new Map(TREES.map((t) => [t.id, t]));
 export const FRUITING_TREES = TREES.filter((t) => !t.bark);
 
 export const saplingBlockId = (t) => `${t.id}_sapling`;
+export const wildSaplingFeature = (t) => `wild_${t.id}_sapling`;
+/** Biome tags for the wild-sapling rules: "jungle_edge" is jungle + edge in the tree rules, a plain tag here. */
+export const saplingBiomes = (t) => [...new Set(t.wild.map((b) => (b === "jungle_edge" ? "jungle" : b)))];
 export const leavesBlockId = (t) => `${t.id}_leaves`;
 export const fruitBlockId = (t) => `${t.id}_fruit`;
 /** The tree_feature a grown sapling places (packs/BP/features/trees/). */
