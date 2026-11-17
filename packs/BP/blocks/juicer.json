@@ -32,7 +32,7 @@
         },
         "glass": {
           "texture": "kh_station_juicer",
-          "render_method": "alpha_test"
+          "render_method": "alpha_test_single_sided"
         }
       },
       "minecraft:collision_box": {

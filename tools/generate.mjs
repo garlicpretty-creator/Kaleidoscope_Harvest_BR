@@ -575,6 +575,7 @@ function hangingFruit(tree) {
 const TREE_FRUITS = new Set(TREES.map((tree) => tree.fruit));
 const PLANTS = new Map(CROPS.filter((crop) => crop.form !== "trellis").map((crop) => [crop.seed, crop]));
 
+const placeableKind = new Map(); // item / block id -> "food" | "drink", for the tooltip line
 for (const item of ITEMS) {
   names[`item.${rid(item.id)}.name`] = [item.zh, item.en];
   addIcon(item.id);
@@ -610,7 +611,9 @@ for (const item of ITEMS) {
     components["minecraft:tags"].tags.push("kaleidoscope_cookery:placeable_food");
   }
   const group = { dish: GROUP.foods, drink: GROUP.drinks, ingredient: GROUP.ingredients }[item.kind] ?? (TREE_FRUITS.has(item.id) ? GROUP.trees : GROUP.crops);
-  const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : "items";
+  // ## Tree fruit sits in the Nature tab with its sapling and leaves, where the catalog's harvest_trees group is.
+  const category = item.kind === "dish" || item.kind === "drink" ? "equipment" : group === GROUP.trees ? "nature" : "items";
+  if (placedFood(item.id)) placeableKind.set(rid(item.id), item.kind === "drink" ? "drink" : "food");
   writeJson(join(BP, "items", `${item.id}.json`), {
     format_version: ITEM_FORMAT,
     "minecraft:item": { description: { identifier: rid(item.id), menu_category: { category, group } }, components },
@@ -685,19 +688,20 @@ function station(def, { states, materials, permutations, component, recipe, soun
   });
 }
 
-// ## Single-sided, as tools/art/stations.py paints them; the juicer's glass is double-sided so its far edges show.
+// ## Single-sided, as tools/art/stations.py paints them. Bedrock wants one render method per block, so the
+// ## juicer's glass and the jar's contents are single-sided too.
 const opaque = (name) => ({ texture: `kh_station_${name}`, render_method: "alpha_test_single_sided" });
 station(JUICER, {
   states: { [state("fruit")]: intRange(JUICER.capacity), [state("juice")]: JUICER.colours },
   // ## The juice is drawn by the display entity (it rises and drains), so the block has no juice permutations.
-  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "alpha_test" } },
+  materials: { "*": opaque(JUICER.id), glass: opaque(JUICER.id) },
   permutations: [],
   recipe: { pattern: [" I ", "GGG", "PPP"], key: { I: { item: "minecraft:iron_ingot" }, G: { item: "minecraft:glass" }, P: { item: "minecraft:oak_planks" } }, unlock: [{ item: "minecraft:glass" }] },
   sound: "glass",
 });
 station(PICKLING_JAR, {
   states: { [state("contents")]: PICKLING_JAR.contents },
-  materials: { "*": opaque(PICKLING_JAR.id), contents: { texture: "kh_station_juice_empty", render_method: "alpha_test" } },
+  materials: { "*": opaque(PICKLING_JAR.id), contents: { texture: "kh_station_juice_empty", render_method: "alpha_test_single_sided" } },
   permutations: PICKLING_JAR.contents.slice(1).map((c) => ({
     condition: `${S("contents")} == '${c}'`,
     components: { "minecraft:material_instances": { "*": opaque(PICKLING_JAR.id), contents: opaque(`contents_${c}`) } },
@@ -1044,11 +1048,23 @@ const PACK = {
   name: ["森羅物語：豐收", "Kaleidoscope Harvest"],
   description: ["非官方的森羅物語擴充：為廚房加入新的蔬菜、香料、水果與果樹。需要《森羅物語：廚房》。", "An unofficial Kaleidoscope expansion: new vegetables, spices, fruit and fruit trees for Cookery. Requires Kaleidoscope Cookery."],
 };
+const PLACEABLE = { food: ["可放置的食物", "Placeable Food"], drink: ["可放置的飲品", "Placeable Drink"] };
 for (const [key, value] of Object.entries(GROUP_NAMES)) names[key] = value;
 
 function lang(index, convert = (s) => s) {
   const lines = ["## pack", `pack.name=${convert(PACK.name[index])}`, `pack.description=${convert(PACK.description[index])}`, "", "## generated from packs/BP/scripts/data — do not edit by hand"];
-  for (const key of Object.keys(names).sort()) lines.push(`${key}=${convert(names[key][index])}`);
+  // ## Series tooltip convention (as in Cookery): the add-on name on a second line of every item / block name,
+  // ## and "placeable food / drink" on a third for anything that can be set down.
+  for (const key of Object.keys(names).sort()) {
+    let text = names[key][index];
+    const id = /^(?:item|tile)\.(.+)\.name$/.exec(key)?.[1];
+    if (id) {
+      text += `\\n§9§o${PACK.name[index]}§r`;
+      const kind = placeableKind.get(id);
+      if (kind) text += `\\n§5${PLACEABLE[kind][index]}§r`;
+    }
+    lines.push(`${key}=${convert(text)}`);
+  }
   return `${lines.join("\n")}\n`;
 }
 for (const pack of [BP, RP]) {
