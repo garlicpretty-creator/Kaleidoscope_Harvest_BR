@@ -1,0 +1,81 @@
+// M5: what Harvest offers the optional partner packs (企劃書「選用聯動」). Each table is
+// sent by api/ranching.js, api/herbal.js or api/tavern.js once that pack answers its
+// handshake; without the partner nothing is sent and Harvest plays the same.
+// Every id is a bare Harvest item id. Plain data: no @minecraft imports.
+
+// --- 樂牧 Ranching: trough feed (kaleidoscope_ranching:register_feed) ---------------------
+//
+// kind: grass / grain / veg are tier 1, mixed tier 2, concentrate tier 3 (Ranching docs/API.md).
+// units: how many trough portions one item fills (1–9). A Ranching hay bale's worth of food
+// is the yardstick: a cob of corn is a big handful of grain, a seed or a bean a small one.
+export const RANCHING_FEEDS = [
+  { item: "corn", kind: "grain", units: 2, why: "整根玉米：份量足的穀物" },
+  { item: "corn_seeds", kind: "grain", units: 1, why: "玉米粒，和小麥種子一樣算一份穀物" },
+  { item: "soybean", kind: "grain", units: 1, why: "大豆是豆類穀物飼料" },
+  // ## Okara is what soy milk leaves behind; without Ranching it has no other use.
+  { item: "okara", kind: "mixed", units: 1, why: "豆渣蛋白質高，算二級的混合飼料" },
+  { item: "napa_cabbage", kind: "veg", units: 2, why: "整顆大白菜，份量大" },
+  { item: "bok_choy", kind: "veg", units: 1, why: "葉菜" },
+  { item: "spinach", kind: "veg", units: 1, why: "葉菜" },
+  { item: "daikon", kind: "veg", units: 2, why: "根莖類，份量大" },
+  { item: "sweet_potato", kind: "veg", units: 2, why: "根莖類，份量大" },
+];
+
+// --- 草本 Herbal: 寒熱 of Harvest foods (kaleidoscope_herbal:heat_register) -----------------
+//
+// −100 (cold) … +100 (hot). Herbal's own teas are ±35–40 and its tonics +30–40, so everyday
+// food stays within ±30. Only foods whose nature is plain in 中醫 food lore are listed.
+export const HERBAL_HEAT = [
+  { id: "ginger_tea", heat: 25, why: "生薑辛溫，薑母茶是驅寒的熱飲" },
+  { id: "cinnamon_tea", heat: 25, why: "肉桂辛甘大熱，溫中散寒" },
+  { id: "cinnamon_apple", heat: 10, why: "加了肉桂粉烤，偏溫" },
+  { id: "lychee", heat: 10, why: "荔枝性溫，多吃上火" },
+  { id: "lychee_wine", heat: 20, why: "酒性溫熱，又是荔枝泡的" },
+  { id: "peach_wine", heat: 15, why: "酒性溫熱；桃子本身性溫" },
+  { id: "mango", heat: -5, why: "芒果甘酸性涼（本草記載），只略涼" },
+  { id: "mango_shaved_ice", heat: -30, why: "刨冰，冰品最涼" },
+  { id: "pear", heat: -10, why: "梨甘寒，清熱潤肺" },
+  { id: "rock_sugar_pear", heat: -10, why: "冰糖燉梨潤肺止咳，燉過仍偏涼" },
+  { id: "pear_honey_drink", heat: -15, why: "雪梨蜜清熱潤燥" },
+  { id: "lemon_tea", heat: -10, why: "檸檬酸涼，生津解暑" },
+  { id: "persimmon", heat: -10, why: "柿子性寒" },
+  { id: "banana", heat: -10, why: "香蕉甘寒" },
+  { id: "cucumber", heat: -10, why: "黃瓜甘涼，清熱" },
+  { id: "smashed_cucumber", heat: -10, why: "涼拌黃瓜，生吃仍涼" },
+  { id: "braised_pork", heat: 10, why: "五香粉、肉桂滷的肉，偏溫" },
+  { id: "five_spice_tea_egg", heat: 10, why: "八角、五香滷的蛋，偏溫" },
+  { id: "cumin_lamb_skewers", heat: 20, why: "羊肉性溫，孜然、胡椒辛熱" },
+  { id: "black_pepper_steak", heat: 15, why: "黑胡椒辛熱" },
+];
+
+// --- 草本 Herbal: adjuvants for the clay pot (kaleidoscope_herbal:adjuvant_register) --------
+//
+// ## Herbal takes only 32 adjuvants from all packs together, so Harvest registers two:
+// ## 陳皮 and 肉桂, the two classic 佐使 among its crops (企劃書 also names ginger and
+// ## star anise; they stay out to leave room for other packs).
+export const HERBAL_ADJUVANTS = [
+  { id: "dried_tangerine_peel", why: "陳皮理氣健脾，常見的佐藥" },
+  { id: "cinnamon_bark", why: "肉桂溫中，藥膳常用" },
+];
+
+// --- 酒館 Tavern: Harvest's fruit wines as barrel recipes (api/tavernSdk) --------------------
+//
+// ## The pickling-jar recipe in data/menu.js stays; the Tavern barrel is a second way to make
+// ## the same bottle. Grape wine is Tavern's own: Harvest only grows the grapes (企劃書 已定決策).
+// The barrel batch follows Herbal's Tavern recipes: 4 water buckets, one of each ingredient
+// per bottle, glass bottles under the tap.
+export const TAVERN_WINES = [
+  {
+    id: "lychee_wine",
+    fruit: "lychee",
+    ingredients: ["lychee", "minecraft:sugar", "minecraft:wheat"],
+    title: { zh_TW: "荔枝酒", zh_CN: "荔枝酒", en_US: "Lychee Wine" },
+  },
+  {
+    id: "peach_wine",
+    fruit: "peach",
+    ingredients: ["peach", "minecraft:sugar", "minecraft:wheat"],
+    title: { zh_TW: "桃子酒", zh_CN: "桃子酒", en_US: "Peach Wine" },
+  },
+];
+export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, carrier: "minecraft:glass_bottle", unitTime: 4800 };

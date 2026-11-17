@@ -34,14 +34,14 @@
       "minecraft:collision_box": false,
       "minecraft:selection_box": {
         "origin": [
-          -3,
-          9,
+          -2,
+          6,
           -3
         ],
         "size": [
-          6,
-          7,
-          5
+          5,
+          10,
+          6
         ]
       },
       "minecraft:destructible_by_mining": {
@@ -84,13 +84,13 @@
           "minecraft:selection_box": {
             "origin": [
               -3,
-              5,
-              -3
+              2,
+              -4
             ],
             "size": [
-              6,
-              11,
-              6
+              7,
+              14,
+              8
             ]
           }
         }
@@ -109,13 +109,13 @@
           "minecraft:selection_box": {
             "origin": [
               -3,
-              5,
-              -3
+              2,
+              -4
             ],
             "size": [
-              6,
-              11,
-              6
+              7,
+              14,
+              8
             ]
           },
           "minecraft:loot": "loot_tables/kaleidoscope_harvest/lychee_fruit_ripe.json"

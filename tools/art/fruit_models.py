@@ -10,7 +10,7 @@ unit, hanging from the top of the block on a stem:
   pear          a round body with a smaller round neck on top
   lemon         an upright oval with a small tip
   mango         an oval tilted on its long stem
-  lychee        a cluster of small bumpy berries on one stalk
+  lychee        a hanging bunch of small bumpy berries on short pedicels, a cone pointing down
   star anise    eight-point star pods (four bars turned 45 degrees apart)
   banana        a stalk with tiers of fingers that curve up and out, the purple bud at the bottom
 Cinnamon has no fruit (its bark is the harvest), so it gets no fruit block.
@@ -25,6 +25,7 @@ Preview: art/previews/fruit_preview.geo.json + fruit_preview.png (all ripe fruit
 Blockbench, and art/previews/fruit_models.png (the textures).
 """
 import json
+import math
 import os
 import sys
 
@@ -134,14 +135,24 @@ def mango(cx, cz, length, skin, s):
 
 
 def lychee_cluster(cx, cz, length, skin, s):
-    out = [stem(cx, cz, length)]
+    """A tidy hanging bunch: one stalk, a short central rachis, and berries on short pedicels in tiers that
+    narrow downwards (3, 3 turned 60 degrees, 1 at the tip), so the bunch reads as a cone pointing down.
+    Each tier's yaws are symmetric, so the bunch looks the same whichever way the rotation sign goes."""
     top = 16 - length
-    berries = [(-1.5, 0, 0), (1.5, 0, 0.5), (0, 0, -1.5), (0, -1.5, 1.5), (-1.5, -2, -1), (1.5, -2.5, -1)]
-    if s < 1:
-        berries = berries[:3]
-    size = 2 if s < 1 else 3
-    for dx, dy, dz in berries:
-        out += rounded(cx + dx, cz + dz, top + dy, size, size, size, skin)
+    if s < 1:  # young: three small berries round the stalk and one below
+        size, tiers = 2, [(0, 1.25, (0, 120, 240)), (2, 0, (0,))]
+    else:
+        size, tiers = 3, [(0, 2, (0, 120, 240)), (2.5, 1.5, (60, 180, 300)), (5, 0, (0,))]
+    bottom = top - tiers[-1][0]
+    out = [stem(cx, cz, length), box(cx - 0.5, bottom - 0.5, cz - 0.5, 1, top - bottom + 0.5, 1, "stem")]
+    for drop, r, yaws in tiers:
+        y = top - drop
+        for yaw in yaws:
+            a = math.radians(yaw)
+            bx, bz = round(cx + r * math.cos(a), 2), round(cz + r * math.sin(a), 2)
+            if r:  # pedicel: a short stalk out from the rachis to the top of the berry
+                out.append(box(cx, y - 0.5, cz - 0.25, r, 0.5, 0.5, "stem", rot=[0, yaw, 0], pivot=[cx, y - 0.25, cz]))
+            out += rounded(bx, bz, y - 0.5, size, size, size, skin)
     return out
 
 

@@ -9,11 +9,13 @@
 import { CLIMATES } from "./climate.js";
 import { CROPS, TRELLIS } from "./crops.js";
 import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
+import { HERBAL_ADJUVANTS, HERBAL_HEAT, RANCHING_FEEDS, TAVERN_WINES } from "./integrations.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
 import { VILLAGE_HOUSES, villageItems } from "./village.js";
 import { BANANA_TRUNK, FRUITWOOD_LOG, TREES, saplingBlockId } from "./trees.js";
+import { VERSION } from "./version.js";
 import { toSimplified } from "./zh_cn.js";
 
 const CLIMATE_NAME = {
@@ -126,8 +128,38 @@ function usesOf(id) {
   return [[`用途：${out.map((u) => u[0]).join("、")}。`, `Used for: ${out.map((u) => u[1]).join(", ")}.`]];
 }
 
+const FEED_KIND = {
+  grass: ["牧草", "grass"], grain: ["穀物", "grain"], veg: ["蔬菜", "vegetable"], mixed: ["混合", "mixed"],
+  concentrate: ["精料", "concentrate"], ruminant: ["反芻", "ruminant"], calcium: ["鈣質", "calcium"],
+};
+
+/**
+ * What the optional partner packs do with an item (data/integrations.js). Each line says
+ * which pack it needs: without that pack the use is simply not there (企劃書「選用聯動」).
+ */
+export function partnerLines(id) {
+  const lines = [];
+  const feed = RANCHING_FEEDS.find((f) => f.item === id);
+  if (feed) {
+    const [zh, en] = FEED_KIND[feed.kind];
+    lines.push([`裝了《樂牧》時，可放進飼槽當${zh}飼料，一個算 ${feed.units} 份。`, `With Kaleidoscope Ranching, it goes in a trough as ${en} feed, ${feed.units} portion${feed.units > 1 ? "s" : ""} each.`]);
+  }
+  const heat = HERBAL_HEAT.find((h) => h.id === id);
+  if (heat) {
+    const n = Math.abs(heat.heat);
+    lines.push(heat.heat > 0 ? [`裝了《草本》時，吃了身子偏熱（寒熱 +${n}）。`, `With Kaleidoscope Herbal, it warms the body (heat +${n}).`] : [`裝了《草本》時，吃了身子偏涼（寒熱 −${n}）。`, `With Kaleidoscope Herbal, it cools the body (heat −${n}).`]);
+  }
+  if (HERBAL_ADJUVANTS.some((a) => a.id === id)) lines.push(["裝了《草本》時，可多放一個進砂鍋當佐使，整鍋湯劑多一份。", "With Kaleidoscope Herbal, one more in the clay pot works as an adjuvant: the brew gives one more serving."]);
+  const wine = TAVERN_WINES.find((w) => w.id === id);
+  if (wine) {
+    const names = wine.ingredients.map((i) => nameOf(rid(i)));
+    lines.push([`裝了《酒館》時，也能用酒館的酒桶釀：加水，再放${names.map((n) => n[0]).join("、")}各一份。`, `With Kaleidoscope Tavern, it can also be brewed in a Tavern barrel: water, then one each of ${names.map((n) => n[1]).join(", ")}.`]);
+  }
+  return lines;
+}
+
 function entry(id, category, lines, extra = {}) {
-  return { id, category, lines, ...extra };
+  return { id, category, lines: [...lines, ...partnerLines(id)], ...extra };
 }
 
 /** One row per entry: id (without namespace), category, lines as [zh, en] pairs. */
@@ -300,7 +332,7 @@ export function guidebookPayload() {
       kinds: row.block ? ["item", "block"] : ["item"],
       icon: iconPath(row.id),
       mechanics: row.lines.map((line) => line[1]),
-      mechanicsByLocale: { zh_TW: zh, zh_CN: zh.map(toSimplified) },
+      mechanicsByLocale: { en_US: row.lines.map((line) => line[1]), zh_TW: zh, zh_CN: zh.map(toSimplified) },
     };
     const item = ITEM_BY_ID.get(row.id);
     if (item?.food) Object.assign(out, { stack: 64, food: { nutrition: item.food[0], saturation: item.food[1] } });
@@ -332,7 +364,7 @@ export function guidebookPayload() {
 
   return {
     api: 1,
-    version: "0.1.0",
+    version: VERSION,
     order: 210,
     icon: iconPath("napa_cabbage"),
     titleKey: "title",
