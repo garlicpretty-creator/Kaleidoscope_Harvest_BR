@@ -1,0 +1,60 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:bamboo_trellis",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:bamboo_trellis.name",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.bamboo_trellis",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_station_bamboo_trellis",
+          "render_method": "alpha_test"
+        },
+        "vine": {
+          "texture": "kh_station_juice_empty",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          16,
+          16
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.2
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ],
+            "block_filter": [
+              "minecraft:farmland",
+              {
+                "tags": "q.any_tag('kaleidoscope_cookery:farmland')"
+              }
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_harvest:trellis": {}
+    },
+    "permutations": []
+  }
+}

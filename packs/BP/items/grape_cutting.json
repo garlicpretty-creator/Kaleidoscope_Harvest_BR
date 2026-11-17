@@ -1,0 +1,19 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:grape_cutting",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_grape_cutting",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:grape_cutting.name"
+      },
+      "minecraft:max_stack_size": 64
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:blueberry_seedling",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_blueberry_seedling",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:blueberry_seedling.name"
+      },
+      "minecraft:max_stack_size": 64,
+      "minecraft:block_placer": {
+        "block": "kaleidoscope_harvest:blueberry_crop",
+        "use_on": [
+          "minecraft:grass_block",
+          "minecraft:dirt",
+          "minecraft:coarse_dirt",
+          "minecraft:podzol",
+          "minecraft:rooted_dirt",
+          "minecraft:moss_block",
+          "minecraft:mud",
+          "minecraft:farmland"
+        ]
+      }
+    }
+  }
+}

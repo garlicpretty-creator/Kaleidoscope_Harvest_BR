@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "onion_stage5_grey",
+    "normal": "onion_stage5_grey_normal",
+    "metalness_emissive_roughness": "onion_stage5_grey_mer"
+  }
+}

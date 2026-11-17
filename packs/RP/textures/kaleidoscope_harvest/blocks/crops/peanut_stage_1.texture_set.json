@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "peanut_stage_1",
+    "normal": "peanut_stage_1_normal",
+    "metalness_emissive_roughness": "peanut_stage_1_mer"
+  }
+}

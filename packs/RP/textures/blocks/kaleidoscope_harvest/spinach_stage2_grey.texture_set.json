@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "spinach_stage2_grey",
+    "normal": "spinach_stage2_grey_normal",
+    "metalness_emissive_roughness": "spinach_stage2_grey_mer"
+  }
+}

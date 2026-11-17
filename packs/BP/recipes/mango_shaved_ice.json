@@ -1,0 +1,38 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shapeless": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:mango_shaved_ice"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "ingredients": [
+      {
+        "item": "kaleidoscope_harvest:mango",
+        "count": 1
+      },
+      {
+        "item": "minecraft:snowball",
+        "count": 1
+      },
+      {
+        "item": "minecraft:sugar",
+        "count": 1
+      },
+      {
+        "item": "minecraft:bowl",
+        "count": 1
+      }
+    ],
+    "result": {
+      "item": "kaleidoscope_harvest:mango_shaved_ice",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "kaleidoscope_harvest:mango"
+      }
+    ]
+  }
+}

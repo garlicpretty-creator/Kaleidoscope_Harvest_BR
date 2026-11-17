@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "soybean_stage7_grey",
+    "normal": "soybean_stage7_grey_normal",
+    "metalness_emissive_roughness": "soybean_stage7_grey_mer"
+  }
+}

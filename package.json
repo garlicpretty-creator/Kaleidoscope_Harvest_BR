@@ -1,0 +1,11 @@
+{
+  "name": "kaleidoscope-harvest",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node tools/generate.mjs",
+    "validate": "node tools/validate.mjs",
+    "test": "node --import ./tools/test/register.mjs tools/test/run.mjs",
+    "build": "npm run validate && npm test && bash tools/build.sh"
+  }
+}

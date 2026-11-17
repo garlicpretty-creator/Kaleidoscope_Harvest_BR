@@ -1,0 +1,109 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:lemon_sapling",
+      "menu_category": {
+        "category": "nature",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_trees"
+      },
+      "states": {
+        "kaleidoscope_harvest:growth": {
+          "values": {
+            "min": 0,
+            "max": 3
+          }
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:lemon_sapling.name",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_lemon_sapling_stage0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ],
+            "block_filter": [
+              "minecraft:grass_block",
+              "minecraft:dirt",
+              "minecraft:coarse_dirt",
+              "minecraft:podzol",
+              "minecraft:rooted_dirt",
+              "minecraft:moss_block",
+              "minecraft:mud"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_harvest:sapling": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 1",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_lemon_sapling_stage1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 2",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_lemon_sapling_stage2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 3",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_lemon_sapling_stage3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          }
+        }
+      }
+    ]
+  }
+}

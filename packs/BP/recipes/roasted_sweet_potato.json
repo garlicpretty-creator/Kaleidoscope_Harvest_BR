@@ -1,0 +1,18 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:roasted_sweet_potato"
+    },
+    "tags": [
+      "furnace",
+      "smoker",
+      "campfire",
+      "soul_campfire"
+    ],
+    "input": {
+      "item": "kaleidoscope_harvest:sweet_potato"
+    },
+    "output": "kaleidoscope_harvest:roasted_sweet_potato"
+  }
+}

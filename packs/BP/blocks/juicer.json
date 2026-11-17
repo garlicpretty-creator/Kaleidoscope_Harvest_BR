@@ -1,0 +1,141 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:juicer",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_cookery:itemGroup.name.cooking_stations"
+      },
+      "states": {
+        "kaleidoscope_harvest:fruit": {
+          "values": {
+            "min": 0,
+            "max": 2
+          }
+        },
+        "kaleidoscope_harvest:juice": [
+          "empty",
+          "orange",
+          "grape",
+          "mango"
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:juicer.name",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.juicer",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_station_juicer",
+          "render_method": "alpha_test"
+        },
+        "glass": {
+          "texture": "kh_station_juicer",
+          "render_method": "blend"
+        },
+        "juice": {
+          "texture": "kh_station_juice_empty",
+          "render_method": "blend"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          13,
+          12
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_harvest:juicer": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'orange'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_juicer",
+              "render_method": "alpha_test"
+            },
+            "glass": {
+              "texture": "kh_station_juicer",
+              "render_method": "blend"
+            },
+            "juice": {
+              "texture": "kh_station_juice_orange",
+              "render_method": "blend"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'grape'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_juicer",
+              "render_method": "alpha_test"
+            },
+            "glass": {
+              "texture": "kh_station_juicer",
+              "render_method": "blend"
+            },
+            "juice": {
+              "texture": "kh_station_juice_grape",
+              "render_method": "blend"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'mango'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_juicer",
+              "render_method": "alpha_test"
+            },
+            "glass": {
+              "texture": "kh_station_juicer",
+              "render_method": "blend"
+            },
+            "juice": {
+              "texture": "kh_station_juice_mango",
+              "render_method": "blend"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

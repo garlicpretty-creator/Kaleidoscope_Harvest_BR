@@ -1,0 +1,109 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:crafting_items_catalog": {
+    "categories": [
+      {
+        "category_name": "items",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:napa_cabbage",
+              "name": "kaleidoscope_harvest:itemGroup.name.harvest_crops"
+            },
+            "items": [
+              "kaleidoscope_harvest:bamboo_trellis",
+              "kaleidoscope_harvest:napa_cabbage_seeds",
+              "kaleidoscope_harvest:bok_choy_seeds",
+              "kaleidoscope_harvest:spinach_seeds",
+              "kaleidoscope_harvest:onion_seeds",
+              "kaleidoscope_harvest:daikon_seeds",
+              "kaleidoscope_harvest:eggplant_seeds",
+              "kaleidoscope_harvest:cucumber_seeds",
+              "kaleidoscope_harvest:corn_seeds",
+              "kaleidoscope_harvest:coriander_seeds",
+              "kaleidoscope_harvest:scallion_seeds",
+              "kaleidoscope_harvest:black_pepper_seedling",
+              "kaleidoscope_harvest:napa_cabbage",
+              "kaleidoscope_harvest:bok_choy",
+              "kaleidoscope_harvest:spinach",
+              "kaleidoscope_harvest:onion",
+              "kaleidoscope_harvest:daikon",
+              "kaleidoscope_harvest:eggplant",
+              "kaleidoscope_harvest:cucumber",
+              "kaleidoscope_harvest:corn",
+              "kaleidoscope_harvest:soybean",
+              "kaleidoscope_harvest:peanut",
+              "kaleidoscope_harvest:sweet_potato",
+              "kaleidoscope_harvest:taro",
+              "kaleidoscope_harvest:scallion",
+              "kaleidoscope_harvest:garlic",
+              "kaleidoscope_harvest:ginger",
+              "kaleidoscope_harvest:coriander",
+              "kaleidoscope_harvest:sesame",
+              "kaleidoscope_harvest:black_peppercorns",
+              "kaleidoscope_harvest:cumin",
+              "kaleidoscope_harvest:strawberry_seeds",
+              "kaleidoscope_harvest:blueberry_seedling",
+              "kaleidoscope_harvest:grape_cutting",
+              "kaleidoscope_harvest:passion_fruit_seeds",
+              "kaleidoscope_harvest:pineapple_crown",
+              "kaleidoscope_harvest:strawberry",
+              "kaleidoscope_harvest:blueberry",
+              "kaleidoscope_harvest:grape",
+              "kaleidoscope_harvest:passion_fruit",
+              "kaleidoscope_harvest:pineapple"
+            ]
+          }
+        ]
+      },
+      {
+        "category_name": "nature",
+        "groups": [
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:mandarin",
+              "name": "kaleidoscope_harvest:itemGroup.name.harvest_trees"
+            },
+            "items": [
+              "kaleidoscope_harvest:fruit_log",
+              "kaleidoscope_harvest:banana_trunk",
+              "kaleidoscope_harvest:mandarin_sapling",
+              "kaleidoscope_harvest:mandarin_fruit_leaves",
+              "kaleidoscope_harvest:sweet_orange_sapling",
+              "kaleidoscope_harvest:sweet_orange_fruit_leaves",
+              "kaleidoscope_harvest:lemon_sapling",
+              "kaleidoscope_harvest:lemon_fruit_leaves",
+              "kaleidoscope_harvest:peach_sapling",
+              "kaleidoscope_harvest:peach_fruit_leaves",
+              "kaleidoscope_harvest:pear_sapling",
+              "kaleidoscope_harvest:pear_fruit_leaves",
+              "kaleidoscope_harvest:persimmon_sapling",
+              "kaleidoscope_harvest:persimmon_fruit_leaves",
+              "kaleidoscope_harvest:lychee_sapling",
+              "kaleidoscope_harvest:lychee_fruit_leaves",
+              "kaleidoscope_harvest:mango_sapling",
+              "kaleidoscope_harvest:mango_fruit_leaves",
+              "kaleidoscope_harvest:banana_sapling",
+              "kaleidoscope_harvest:banana_fruit_leaves",
+              "kaleidoscope_harvest:star_anise_sapling",
+              "kaleidoscope_harvest:star_anise_fruit_leaves",
+              "kaleidoscope_harvest:cinnamon_sapling",
+              "kaleidoscope_harvest:cinnamon_fruit_leaves",
+              "kaleidoscope_harvest:mandarin",
+              "kaleidoscope_harvest:sweet_orange",
+              "kaleidoscope_harvest:lemon",
+              "kaleidoscope_harvest:peach",
+              "kaleidoscope_harvest:pear",
+              "kaleidoscope_harvest:persimmon",
+              "kaleidoscope_harvest:lychee",
+              "kaleidoscope_harvest:mango",
+              "kaleidoscope_harvest:banana",
+              "kaleidoscope_harvest:star_anise",
+              "kaleidoscope_harvest:cinnamon_bark"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

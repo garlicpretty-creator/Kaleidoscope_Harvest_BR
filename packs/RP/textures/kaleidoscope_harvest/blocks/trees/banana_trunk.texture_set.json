@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "banana_trunk",
+    "normal": "banana_trunk_normal",
+    "metalness_emissive_roughness": "banana_trunk_mer"
+  }
+}

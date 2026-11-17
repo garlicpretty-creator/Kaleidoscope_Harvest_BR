@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "eggplant_stage6_grey",
+    "normal": "eggplant_stage6_grey_normal",
+    "metalness_emissive_roughness": "eggplant_stage6_grey_mer"
+  }
+}

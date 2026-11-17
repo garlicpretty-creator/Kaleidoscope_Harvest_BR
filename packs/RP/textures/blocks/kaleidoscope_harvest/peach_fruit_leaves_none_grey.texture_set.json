@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "peach_fruit_leaves_none_grey",
+    "normal": "peach_fruit_leaves_none_grey_normal",
+    "metalness_emissive_roughness": "peach_fruit_leaves_none_grey_mer"
+  }
+}

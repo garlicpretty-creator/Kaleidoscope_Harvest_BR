@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "black_pepper_stage4_grey",
+    "normal": "black_pepper_stage4_grey_normal",
+    "metalness_emissive_roughness": "black_pepper_stage4_grey_mer"
+  }
+}

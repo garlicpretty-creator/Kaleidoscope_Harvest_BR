@@ -1,0 +1,119 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:pickling_jar",
+      "menu_category": {
+        "category": "items",
+        "group": "kaleidoscope_cookery:itemGroup.name.cooking_stations"
+      },
+      "states": {
+        "kaleidoscope_harvest:contents": [
+          "empty",
+          "fresh",
+          "fermenting",
+          "done"
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:pickling_jar.name",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.pickling_jar",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_station_pickling_jar",
+          "render_method": "alpha_test"
+        },
+        "contents": {
+          "texture": "kh_station_juice_empty",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          13,
+          12
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_harvest:pickling_jar": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:contents') == 'fresh'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_pickling_jar",
+              "render_method": "alpha_test"
+            },
+            "contents": {
+              "texture": "kh_station_contents_fresh",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:contents') == 'fermenting'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_pickling_jar",
+              "render_method": "alpha_test"
+            },
+            "contents": {
+              "texture": "kh_station_contents_fermenting",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:contents') == 'done'",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_station_pickling_jar",
+              "render_method": "alpha_test"
+            },
+            "contents": {
+              "texture": "kh_station_contents_done",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
