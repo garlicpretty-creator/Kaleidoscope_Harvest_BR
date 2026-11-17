@@ -32,8 +32,8 @@ function isOpen(block) {
   const id = block.typeId;
   if (isGlass(id)) return false;
   if (id === "minecraft:air" || id === "minecraft:water" || id === "minecraft:light_block") return true;
-  // ## Harvest's own crops, trellises, saplings and leaves; its trunk is a wall.
-  if (id.startsWith(`${NAMESPACE}:`)) return !id.endsWith(":fruit_log");
+  // ## Harvest's own crops, trellises, saplings, leaves and fruit; its trunks are walls.
+  if (id.startsWith(`${NAMESPACE}:`)) return !id.endsWith(":fruitwood_log") && !id.endsWith(":banana_trunk");
   return PLANT.test(id);
 }
 

@@ -1,61 +1,42 @@
-// Fruit trees (企劃書「果樹生長」). A tree is not a vanilla tree: it is a
-// sapling that grows through `saplingStages`, then turns into a trunk of
-// `trunk` blocks topped by this tree's fruit-leaf blocks. Each fruit leaf carries
-// `fruit_stage`: 0 none → 1 blossom → 2 green fruit → 3 ripe. Picking a ripe
-// leaf drops the fruit and puts it back to 0; the tree never dies. Chopping the
-// trunk away leaves the fruit leaves without a trunk, and they fall.
+// Fruit trees (企劃書「果樹生長」, as revised with art PR #4). A tree is not a vanilla
+// tree: a sapling grows through `saplingStages`, then the script places the tree's
+// `tree_feature` (packs/BP/features/trees/, written by tools/art/tree_shapes.py) where the
+// sapling stands. The feature builds the trunk of `trunk` blocks and this tree's leaves.
+//
+// Leaves have two looks only: bare → blossom. A blossoming leaf with air below it sets a
+// hanging fruit block there (like vanilla cocoa) and goes back to bare; the fruit grows
+// small green → big green → ripe (`FRUIT_STAGES`), and picking it removes the block. The
+// tree never dies; chopping the trunk away leaves the leaves without a trunk, and they fall.
 // Plain data: no @minecraft imports.
 //
-// Cinnamon has no fruit: its "ripe" leaves are red-brown new growth, and picking
-// them strips a piece of bark (企劃書：八角與肉桂歸在果樹，長成大樹後摘果或剝皮).
+// Cinnamon has no fruit block (`bark: true`): its blossom is a flush of red-brown new
+// growth, and using it strips a piece of bark (企劃書：八角與肉桂歸在果樹，長成大樹後摘果或剝皮).
 //
-// wild: biome tags where a wild sapling grows (planted by world generation like the
-//   wild crops, so it grows into a tree once the chunk is loaded long enough).
+// wild: where the tree grows wild, for the guidebook. World generation itself is
+//   packs/BP/feature_rules/trees/ (tools/art/tree_shapes.py); the names here follow those rules.
 // village: see data/village.js.
 
-export const FRUIT_STAGES = ["none", "blossom", "green", "ripe"];
+/** Hanging fruit stages (bones stage0 … stage2 of geometry.kaleidoscope_harvest.<tree>_fruit). */
+export const FRUIT_STAGES = ["small_green", "big_green", "ripe"];
 
-/**
- * Tree shapes, relative to the sapling: trunk blocks, then leaves.
- * ## A fixed shape is a fixed number of fruit leaves per tree, which keeps big
- * ## orchards cheap (企劃書 risk: 限制單棵樹的果葉數).
- */
-export const TREE_SHAPES = {
-  /** 3 trunk + 21 leaves: a ring at y2, a square at y3, a cross on top. */
-  round: (() => {
-    const trunk = [0, 1, 2].map((y) => [0, y, 0]);
-    const leaves = [];
-    for (const y of [2, 3]) for (let x = -1; x <= 1; x++) for (let z = -1; z <= 1; z++) if (x || z || y === 3) leaves.push([x, y, z]);
-    for (const [x, z] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) leaves.push([x, 4, z]);
-    return { trunk, leaves };
-  })(),
-  /** 4 trunk + 9 leaves: a crown on top with fronds hanging one block lower. */
-  palm: (() => {
-    const trunk = [0, 1, 2, 3].map((y) => [0, y, 0]);
-    const leaves = [[0, 4, 0], [1, 4, 0], [-1, 4, 0], [0, 4, 1], [0, 4, -1], [2, 3, 0], [-2, 3, 0], [0, 3, 2], [0, 3, -2]];
-    return { trunk, leaves };
-  })(),
-};
-/** The shape most trees use (kept under its old name for the growth code). */
-export const TREE_SHAPE = TREE_SHAPES.round;
-
-/** How far a fruit leaf looks for its trunk before it falls (blocks, along each axis). */
-export const LEAF_LOG_RANGE = 2;
+/** How far a leaf looks for its trunk before it falls (blocks, along each axis). */
+export const LEAF_LOG_RANGE = 4;
 
 /** Trunk blocks. Every tree uses the Fruitwood Log except the banana. */
-export const FRUIT_LOG = { id: "fruit_log", zh: "果木原木", en: "Fruitwood Log" };
+export const FRUITWOOD_LOG = { id: "fruitwood_log", zh: "果木原木", en: "Fruitwood Log" };
 export const BANANA_TRUNK = { id: "banana_trunk", zh: "香蕉假莖", en: "Banana Trunk" };
-export const TRUNKS = [FRUIT_LOG, BANANA_TRUNK];
+export const TRUNKS = [FRUITWOOD_LOG, BANANA_TRUNK];
 
 const tree = (id, zh, en, climate, fruit, look, extra = {}) => ({
   id, zh, en, climate,
   saplingStages: 4, saplingChance: 0.3, minLightLevel: 9,
+  // ## One chance for each step: bare → blossom, blossom → a fruit below, and each fruit stage.
   fruitChance: 0.25, fruit, pick: [1, 2],
-  shape: "round", trunk: FRUIT_LOG.id,
+  trunk: FRUITWOOD_LOG.id,
   look,
   ...extra,
 });
-const leaf = (ripe, blossom = [250, 250, 240]) => ({ leaf: [64, 130, 56], blossom, green: [120, 170, 60], ripe });
+const leaf = (ripe, blossom = [250, 250, 240]) => ({ leaf: [64, 130, 56], blossom, ripe });
 
 export const TREES = [
   tree("mandarin", "柑橘", "Mandarin", "warm", "mandarin", leaf([244, 150, 40]), { village: ["plains", "savanna"] }),
@@ -67,14 +48,18 @@ export const TREES = [
   tree("persimmon", "柿子", "Persimmon", "temperate", "persimmon", leaf([240, 120, 30]), { wild: ["taiga"] }),
   tree("lychee", "荔枝", "Lychee", "hot", "lychee", leaf([200, 50, 60]), { wild: ["jungle"] }),
   tree("mango", "芒果", "Mango", "hot", "mango", leaf([244, 184, 40]), { wild: ["jungle"] }),
-  tree("banana", "香蕉", "Banana", "hot", "banana", leaf([246, 220, 80], [180, 60, 80]), { wild: ["jungle"], shape: "palm", trunk: BANANA_TRUNK.id }),
-  // ## 繁茂山丘: the dark (roofed) forest, a warm biome in data/climate.js.
-  tree("star_anise", "八角", "Star Anise", "warm", "star_anise", leaf([140, 70, 40]), { wild: ["roofed"] }),
-  tree("cinnamon", "肉桂", "Cinnamon", "warm", "cinnamon_bark", leaf([170, 70, 50], [200, 120, 90]), { wild: ["jungle"], pick: [1, 1] }),
+  tree("banana", "香蕉", "Banana", "hot", "banana", leaf([246, 220, 80], [180, 60, 80]), { wild: ["jungle"], trunk: BANANA_TRUNK.id }),
+  // ## 繁茂山丘: no such vanilla biome; the tree rule uses bamboo jungles (docs/art/TREE_SHAPES.md).
+  tree("star_anise", "八角", "Star Anise", "warm", "star_anise", leaf([140, 70, 40]), { wild: ["bamboo"] }),
+  tree("cinnamon", "肉桂", "Cinnamon", "warm", "cinnamon_bark", leaf([170, 70, 50], [200, 120, 90]), { wild: ["jungle_edge"], pick: [1, 1], bark: true }),
 ];
 
 export const TREE_BY_ID = new Map(TREES.map((t) => [t.id, t]));
+/** Trees that set hanging fruit blocks (every tree but cinnamon). */
+export const FRUITING_TREES = TREES.filter((t) => !t.bark);
 
 export const saplingBlockId = (t) => `${t.id}_sapling`;
-export const fruitLeavesBlockId = (t) => `${t.id}_fruit_leaves`;
-export const wildSaplingFeature = (t) => `wild_${t.id}_sapling`;
+export const leavesBlockId = (t) => `${t.id}_leaves`;
+export const fruitBlockId = (t) => `${t.id}_fruit`;
+/** The tree_feature a grown sapling places (packs/BP/features/trees/). */
+export const treeFeatureId = (t) => `${t.id}_tree_feature`;

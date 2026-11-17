@@ -8,6 +8,7 @@ export const SOUND = {
   plant: "use.grass",
   boneMeal: "item.bone_meal.use",
   treeGrown: "block.azalea.place",
+  strip: "use.wood",
   trellisPlant: "use.bamboo",
   juicerAdd: "block.composter.fill",
   juicerPour: "bucket.fill.water",
@@ -20,7 +21,8 @@ export const SOUND = {
 export const PARTICLE = {
   boneMeal: "minecraft:crop_growth_emitter",
   ripe: "minecraft:wax_particle",
+  pick: "minecraft:villager_happy",
 };
 
-/** Chance, per random tick, that a ripe crop or fruit leaf gives off a particle. */
+/** Chance, per random tick, that a ripe crop or hanging fruit gives off a particle. */
 export const RIPE_PARTICLE_CHANCE = 0.35;

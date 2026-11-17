@@ -4,7 +4,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import * as mc from "@minecraft/server";
 
-const { world, system, ItemStack, Player, GameMode, __skipTime, __advance, __place, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom } = mc;
+const { world, system, ItemStack, Player, GameMode, __skipTime, __advance, __place, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom, __componentsOf, BlockPermutation } = mc;
 const overworld = world.getDimension("overworld");
 
 const results = [];
@@ -32,7 +32,7 @@ __advance(2); // startup: api_ping and guidebook_ping go out
 const PINGED = ["kaleidoscope_cookery:api_ping", "kaleidoscope_cookery:guidebook_ping"].every((id) => system.sentEvents.some((e) => e.id === id));
 const { setRandom } = await import("../../packs/BP/scripts/utils/blocks.js");
 const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
-const { TREE_SHAPE } = await import("../../packs/BP/scripts/data/trees.js");
+const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
 const { ITEMS } = await import("../../packs/BP/scripts/data/items.js");
 const { climateMultiplier, climateOfBiome } = await import("../../packs/BP/scripts/data/climate.js");
 const { guideEntries } = await import("../../packs/BP/scripts/data/guidebook.js");
@@ -70,7 +70,7 @@ test("every custom component named in the block JSON is registered at startup", 
     const def = JSON.parse(readFileSync(`packs/BP/blocks/${file}`, "utf8"))["minecraft:block"];
     for (const key of Object.keys(def.components)) if (key.startsWith(`${NS}:`)) assert(COMPONENTS[key], `${file}: ${key} is not registered`);
   }
-  equal(Object.keys(COMPONENTS).length, 6, "component count");
+  equal(Object.keys(COMPONENTS).length, 7, "component count");
 });
 
 // --- Climate --------------------------------------------------------------------------------
@@ -239,21 +239,67 @@ test("underground crops give the hoe bonus only when ripe and dug with a hoe", (
 
 // --- Fruit trees -------------------------------------------------------------------------------------------
 
-function plantSapling(x = 0) {
-  __place(overworld, at(x, 63), "minecraft:grass_block");
-  return __place(overworld, at(x), r("mandarin_sapling"));
-}
+const blockDef = (id) => JSON.parse(readFileSync(`packs/BP/blocks/${id}.json`, "utf8"))["minecraft:block"];
+const blossom = (block) => block.permutation.getState(S("blossom"));
+/** Shortest trunk of a tree's feature: the mock places that many logs (tools/test/mock-server.mjs). */
+const trunkHeight = (t) => {
+  const feature = JSON.parse(readFileSync(`packs/BP/features/trees/${t.id}_tree_feature.json`, "utf8"))["minecraft:tree_feature"];
+  const trunk = feature[Object.keys(feature).find((k) => k.endsWith("trunk"))];
+  return trunk.trunk_height.range_min ?? trunk.trunk_height.base;
+};
 
-test("a mandarin sapling grows into a tree of the fixed shape", () => {
+function plantSapling(x = 0, tree = "mandarin") {
+  __place(overworld, at(x, 63), "minecraft:grass_block");
+  return __place(overworld, at(x), r(`${tree}_sapling`));
+}
+/** A grown mandarin (mock feature): fruitwood log y64–66, a ring of leaves at y66, a layer at y67. */
+function grownMandarin() {
   overworld.biome = "minecraft:swamp";
   tick(plantSapling(), 4);
-  equal(overworld.getBlock(at(0)).typeId, r("fruit_log"), "trunk at the sapling");
-  for (const [x, y, z] of TREE_SHAPE.trunk) equal(overworld.getBlock(at(x, 64 + y, z)).typeId, r("fruit_log"), `trunk ${y}`);
-  const leaves = [...overworld.blocks.values()].filter((p) => p.type.id === r("mandarin_fruit_leaves")).length;
-  equal(leaves, 21, "fruit leaves");
+}
+const LEAF = at(1, 66);
+const UNDER = at(1, 65);
+
+test("tree block ids follow the art: <tree>_leaves, fruitwood_log, banana_trunk, <tree>_fruit", () => {
+  const ids = new Set(readdirSync("packs/BP/blocks").map((f) => f.replace(/\.json$/, "")));
+  for (const t of TREES) {
+    assert(ids.has(`${t.id}_leaves`), `${t.id}_leaves`);
+    assert(!ids.has(`${t.id}_fruit_leaves`), `${t.id}_fruit_leaves is gone`);
+    equal(ids.has(`${t.id}_fruit`), !t.bark, `${t.id}_fruit block`);
+  }
+  assert(ids.has("fruitwood_log") && ids.has("banana_trunk") && !ids.has("fruit_log"), "trunks");
+  equal(blockDef("mandarin_leaves").description.states[S("blossom")][0], false, "leaves are bare by default");
+  for (const dir of ["packs/BP/features/trees", "packs/BP/feature_rules/trees"])
+    for (const file of readdirSync(dir))
+      for (const [, id] of readFileSync(`${dir}/${file}`, "utf8").matchAll(/"kaleidoscope_harvest:([a-z0-9_]+)"/g))
+        if (!/_tree_feature(_rule)?$/.test(id)) assert(ids.has(id), `${file} names ${id}, which is a block`);
+  const lang = readFileSync("packs/RP/texts/en_US.lang", "utf8");
+  assert(lang.includes("tile.kaleidoscope_harvest:fruitwood_log.name=Fruitwood Log") && lang.includes("tile.kaleidoscope_harvest:mandarin_leaves.name="), "names");
+  assert(!lang.includes("fruit_leaves") && !lang.includes(":fruit_log"), "no old names left");
 });
 
-test("a sapling with no room waits", () => {
+test("a grown sapling places its tree feature where it stands", () => {
+  grownMandarin();
+  equal(overworld.placedFeatures.at(-1)?.name, r("mandarin_tree_feature"), "feature");
+  equal(JSON.stringify(overworld.placedFeatures.at(-1).location), JSON.stringify(at(0)), "at the sapling");
+  equal(overworld.getBlock(at(0)).typeId, r("fruitwood_log"), "trunk took the sapling's place");
+  equal(overworld.getBlock(LEAF).typeId, r("mandarin_leaves"), "leaves");
+  equal(blossom(overworld.getBlock(LEAF)), false, "bare leaves");
+  equal(overworld.sounds.at(-1).id, "block.azalea.place", "sound");
+});
+
+test("when placeFeature fails the sapling stays and tries again later", () => {
+  overworld.biome = "minecraft:swamp";
+  overworld.featureFails = true;
+  let sapling = tick(plantSapling(), 10);
+  equal(sapling.typeId, r("mandarin_sapling"), "still a sapling");
+  equal(growth(sapling), 3, "waiting at its last stage");
+  overworld.featureFails = false;
+  sapling = tick(sapling, 1);
+  equal(sapling.typeId, r("fruitwood_log"), "grew once it could");
+});
+
+test("a sapling with something in the way waits", () => {
   overworld.biome = "minecraft:swamp";
   __place(overworld, at(1, 66), "minecraft:stone");
   const sapling = tick(plantSapling(), 10);
@@ -267,37 +313,167 @@ test("bone meal moves a sapling on one stage only", () => {
   equal(growth(overworld.getBlock(at(0))), 1, "one stage");
 });
 
-test("fruit leaves blossom, ripen, are picked and fruit again", () => {
-  overworld.biome = "minecraft:swamp";
-  tick(plantSapling(), 4);
-  let leaf = overworld.getBlock(at(1, 66));
-  equal(leaf.typeId, r("mandarin_fruit_leaves"), "a leaf");
-  leaf = tick(leaf, 3);
-  equal(leaf.permutation.getState(S("fruit_stage")), 3, "ripe");
-  __interact(player(), leaf);
+test("blossoming leaves hang a small green fruit below them, only into air", () => {
+  grownMandarin();
+  let leaf = tick(overworld.getBlock(LEAF), 1);
+  equal(blossom(leaf), true, "blossom");
+  __place(overworld, UNDER, "minecraft:stone");
+  leaf = tick(leaf, 5);
+  equal(overworld.getBlock(UNDER).typeId, "minecraft:stone", "no fruit into stone");
+  equal(blossom(leaf), true, "still in blossom");
+  overworld.getBlock(UNDER).setType("minecraft:air");
+  leaf = tick(leaf, 1);
+  const fruit = overworld.getBlock(UNDER);
+  equal(fruit.typeId, r("mandarin_fruit"), "fruit below");
+  equal(growth(fruit), 0, "small green");
+  equal(blossom(leaf), false, "leaf back to bare");
+  // Leaves with a leaf below (y67 over y66) blossom but never fruit.
+  const top = tick(overworld.getBlock(at(1, 67)), 5);
+  equal(blossom(top), true, "top leaf in blossom");
+  equal(overworld.getBlock(at(1, 66)).typeId, r("mandarin_leaves"), "nothing replaced the leaf below");
+});
+
+test("hanging fruit grows small green → big green → ripe, each stage its own bone", () => {
+  grownMandarin();
+  tick(overworld.getBlock(LEAF), 2);
+  let fruit = tick(overworld.getBlock(UNDER), 1);
+  equal(growth(fruit), 1, "big green");
+  fruit = tick(fruit, 5);
+  equal(growth(fruit), 2, "ripe, and no further");
+  for (const stage of [0, 1, 2]) {
+    const geometry = __componentsOf(BlockPermutation.resolve(r("mandarin_fruit"), { [S("growth")]: stage }))["minecraft:geometry"];
+    equal(geometry.identifier, "geometry.kaleidoscope_harvest.mandarin_fruit", "art model");
+    for (const bone of [0, 1, 2]) equal(geometry.bone_visibility[`stage${bone}`], bone === stage, `stage ${stage}: bone stage${bone}`);
+  }
+  const def = blockDef("mandarin_fruit");
+  equal(def.components["minecraft:collision_box"], false, "no collision");
+  equal(def.components["minecraft:material_instances"]["*"].render_method, "alpha_test", "alpha test");
+  equal(JSON.parse(readFileSync("packs/RP/textures/terrain_texture.json", "utf8")).texture_data.kh_mandarin_fruit.textures, "textures/kaleidoscope_harvest/blocks/fruit/mandarin_fruit", "fruit texture");
+  assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/fruit").includes("mandarin_fruit.texture_set.json"), "PBR texture set");
+});
+
+test("picking a ripe fruit gives the fruit and removes the block, with no text; the leaf fruits again", () => {
+  grownMandarin();
+  tick(overworld.getBlock(LEAF), 2);
+  const fruit = tick(overworld.getBlock(UNDER), 3);
+  __interact(player(), fruit);
   assert(overworld.dropped(r("mandarin")) >= 1, "mandarin picked");
-  equal(overworld.getBlock(at(1, 66)).permutation.getState(S("fruit_stage")), 0, "back to no fruit");
-  const p = player("minecraft:bone_meal", 2);
-  __interact(p, overworld.getBlock(at(1, 66)));
-  equal(overworld.getBlock(at(1, 66)).permutation.getState(S("fruit_stage")), 1, "bone meal: one stage");
+  equal(overworld.getBlock(UNDER).typeId, "minecraft:air", "fruit block gone");
+  equal(overworld.sounds.at(-1).id, "block.sweet_berry_bush.pick", "pick sound");
+  assert(overworld.particles.some((p) => p.id === "minecraft:villager_happy"), "pick particles");
+  equal(world.messages.length, 0, "no chat text");
+  tick(overworld.getBlock(LEAF), 2);
+  equal(overworld.getBlock(UNDER).typeId, r("mandarin_fruit"), "fruits again");
 });
 
-test("off-climate fruit leaves turn grey and do not fruit", () => {
-  overworld.biome = "minecraft:swamp";
-  tick(plantSapling(), 4);
+test("an unripe fruit is not picked; bone meal moves it one stage; broken unripe it gives nothing", () => {
+  grownMandarin();
+  __place(overworld, UNDER, r("mandarin_fruit"));
+  __interact(player(), overworld.getBlock(UNDER));
+  equal(overworld.dropped(r("mandarin")), 0, "nothing picked");
+  equal(growth(overworld.getBlock(UNDER)), 0, "unchanged");
+  __interact(player("minecraft:bone_meal", 2), overworld.getBlock(UNDER));
+  equal(growth(overworld.getBlock(UNDER)), 1, "bone meal: one stage");
+  __break(player(), overworld.getBlock(UNDER));
+  equal(overworld.dropped(r("mandarin")), 0, "unripe gives nothing");
+  equal(overworld.dropped(r("mandarin_fruit")), 0, "and not itself");
+});
+
+test("a fruit falls when the leaves above it go; a ripe one still gives its fruit", () => {
+  grownMandarin();
+  __place(overworld, UNDER, r("mandarin_fruit"), { [S("growth")]: 2 });
+  __break(player(), overworld.getBlock(LEAF));
+  equal(overworld.getBlock(UNDER).typeId, "minecraft:air", "ripe fruit fell with its leaf");
+  equal(overworld.dropped(r("mandarin")), 1, "and gave its fruit");
+  // Leaves gone without a break event (an explosion, a command): the fruit's own tick notices.
+  __place(overworld, at(-1, 65), r("mandarin_fruit"));
+  overworld.getBlock(at(-1, 66)).setType("minecraft:air");
+  tick(overworld.getBlock(at(-1, 65)), 1);
+  equal(overworld.getBlock(at(-1, 65)).typeId, "minecraft:air", "unripe fruit fell");
+  equal(overworld.dropped(r("mandarin")), 1, "and gave nothing");
+  const filter = blockDef("mandarin_fruit").components["minecraft:placement_filter"].conditions[0];
+  equal(JSON.stringify(filter), JSON.stringify({ allowed_faces: ["down"], block_filter: [r("mandarin_leaves")] }), "only under its own leaves");
+});
+
+test("off-climate leaves turn grey and do not blossom; fruit off its climate stops growing", () => {
+  grownMandarin();
   overworld.biome = "minecraft:snowy_plains";
-  const leaf = tick(overworld.getBlock(at(1, 66)), 5);
+  const leaf = tick(overworld.getBlock(LEAF), 5);
   equal(leaf.permutation.getState(S("off_climate")), true, "grey");
-  equal(leaf.permutation.getState(S("fruit_stage")), 0, "no fruit");
+  equal(blossom(leaf), false, "no blossom");
+  __place(overworld, at(-1, 65), r("mandarin_fruit"));
+  equal(growth(tick(overworld.getBlock(at(-1, 65)), 5)), 0, "fruit waits");
 });
 
-test("chopping the trunk away makes the fruit leaves fall", () => {
+test("bone meal on leaves: bare → blossom, then a fruit below", () => {
+  grownMandarin();
+  const p = player("minecraft:bone_meal", 3);
+  __interact(p, overworld.getBlock(LEAF));
+  equal(blossom(overworld.getBlock(LEAF)), true, "blossom");
+  __interact(p, overworld.getBlock(LEAF));
+  equal(overworld.getBlock(UNDER).typeId, r("mandarin_fruit"), "fruit");
+  equal(p.hand.amount, 1, "two bone meal used");
+});
+
+test("chopping the trunk away makes the leaves fall", () => {
+  grownMandarin();
+  for (const y of [64, 65, 66]) __break(player("minecraft:iron_axe"), overworld.getBlock(at(0, y)));
+  equal(overworld.dropped(r("fruitwood_log")), 3, "logs dropped");
+  tick(overworld.getBlock(LEAF), 1);
+  equal(overworld.getBlock(LEAF).typeId, "minecraft:air", "leaf fell");
+});
+
+test("cinnamon has no fruit block: its flushed leaves give bark and go back to bare", () => {
   overworld.biome = "minecraft:swamp";
-  tick(plantSapling(), 4);
-  for (const [x, y, z] of TREE_SHAPE.trunk) __break(player("minecraft:iron_axe"), overworld.getBlock(at(x, 64 + y, z)));
-  equal(overworld.dropped(r("fruit_log")), 3, "logs dropped");
-  tick(overworld.getBlock(at(1, 66)), 1);
-  equal(overworld.getBlock(at(1, 66)).typeId, "minecraft:air", "leaf fell");
+  tick(plantSapling(0, "cinnamon"), 4);
+  const h = trunkHeight(TREES.find((t) => t.id === "cinnamon"));
+  const leafAt = at(1, 64 + h - 1);
+  const leaf = tick(overworld.getBlock(leafAt), 5);
+  equal(blossom(leaf), true, "red-brown flush");
+  equal(overworld.getBlock(at(1, 64 + h - 2)).typeId, "minecraft:air", "nothing hangs below");
+  __interact(player(), leaf);
+  equal(overworld.dropped(r("cinnamon_bark")), 1, "a piece of bark");
+  equal(blossom(overworld.getBlock(leafAt)), false, "back to bare");
+  assert(!readdirSync("packs/BP/blocks").includes("cinnamon_fruit.json"), "no cinnamon fruit block");
+});
+
+test("every fruit tree grows by its own feature and fruits (cinnamon: bark)", () => {
+  for (const t of TREES) {
+    __reset();
+    setRandom(() => 0);
+    overworld.biome = { cold: "minecraft:taiga", temperate: "minecraft:forest", warm: "minecraft:swamp", hot: "minecraft:jungle" }[t.climate];
+    tick(plantSapling(0, t.id), 4);
+    equal(overworld.placedFeatures.at(-1)?.name, r(`${t.id}_tree_feature`), `${t.id}: feature`);
+    equal(overworld.getBlock(at(0)).typeId, r(t.trunk), `${t.id}: trunk`);
+    const h = trunkHeight(t);
+    const leaf = tick(overworld.getBlock(at(1, 64 + h - 1)), 2);
+    if (t.bark) __interact(player(), leaf);
+    else __interact(player(), tick(overworld.getBlock(at(1, 64 + h - 2)), 2));
+    assert(overworld.dropped(r(t.fruit)) >= 1, `${t.id}: picked ${t.fruit}`);
+  }
+});
+
+test("a banana's leaves fall when its trunk is chopped", () => {
+  overworld.biome = "minecraft:jungle";
+  tick(plantSapling(0, "banana"), 4);
+  const h = trunkHeight(TREES.find((t) => t.id === "banana"));
+  for (let y = 0; y < h; y++) __break(player("minecraft:iron_axe"), overworld.getBlock(at(0, 64 + y)));
+  equal(overworld.dropped(r("banana_trunk")), h, "trunk dropped");
+  tick(overworld.getBlock(at(0, 64 + h)), 1);
+  equal(overworld.getBlock(at(0, 64 + h)).typeId, "minecraft:air", "crown fell");
+});
+
+test("wild fruit trees come from feature_rules/trees, not wild saplings; mandarins come from villages", () => {
+  const rules = readdirSync("packs/BP/feature_rules/trees");
+  for (const t of TREES) {
+    const file = `${t.id}_tree_feature_rule.json`;
+    equal(rules.includes(file), Boolean(t.wild), `${t.id}: wild tree rule`);
+    if (rules.includes(file)) equal(JSON.parse(readFileSync(`packs/BP/feature_rules/trees/${file}`, "utf8"))["minecraft:feature_rules"].description.places_feature, r(`${t.id}_tree_feature`), `${t.id}: rule places the tree`);
+  }
+  for (const dir of ["packs/BP/features/wild", "packs/BP/feature_rules/wild"]) assert(!readdirSync(dir).some((f) => f.includes("_sapling")), `${dir}: no wild saplings`);
+  const plains = JSON.parse(readFileSync("packs/BP/loot_tables/chests/village/village_plains_house.json", "utf8")).pools.at(-1);
+  assert(plains.entries.some((e) => e.name === r("grape_cutting")), "grape cuttings in plains houses");
+  assert(plains.entries.some((e) => e.name === r("mandarin_sapling")), "mandarin saplings in plains houses");
 });
 
 // --- M2: spices, underground crops, wild plants ------------------------------------------------------------
@@ -390,61 +566,46 @@ test("a blueberry bush grows on grass, not only farmland, and is picked again an
   equal(growth(overworld.getBlock(at(0))), 4, "back to 4");
 });
 
-test("grapes grow on a Bamboo Trellis from a cutting, drawn on the trellis model", () => {
+test("grapes grow on a Bamboo Trellis from a cutting", () => {
   __place(overworld, at(0, 63), "minecraft:farmland");
   __interact(player(r("grape_cutting")), __place(overworld, at(0), r("bamboo_trellis")));
   const vine = tick(overworld.getBlock(at(0)), 40);
   equal(vine.typeId, r("grape_crop"), "planted");
   __interact(player(), vine);
   assert(overworld.dropped(r("grape")) >= 2, "grapes picked");
-  const def = JSON.parse(readFileSync("packs/BP/blocks/grape_crop.json", "utf8"))["minecraft:block"];
-  equal(def.components["minecraft:geometry"], "geometry.kaleidoscope_harvest.bamboo_trellis", "trellis model");
-  assert(def.components["minecraft:material_instances"].vine, "vine material");
 });
 
-const TREES_ALL = (await import("../../packs/BP/scripts/data/trees.js"));
-
-test("every fruit tree grows into its shape with its trunk, and its leaves give its fruit", () => {
-  for (const t of TREES_ALL.TREES) {
-    __reset();
-    setRandom(() => 0);
-    overworld.biome = { cold: "minecraft:taiga", temperate: "minecraft:forest", warm: "minecraft:swamp", hot: "minecraft:jungle" }[t.climate];
-    __place(overworld, at(0, 63), "minecraft:grass_block");
-    tick(__place(overworld, at(0), r(`${t.id}_sapling`)), 4);
-    const shape = TREES_ALL.TREE_SHAPES[t.shape];
-    for (const [x, y, z] of shape.trunk) equal(overworld.getBlock(at(x, 64 + y, z)).typeId, r(t.trunk), `${t.id}: trunk at y${y}`);
-    const leaves = [...overworld.blocks.values()].filter((p) => p.type.id === r(`${t.id}_fruit_leaves`)).length;
-    equal(leaves, shape.leaves.length, `${t.id}: leaf count`);
-    const [lx, ly, lz] = shape.leaves[0];
-    const leaf = tick(overworld.getBlock(at(lx, 64 + ly, lz)), 3);
-    __interact(player(), leaf);
-    assert(overworld.dropped(r(t.fruit)) >= 1, `${t.id}: picked ${t.fruit}`);
-  }
-});
-
-test("a banana's leaves fall when its trunk is chopped", () => {
-  overworld.biome = "minecraft:jungle";
-  __place(overworld, at(0, 63), "minecraft:grass_block");
-  tick(__place(overworld, at(0), r("banana_sapling")), 4);
-  for (const [x, y, z] of TREES_ALL.TREE_SHAPES.palm.trunk) __break(player("minecraft:iron_axe"), overworld.getBlock(at(x, 64 + y, z)));
-  equal(overworld.dropped(r("banana_trunk")), 4, "trunk dropped");
-  tick(overworld.getBlock(at(0, 68)), 1);
-  equal(overworld.getBlock(at(0, 68)).typeId, "minecraft:air", "crown fell");
-});
-
-test("wild saplings, village grape cuttings and the drawn textures are wired up", () => {
-  for (const t of TREES_ALL.TREES.filter((t) => t.wild)) {
-    const rules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.startsWith(`wild_${t.id}_sapling_`));
-    equal(rules.length, t.wild.length, `${t.id}: wild sapling rules`);
-  }
-  const plains = JSON.parse(readFileSync("packs/BP/loot_tables/chests/village/village_plains_house.json", "utf8")).pools.at(-1);
-  assert(plains.entries.some((e) => e.name === r("grape_cutting")), "grape cuttings in plains houses");
+test("crops use the art's models: one bone per drawn stage, state 0–7 → stage floor(state / 2)", () => {
   const terrain = JSON.parse(readFileSync("packs/RP/textures/terrain_texture.json", "utf8")).texture_data;
-  equal(terrain.kh_corn_stage7.textures, "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3", "state 7 shows drawn stage 3");
-  // Stopgap until the hanging fruit blocks exist (art PR #4): leaves with fruit show the blossom texture.
-  equal(terrain.kh_mandarin_fruit_leaves_green.textures, "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom", "leaf art");
+  const look = (id, states) => __componentsOf(BlockPermutation.resolve(r(id), Object.fromEntries(Object.entries(states).map(([k, v]) => [S(k), v]))));
+  for (let s = 0; s <= 7; s++) {
+    const c = look("napa_cabbage_crop", { growth: s });
+    equal(c["minecraft:geometry"].identifier, "geometry.kaleidoscope_harvest.napa_cabbage_crop", "crop model");
+    for (let n = 0; n < 4; n++) equal(c["minecraft:geometry"].bone_visibility[`stage${n}`], n === Math.floor(s / 2), `state ${s}: bone stage${n}`);
+    equal(c["minecraft:material_instances"][`stage${Math.floor(s / 2)}`].texture, `kh_napa_cabbage_stage_${Math.floor(s / 2)}`, `state ${s}: texture`);
+  }
+  equal(terrain.kh_corn_stage_3.textures, "textures/kaleidoscope_harvest/blocks/crops/corn_stage_3", "drawn stage texture");
+  equal(look("napa_cabbage_crop", { growth: 7, off_climate: true })["minecraft:material_instances"].stage3.texture, "kh_napa_cabbage_stage_3_grey", "grey when off climate");
+  assert(terrain.kh_corn_stage_3_grey.textures.startsWith("textures/blocks/"), "grey copy made from the art");
   assert(readdirSync("packs/RP/textures/kaleidoscope_harvest/blocks/crops").includes("corn_stage_3.texture_set.json"), "PBR texture set");
-  assert(terrain.kh_corn_stage7_grey.textures.startsWith("textures/blocks/"), "grey copy made from the art");
+
+  const upper = look("corn_crop", { growth: 6, upper: true });
+  equal(upper["minecraft:geometry"].identifier, "geometry.kaleidoscope_harvest.corn_upper", "corn upper model");
+  equal(JSON.stringify(upper["minecraft:geometry"].bone_visibility), JSON.stringify({ stage2: false, stage3: true }), "upper bones");
+  equal(upper["minecraft:material_instances"].stage3.texture, "kh_corn_upper_stage_3", "upper texture");
+  equal(look("corn_crop", { growth: 6 })["minecraft:geometry"].identifier, "geometry.kaleidoscope_harvest.corn_crop", "corn lower model");
+
+  const grape = look("grape_crop", { growth: 2 });
+  equal(grape["minecraft:geometry"].identifier, "geometry.kaleidoscope_harvest.bamboo_trellis_grape", "vine on its trellis model");
+  equal(grape["minecraft:material_instances"].trellis.texture, "kh_station_bamboo_trellis", "trellis frame");
+  equal(grape["minecraft:material_instances"].stage1.texture, "kh_grape_stage_1", "vine stage");
+  equal(look("blueberry_crop", { growth: 0 })["minecraft:geometry"].identifier, "geometry.kaleidoscope_harvest.blueberry_crop", "shrub model");
+
+  const sapling = blockDef("mandarin_sapling").components;
+  equal(sapling["minecraft:geometry"], "geometry.kaleidoscope_harvest.sapling", "sapling model");
+  equal(sapling["minecraft:material_instances"].sapling.texture, "kh_mandarin_sapling", "sapling texture");
+  equal(terrain.kh_mandarin_sapling.textures, "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling", "drawn sapling");
+  equal(terrain.kh_mandarin_leaves_blossom.textures, "textures/kaleidoscope_harvest/blocks/trees/mandarin_leaves_blossom", "leaf art");
 });
 
 const contents = (block) => block.permutation.getState(S("contents"));
@@ -589,7 +750,7 @@ test("the guidebook chapter goes out as begin / chunks / end and reads back as J
 test("every item and placeable block has a guidebook entry", () => {
   const ids = new Set(guideEntries().map((row) => row.id));
   for (const item of ITEMS) assert(ids.has(item.id), `no entry for ${item.id}`);
-  for (const id of ["bamboo_trellis", "mandarin_sapling", "fruit_log"]) assert(ids.has(id), `no entry for ${id}`);
+  for (const id of ["bamboo_trellis", "mandarin_sapling", "fruitwood_log", "banana_trunk"]) assert(ids.has(id), `no entry for ${id}`);
   for (const crop of CROPS) assert(ids.has(crop.seed), `no entry for ${crop.seed}`);
 });
 

@@ -25,10 +25,42 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:corn_crop.name",
-      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+        "bone_visibility": {
+          "stage0": true,
+          "stage1": false,
+          "stage2": false,
+          "stage3": false
+        }
+      },
       "minecraft:material_instances": {
         "*": {
-          "texture": "kh_corn_stage0",
+          "texture": "kh_corn_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage0": {
+          "texture": "kh_corn_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage1": {
+          "texture": "kh_corn_stage_1",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage2": {
+          "texture": "kh_corn_stage_2",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage3": {
+          "texture": "kh_corn_stage_3",
           "render_method": "alpha_test",
           "face_dimming": false,
           "ambient_occlusion": false
@@ -79,9 +111,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 0 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage0",
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -104,9 +169,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 0 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage0_grey",
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -129,9 +227,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 1 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage1",
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -154,9 +285,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 1 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage1_grey",
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -179,9 +343,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 2 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage2",
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -204,9 +401,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 2 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage2_grey",
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -229,9 +459,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 3 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage3",
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -254,9 +517,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 3 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage3_grey",
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -279,9 +575,42 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage4",
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -304,22 +633,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage4",
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage4_grey",
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -342,22 +735,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage4_grey",
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage5",
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -380,22 +837,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage5",
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage5_grey",
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -418,22 +939,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": true,
+              "stage3": false
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage5_grey",
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage6",
+              "texture": "kh_corn_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -456,22 +1041,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage6",
+              "texture": "kh_corn_upper_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage6_grey",
+              "texture": "kh_corn_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -494,22 +1143,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage6_grey",
+              "texture": "kh_corn_upper_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage7",
+              "texture": "kh_corn_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -532,22 +1245,86 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == false && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage7",
+              "texture": "kh_corn_upper_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == false",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_stage7_grey",
+              "texture": "kh_corn_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_corn_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_corn_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
@@ -570,13 +1347,44 @@
       {
         "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == true && q.block_state('kaleidoscope_harvest:upper') == true",
         "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.corn_upper",
+            "bone_visibility": {
+              "stage2": false,
+              "stage3": true
+            }
+          },
           "minecraft:material_instances": {
             "*": {
-              "texture": "kh_corn_top_stage7_grey",
+              "texture": "kh_corn_upper_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_corn_upper_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_corn_upper_stage_3_grey",
               "render_method": "alpha_test",
               "face_dimming": false,
               "ambient_occlusion": false
             }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
           }
         }
       },

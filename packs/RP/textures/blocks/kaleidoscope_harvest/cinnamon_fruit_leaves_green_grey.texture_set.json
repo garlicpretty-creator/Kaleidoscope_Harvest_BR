@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "cinnamon_fruit_leaves_green_grey",
-    "normal": "cinnamon_fruit_leaves_green_grey_normal",
-    "metalness_emissive_roughness": "cinnamon_fruit_leaves_green_grey_mer"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "pear_fruit_leaves_ripe_grey",
-    "normal": "pear_fruit_leaves_ripe_grey_normal",
-    "metalness_emissive_roughness": "pear_fruit_leaves_ripe_grey_mer"
-  }
-}

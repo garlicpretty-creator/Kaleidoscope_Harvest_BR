@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "mandarin_fruit_leaves_none_grey",
-    "normal": "mandarin_fruit_leaves_none_grey_normal",
-    "metalness_emissive_roughness": "mandarin_fruit_leaves_none_grey_mer"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "mango_fruit_leaves_blossom_grey",
-    "normal": "mango_fruit_leaves_blossom_grey_normal",
-    "metalness_emissive_roughness": "mango_fruit_leaves_blossom_grey_mer"
-  }
-}

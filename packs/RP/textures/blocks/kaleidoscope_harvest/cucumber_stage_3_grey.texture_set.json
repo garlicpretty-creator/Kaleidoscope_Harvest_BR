@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "cucumber_stage_3_grey",
+    "normal": "cucumber_stage_3_grey_normal",
+    "metalness_emissive_roughness": "cucumber_stage_3_grey_mer"
+  }
+}

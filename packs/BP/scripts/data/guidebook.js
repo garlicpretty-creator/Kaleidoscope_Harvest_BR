@@ -13,7 +13,7 @@ import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
 import { VILLAGE_HOUSES, villageItems } from "./village.js";
-import { BANANA_TRUNK, FRUIT_LOG, TREES, saplingBlockId } from "./trees.js";
+import { BANANA_TRUNK, FRUITWOOD_LOG, TREES, saplingBlockId } from "./trees.js";
 import { toSimplified } from "./zh_cn.js";
 
 const CLIMATE_NAME = {
@@ -82,6 +82,8 @@ const BIOME_NAME = {
   desert: ["沙漠", "deserts"],
   taiga: ["針葉林", "taigas"],
   roofed: ["黑森林", "dark forests"],
+  bamboo: ["竹林", "bamboo jungles"],
+  jungle_edge: ["叢林邊緣", "sparse jungles"],
 };
 
 const HOUSE_NAME = {
@@ -99,9 +101,9 @@ export function villageLine(id) {
   return [[`村莊：${houses.map((h) => h[0]).join("、")}村莊的民宅箱子裡有時找得到。`, `Villages: sometimes found in house chests of ${houses.map((h) => h[1]).join(", ")} villages.`]];
 }
 
-export function wildSaplingLine(biomes) {
+export function wildTreeLine(biomes) {
   const names = biomes.map((b) => BIOME_NAME[b]);
-  return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生樹苗，挖回來就能種。`, `In the wild: wild saplings grow now and then in ${names.map((n) => n[1]).join(" and ")}; dig one up to plant.`];
+  return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生的果樹，打下樹葉有機會掉樹苗。`, `In the wild: the tree grows now and then in ${names.map((n) => n[1]).join(" and ")}; its leaves sometimes drop a sapling.`];
 }
 
 export function wildLine(wild) {
@@ -144,22 +146,23 @@ export function guideEntries() {
         ["種在草地或泥土上，長成一棵果樹。周圍要有空間，被擋住就會等到空出來。", "Plant it on grass or dirt and it grows into a fruit tree. It needs room; if something is in the way it waits."],
         climateLine(tree.climate),
         ["骨粉一次只推進一個階段。", "Bone meal moves it on one stage only."],
-        ...(tree.wild ? [wildSaplingLine(tree.wild)] : []),
+        ...(tree.wild ? [wildTreeLine(tree.wild)] : []),
         ...villageLine(saplingBlockId(tree)),
-        ...(tree.shape === "palm" ? [["香蕉長成單幹的香蕉假莖，頂上一圈果葉；假莖砍掉，果葉一樣會掉光。", "A banana grows a single banana trunk with a ring of fruit leaves on top; chop the trunk and the leaves fall."]] : []),
+        ...(tree.trunk === BANANA_TRUNK.id ? [["香蕉長成單幹的香蕉假莖，頂上一叢葉子；假莖砍掉，葉子一樣會掉光。", "A banana grows a single banana trunk with a tuft of leaves on top; chop the trunk and the leaves fall."]] : []),
       ], { block: true })
     );
     rows.push(
       entry(tree.fruit, "trees", [
-        tree.id === "cinnamon"
-          ? ["肉桂不結果：果葉長出紅褐色的嫩葉時，點它剝下一片肉桂皮，葉子回到原樣後會再長。", "Cinnamon bears no fruit: when its leaves put out red-brown new growth, use one to strip a piece of bark; it grows back again."]
-          : ["果葉會開花、結青果，再轉為熟果。點熟果採收，果葉回到無果，之後會再結果，不用重種。", "Fruit leaves blossom, set green fruit, then ripen. Use a ripe leaf to pick; it starts over and fruits again."],
+        tree.bark
+          ? ["肉桂不結果：葉子長出紅褐色的嫩葉時，點它剝下一片肉桂皮，葉子回到原樣後會再長。", "Cinnamon bears no fruit: when its leaves put out red-brown new growth, use one to strip a piece of bark; it grows back again."]
+          : ["葉子會開花；開花的葉子下方是空的，就會垂下一顆小青果，長大後轉為熟果。點熟果摘下，之後會再開花結果，不用重種。", "The leaves blossom; a blossoming leaf with nothing below it hangs a small green fruit, which grows and ripens. Use a ripe fruit to pick it; the tree blossoms and fruits again."],
+        ...(tree.bark ? [] : [["熟果之前打掉果實什麼都不會掉；上面的葉子沒了，果實也會掉下來。", "A fruit broken before it is ripe gives nothing; if the leaves above it go, it falls."]]),
         ...usesOf(tree.fruit),
       ])
     );
   }
-  rows.push(entry(FRUIT_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，果葉會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the fruit leaves fall and the tree is gone."]], { block: true }));
-  rows.push(entry(BANANA_TRUNK.id, "trees", [["香蕉的假莖。砍下可得香蕉假莖，但沒了假莖，香蕉果葉會掉光。", "The trunk of a banana plant. It can be chopped, but without it the banana's fruit leaves fall."]], { block: true }));
+  rows.push(entry(FRUITWOOD_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，葉子會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the leaves fall and the tree is gone."]], { block: true }));
+  rows.push(entry(BANANA_TRUNK.id, "trees", [["香蕉的假莖。砍下可得香蕉假莖，但沒了假莖，香蕉的葉子會掉光。", "The trunk of a banana plant. It can be chopped, but without it the banana's leaves fall."]], { block: true }));
 
   rows.push(
     entry(JUICER.id, "stations", [
@@ -229,7 +232,7 @@ export function nameOf(id) {
   const item = ITEM_BY_ID.get(bare);
   if (item) return [item.zh, item.en];
   if (bare === TRELLIS.id) return [TRELLIS.zh, TRELLIS.en];
-  if (bare === FRUIT_LOG.id) return [FRUIT_LOG.zh, FRUIT_LOG.en];
+  if (bare === FRUITWOOD_LOG.id) return [FRUITWOOD_LOG.zh, FRUITWOOD_LOG.en];
   if (bare === BANANA_TRUNK.id) return [BANANA_TRUNK.zh, BANANA_TRUNK.en];
   for (const station of [JUICER, PICKLING_JAR]) if (bare === station.id) return [station.zh, station.en];
   const tree = TREES.find((t) => saplingBlockId(t) === bare);

@@ -18,10 +18,16 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:banana_sapling.name",
-      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.sapling",
       "minecraft:material_instances": {
         "*": {
-          "texture": "kh_banana_sapling_stage0",
+          "texture": "kh_banana_sapling",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "sapling": {
+          "texture": "kh_banana_sapling",
           "render_method": "alpha_test",
           "face_dimming": false,
           "ambient_occlusion": false
@@ -64,46 +70,6 @@
       },
       "kaleidoscope_harvest:sapling": {}
     },
-    "permutations": [
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:growth') == 1",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_banana_sapling_stage1",
-              "render_method": "alpha_test",
-              "face_dimming": false,
-              "ambient_occlusion": false
-            }
-          }
-        }
-      },
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:growth') == 2",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_banana_sapling_stage2",
-              "render_method": "alpha_test",
-              "face_dimming": false,
-              "ambient_occlusion": false
-            }
-          }
-        }
-      },
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:growth') == 3",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_banana_sapling_stage3",
-              "render_method": "alpha_test",
-              "face_dimming": false,
-              "ambient_occlusion": false
-            }
-          }
-        }
-      }
-    ]
+    "permutations": []
   }
 }

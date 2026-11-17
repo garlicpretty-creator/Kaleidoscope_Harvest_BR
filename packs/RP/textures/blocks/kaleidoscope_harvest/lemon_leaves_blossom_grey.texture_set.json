@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lemon_leaves_blossom_grey",
+    "normal": "lemon_leaves_blossom_grey_normal",
+    "metalness_emissive_roughness": "lemon_leaves_blossom_grey_mer"
+  }
+}

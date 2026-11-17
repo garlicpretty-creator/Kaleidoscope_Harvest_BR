@@ -23,7 +23,7 @@ const load = (name) => import(pathToFileURL(join(BP, "scripts", "data", name)).h
 
 const { NAMESPACE, rid, state } = await load("ns.js");
 const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
-const { TREES, TRUNKS, FRUIT_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, fruitLeavesBlockId, wildSaplingFeature } = await load("trees.js");
+const { TREES, TRUNKS, FRUITWOOD_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR } = await load("stations.js");
@@ -155,15 +155,46 @@ const FARMLAND = ["minecraft:farmland", { tags: "q.any_tag('kaleidoscope_cookery
 const SOIL = ["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:rooted_dirt", "minecraft:moss_block", "minecraft:mud"];
 /** Drawn crop textures have 4 stages; block state 0–7 shows stage floor(state / 2) (docs/art/CROP_TEXTURES.md). */
 const artStage = (s) => Math.floor(s / 2);
+const ART_STAGES = [0, 1, 2, 3];
 
-// The Bamboo Trellis model: the frame is "*", the vine its own "vine" instance, so a trellis
-// crop draws its vine on the same frame (tools/art/station_models.py).
+// The plain Bamboo Trellis model (tools/art/station_models.py): the frame is "*"; its
+// "vine" instance stays see-through until a vine is planted, which swaps in the vine's
+// own model (bamboo_trellis_<vine>, tools/art/plant_models.py).
 const TRELLIS_GEO = `geometry.${NS}.bamboo_trellis`;
 terrain.kh_station_bamboo_trellis = { textures: `textures/${NS}/blocks/stations/bamboo_trellis` };
-const trellisMaterial = (vine) => ({
+const trellisMaterial = () => ({
   "*": { texture: "kh_station_bamboo_trellis", render_method: "alpha_test" },
-  vine: vine ? { texture: `kh_${vine}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } : { texture: "kh_station_juice_empty", render_method: "alpha_test" },
+  vine: { texture: "kh_station_juice_empty", render_method: "alpha_test" },
 });
+
+/** A plant texture instance: see-through, no face shading (the drawn stages are flat planes). */
+const plantTex = (texture) => ({ texture: `kh_${texture}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false });
+
+/**
+ * The art's plant models (tools/art/plant_models.py) have one bone per drawn stage; a
+ * permutation shows only the bone of its stage (docs/art/PLANT_MODELS.md).
+ */
+const stagedGeometry = (identifier, bones, shown) => ({ identifier, bone_visibility: Object.fromEntries(bones.map((b) => [`stage${b}`, b === shown])) });
+/** stageN instances → `<name>_stage_N` textures (the "*" fallback shows the current stage). */
+function stagedMaterials(name, stages, shown, grey, extra = {}) {
+  const tex = (n) => plantTex(`${name}_stage_${n}${grey ? "_grey" : ""}`);
+  return { "*": tex(shown), ...Object.fromEntries(stages.map((n) => [`stage${n}`, tex(n)])), ...extra };
+}
+/** The bounding box of a drawn model's bone, in block units, for selection boxes. */
+function boneBounds(geoFile, bone) {
+  const geo = JSON.parse(readFileSync(join(RP, "models", "blocks", geoFile), "utf8"))["minecraft:geometry"][0];
+  const min = [Infinity, Infinity, Infinity];
+  const max = [-Infinity, -Infinity, -Infinity];
+  for (const cube of geo.bones.find((b) => b.name === bone).cubes)
+    for (let i = 0; i < 3; i++) {
+      min[i] = Math.min(min[i], cube.origin[i]);
+      max[i] = Math.max(max[i], cube.origin[i] + cube.size[i]);
+    }
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const origin = [clamp(Math.floor(min[0]), -8, 8), clamp(Math.floor(min[1]), 0, 16), clamp(Math.floor(min[2]), -8, 8)];
+  const top = [clamp(Math.ceil(max[0]), -8, 8), clamp(Math.ceil(max[1]), 0, 16), clamp(Math.ceil(max[2]), -8, 8)];
+  return { origin, size: top.map((v, i) => Math.max(1, v - origin[i])) };
+}
 
 function block(id, { states, components, permutations = [], menu = { category: "none" } }) {
   writeJson(join(BP, "blocks", `${id}.json`), {
@@ -196,14 +227,23 @@ for (const crop of CROPS) {
   const tall = crop.form === "tall";
   const trellis = crop.form === "trellis";
   const bush = crop.form === "bush";
-  const look = (texture) => (trellis ? trellisMaterial(texture) : material(texture));
   names[`tile.${rid(id)}.name`] = [crop.zh, crop.en];
 
-  for (let s = 0; s <= max; s++)
+  // ## The art's models: <crop>_crop (vines: bamboo_trellis_<vine>, with the frame as its
+  // ## "trellis" instance); a tall crop's upper block is <crop>_upper, which only has the
+  // ## stages it appears in (docs/art/PLANT_MODELS.md).
+  const geo = trellis ? `geometry.${NS}.bamboo_trellis_${crop.id}` : `geometry.${NS}.${crop.id}_crop`;
+  const upperGeo = `geometry.${NS}.${crop.id}_upper`;
+  const upperStages = tall ? ART_STAGES.filter((n) => n >= artStage(crop.tallFrom)) : [];
+  const frame = trellis ? { trellis: { texture: "kh_station_bamboo_trellis", render_method: "alpha_test" } } : {};
+  const look = (s, grey) => stagedMaterials(crop.id, ART_STAGES, artStage(s), grey, frame);
+  const lookUpper = (s, grey) => stagedMaterials(`${crop.id}_upper`, upperStages, artStage(s), grey);
+
+  for (const n of ART_STAGES)
     for (const grey of [false, true]) {
-      const suffix = `${s}${grey ? "_grey" : ""}`;
-      addTerrain(`${crop.id}_stage${suffix}`, { from: `crops/${crop.id}_stage_${artStage(s)}`, grey });
-      if (tall && s >= crop.tallFrom) addTerrain(`${crop.id}_top_stage${suffix}`, { from: `crops/${crop.id}_upper_stage_${artStage(s)}`, grey });
+      const suffix = grey ? "_grey" : "";
+      addTerrain(`${crop.id}_stage_${n}${suffix}`, { from: `crops/${crop.id}_stage_${n}`, grey });
+      if (upperStages.includes(n)) addTerrain(`${crop.id}_upper_stage_${n}${suffix}`, { from: `crops/${crop.id}_upper_stage_${n}`, grey });
     }
 
   // ## Young and ripe loot. Underground crops only differ when dug with a hoe
@@ -221,14 +261,22 @@ for (const crop of CROPS) {
   const permutations = [];
   for (let s = 0; s <= max; s++)
     for (const grey of [false, true]) {
-      const suffix = `${s}${grey ? "_grey" : ""}`;
       const cond = `${S("growth")} == ${s} && ${S("off_climate")} == ${grey}`;
       const height = Math.min(16, 3 + 2 * s);
+      const lower = {
+        "minecraft:geometry": stagedGeometry(geo, ART_STAGES, artStage(s)),
+        "minecraft:material_instances": look(s, grey),
+        "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, trellis ? 16 : height, 16] },
+      };
       if (tall) {
-        permutations.push({ condition: `${cond} && ${S("upper")} == false`, components: { "minecraft:material_instances": material(`${crop.id}_stage${suffix}`), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, height, 16] } } });
-        if (s >= crop.tallFrom) permutations.push({ condition: `${cond} && ${S("upper")} == true`, components: { "minecraft:material_instances": material(`${crop.id}_top_stage${suffix}`) } });
+        permutations.push({ condition: `${cond} && ${S("upper")} == false`, components: lower });
+        if (s >= crop.tallFrom)
+          permutations.push({
+            condition: `${cond} && ${S("upper")} == true`,
+            components: { "minecraft:geometry": stagedGeometry(upperGeo, upperStages, artStage(s)), "minecraft:material_instances": lookUpper(s, grey), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 16, 16] } },
+          });
       } else {
-        permutations.push({ condition: cond, components: { "minecraft:material_instances": look(`${crop.id}_stage${suffix}`), "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, trellis ? 16 : height, 16] } } });
+        permutations.push({ condition: cond, components: lower });
       }
     }
   permutations.push({ condition: `${S("growth")} == ${max}`, components: { "minecraft:loot": ripe } });
@@ -237,8 +285,8 @@ for (const crop of CROPS) {
   block(id, {
     states,
     components: {
-      "minecraft:geometry": trellis ? TRELLIS_GEO : CROSS_GEO,
-      "minecraft:material_instances": look(`${crop.id}_stage0`),
+      "minecraft:geometry": stagedGeometry(geo, ART_STAGES, 0),
+      "minecraft:material_instances": look(0, false),
       "minecraft:collision_box": false,
       "minecraft:selection_box": { origin: [-8, 0, -8], size: [16, 4, 16] },
       "minecraft:destructible_by_mining": { seconds_to_destroy: 0 },
@@ -267,13 +315,14 @@ function wildPlant(crop) {
   const id = wildBlockId(crop);
   const soil = crop.wild.soil ?? WILD_SOIL;
   names[`tile.${rid(id)}.name`] = [`野生${crop.zh}`, `Wild ${crop.en}`];
-  addTerrain(id, { from: `crops/${crop.id}_stage_3` });
   const pools = [countEntry(crop.produce, [1, 2])];
   if (crop.seed !== crop.produce) pools.push(countEntry(crop.seed, [1, 2]));
+  // ## The ripe stage of the crop's own model; a wild vine has no trellis, so it is a plain cross.
+  const vine = crop.form === "trellis";
   block(id, {
     components: {
-      "minecraft:geometry": CROSS_GEO,
-      "minecraft:material_instances": material(id),
+      "minecraft:geometry": vine ? CROSS_GEO : stagedGeometry(`geometry.${NS}.${crop.id}_crop`, ART_STAGES, 3),
+      "minecraft:material_instances": vine ? material(`${crop.id}_stage_3`) : stagedMaterials(crop.id, ART_STAGES, 3, false),
       "minecraft:collision_box": false,
       "minecraft:selection_box": { origin: [-6, 0, -6], size: [12, 12, 12] },
       "minecraft:destructible_by_mining": { seconds_to_destroy: 0 },
@@ -368,7 +417,7 @@ writeJson(join(BP, "recipes", `${TRELLIS.id}.json`), {
 // --- Fruit trees -------------------------------------------------------------------------------------
 
 // Trunks: Fruitwood Log for every tree but the banana, whose trunk has its own texture.
-const TRUNK_ART = { [FRUIT_LOG.id]: ["trees/fruitwood_log", "trees/fruitwood_log_top"], [BANANA_TRUNK.id]: ["trees/banana_trunk", "trees/banana_trunk"] };
+const TRUNK_ART = { [FRUITWOOD_LOG.id]: ["trees/fruitwood_log", "trees/fruitwood_log_top"], [BANANA_TRUNK.id]: ["trees/banana_trunk", "trees/banana_trunk"] };
 for (const trunk of TRUNKS) {
   const [side, top] = TRUNK_ART[trunk.id];
   names[`tile.${rid(trunk.id)}.name`] = [trunk.zh, trunk.en];
@@ -398,29 +447,29 @@ for (const trunk of TRUNKS) {
   catalog.trees.push(rid(trunk.id));
 }
 
-/**
- * Fruit stage → drawn leaf texture suffix. ## Stopgap: the art now draws only bare and
- * blossoming leaves, and fruit as a block hanging below them (企劃書 as revised in art PR #4,
- * docs/art/PLANT_MODELS.md). Until the code makes those hanging fruit, a leaf with fruit
- * shows the blossom texture, so green and ripe fruit cannot be told apart by look.
- */
-const LEAF_ART = { none: "bare", blossom: "blossom", green: "blossom", ripe: "blossom" };
+/** The leaves' two looks (企劃書 as revised in art PR #4): state blossom false → bare, true → blossom. */
+const LEAF_LOOKS = [
+  [false, "bare"],
+  [true, "blossom"],
+];
+const SAPLING_GEO = `geometry.${NS}.sapling`;
 
 for (const tree of TREES) {
   const sap = saplingBlockId(tree);
-  const leaves = fruitLeavesBlockId(tree);
+  const leaves = leavesBlockId(tree);
   names[`tile.${rid(sap)}.name`] = [`${tree.zh}樹苗`, `${tree.en} Sapling`];
-  names[`tile.${rid(leaves)}.name`] = [`${tree.zh}果葉`, `${tree.en} Fruit Leaves`];
+  names[`tile.${rid(leaves)}.name`] = [`${tree.zh}樹葉`, `${tree.en} Leaves`];
 
-  // ## One drawn sapling texture for every sapling stage.
-  for (let s = 0; s < tree.saplingStages; s++) addTerrain(`${sap}_stage${s}`, { from: `saplings/${tree.id}_sapling` });
+  // ## One drawn sapling texture and model for every sapling stage. A grown sapling places the
+  // ## tree's feature (packs/BP/features/trees/, tools/art/tree_shapes.py): growth/trees.js.
+  addTerrain(sap, { from: `saplings/${tree.id}_sapling` });
   addIcon(sap);
   block(sap, {
     menu: { category: "nature", group: GROUP.trees },
     states: { [state("growth")]: intRange(tree.saplingStages - 1) },
     components: {
-      "minecraft:geometry": CROSS_GEO,
-      "minecraft:material_instances": material(`${sap}_stage0`),
+      "minecraft:geometry": SAPLING_GEO,
+      "minecraft:material_instances": { "*": plantTex(sap), sapling: plantTex(sap) },
       "minecraft:collision_box": false,
       "minecraft:selection_box": { origin: [-6, 0, -6], size: [12, 12, 12] },
       "minecraft:destructible_by_mining": { seconds_to_destroy: 0 },
@@ -429,35 +478,30 @@ for (const tree of TREES) {
       // ## Without minecraft:loot a block drops itself, which is what a sapling should do.
       [`${NS}:sapling`]: {},
     },
-    permutations: Array.from({ length: tree.saplingStages - 1 }, (_, i) => ({
-      condition: `${S("growth")} == ${i + 1}`,
-      components: { "minecraft:material_instances": material(`${sap}_stage${i + 1}`) },
-    })),
   });
   blockSounds[rid(sap)] = { sound: "grass" };
   catalog.trees.push(rid(sap));
 
-  for (let s = 0; s < FRUIT_STAGES.length; s++)
-    for (const grey of [false, true]) addTerrain(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`, { from: `trees/${tree.id}_leaves_${LEAF_ART[FRUIT_STAGES[s]]}`, grey });
+  for (const [, look] of LEAF_LOOKS)
+    for (const grey of [false, true]) addTerrain(`${leaves}_${look}${grey ? "_grey" : ""}`, { from: `trees/${tree.id}_leaves_${look}`, grey });
   addIcon(leaves);
   // ## Leaves drop a sapling now and then, like vanilla leaves: the way to start a second tree.
   const leafLoot = lootTable(leaves, [{ rolls: 1, entries: [{ type: "item", name: rid(sap), weight: 1 }, { type: "empty", weight: 19 }] }]);
-  const ripeLeafLoot = lootTable(`${leaves}_ripe`, [{ rolls: 1, entries: [{ type: "item", name: rid(sap), weight: 1 }, { type: "empty", weight: 19 }] }, countEntry(tree.fruit, tree.pick)]);
   const leafMat = (name) => ({ "*": { texture: `kh_${name}`, render_method: "alpha_test" } });
   const leafPerms = [];
-  for (let s = 0; s < FRUIT_STAGES.length; s++)
+  for (const [blossom, look] of LEAF_LOOKS)
     for (const grey of [false, true])
       leafPerms.push({
-        condition: `${S("fruit_stage")} == ${s} && ${S("off_climate")} == ${grey}`,
-        components: { "minecraft:material_instances": leafMat(`${leaves}_${FRUIT_STAGES[s]}${grey ? "_grey" : ""}`) },
+        condition: `${S("blossom")} == ${blossom} && ${S("off_climate")} == ${grey}`,
+        components: { "minecraft:material_instances": leafMat(`${leaves}_${look}${grey ? "_grey" : ""}`) },
       });
-  leafPerms.push({ condition: `${S("fruit_stage")} == ${FRUIT_STAGES.length - 1}`, components: { "minecraft:loot": ripeLeafLoot } });
   block(leaves, {
     menu: { category: "nature", group: GROUP.trees },
-    states: { [state("fruit_stage")]: intRange(FRUIT_STAGES.length - 1), [state("off_climate")]: [false, true] },
+    // ## The first value is the default: the tree feature places bare leaves (docs/art/TREE_SHAPES.md).
+    states: { [state("blossom")]: [false, true], [state("off_climate")]: [false, true] },
     components: {
       "minecraft:geometry": "minecraft:geometry.full_block",
-      "minecraft:material_instances": leafMat(`${leaves}_none`),
+      "minecraft:material_instances": leafMat(`${leaves}_bare`),
       "minecraft:destructible_by_mining": {
         seconds_to_destroy: 0.3,
         item_specific_speeds: [{ item: "minecraft:shears", destroy_speed: 0.05 }, { item: { tags: "q.any_tag('minecraft:is_hoe')" }, destroy_speed: 0.1 }],
@@ -467,13 +511,57 @@ for (const tree of TREES) {
       "minecraft:map_color": "#408238",
       "minecraft:loot": leafLoot,
       "tag:leaves": {},
-      [`${NS}:fruit_leaves`]: {},
+      [`${NS}:tree_leaves`]: {},
     },
     permutations: leafPerms,
   });
   blockSounds[rid(leaves)] = { sound: "grass" };
   catalog.trees.push(rid(leaves));
-  if (tree.wild) wildFeature(wildSaplingFeature(tree), sap, SOIL, tree.wild);
+
+  if (!tree.bark) hangingFruit(tree);
+}
+
+/**
+ * The fruit hanging under a blossoming leaf (tools/art/fruit_models.py): bones stage0 small
+ * green, stage1 big green, stage2 ripe. Set by script only, so no item and no menu entry. It
+ * hangs from its own tree's leaves (the placement filter pops it when they go); broken or
+ * popped before it is ripe it gives nothing, once ripe it gives the fruit.
+ */
+function hangingFruit(tree) {
+  const id = fruitBlockId(tree);
+  const geoName = `geometry.${NS}.${id}`;
+  const stages = FRUIT_STAGES.map((_, i) => i);
+  names[`tile.${rid(id)}.name`] = [`${tree.zh}果實`, `${tree.en} Fruit`];
+  addTerrain(id, { from: `fruit/${id}` });
+  const fruitMat = { "*": { texture: `kh_${id}`, render_method: "alpha_test" } };
+  const geometry = (shown) => ({ identifier: geoName, bone_visibility: Object.fromEntries(stages.map((n) => [`stage${n}`, n === shown])) });
+  const unripe = lootTable(id, []);
+  const ripe = lootTable(`${id}_ripe`, [countEntry(tree.fruit, tree.pick)]);
+  block(id, {
+    states: { [state("growth")]: intRange(stages.length - 1) },
+    components: {
+      "minecraft:geometry": geometry(0),
+      "minecraft:material_instances": fruitMat,
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": boneBounds(`${id}.geo.json`, "stage0"),
+      "minecraft:destructible_by_mining": { seconds_to_destroy: 0.2 },
+      "minecraft:destructible_by_explosion": { explosion_resistance: 0 },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": { movement_type: "popped" },
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["down"], block_filter: [rid(leavesBlockId(tree))] }] },
+      "minecraft:loot": unripe,
+      [`${NS}:hanging_fruit`]: {},
+    },
+    permutations: stages.slice(1).map((n) => ({
+      condition: `${S("growth")} == ${n}`,
+      components: {
+        "minecraft:geometry": geometry(n),
+        "minecraft:selection_box": boneBounds(`${id}.geo.json`, `stage${n}`),
+        ...(n === stages.length - 1 ? { "minecraft:loot": ripe } : {}),
+      },
+    })),
+  });
+  blockSounds[rid(id)] = { sound: "grass" };
 }
 
 // --- Items ---------------------------------------------------------------------------------------------
