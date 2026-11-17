@@ -9,7 +9,7 @@
 import { CLIMATES } from "./climate.js";
 import { CROPS, TRELLIS } from "./crops.js";
 import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
-import { HERBAL_ADJUVANTS, HERBAL_HEAT, RANCHING_FEEDS, TAVERN_WINES } from "./integrations.js";
+import { FISHING_BAITS, FISHING_POND_FEEDS, HERBAL_ADJUVANTS, HERBAL_HEAT, RANCHING_FEEDS, TAVERN_WINES } from "./integrations.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
@@ -150,6 +150,9 @@ export function partnerLines(id) {
     lines.push(heat.heat > 0 ? [`裝了《草本》時，吃了身子偏熱（寒熱 +${n}）。`, `With Kaleidoscope Herbal, it warms the body (heat +${n}).`] : [`裝了《草本》時，吃了身子偏涼（寒熱 −${n}）。`, `With Kaleidoscope Herbal, it cools the body (heat −${n}).`]);
   }
   if (HERBAL_ADJUVANTS.some((a) => a.id === id)) lines.push(["裝了《草本》時，可多放一個進砂鍋當佐使，整鍋湯劑多一份。", "With Kaleidoscope Herbal, one more in the clay pot works as an adjuvant: the brew gives one more serving."]);
+  if (FISHING_BAITS.some((b) => b.id === id)) lines.push(["裝了《漁歌》時，可以掛在釣竿上當魚餌，魚比較快上鉤。", "With Kaleidoscope Fishing Voyage, it works as bait on a rod: fish bite sooner."]);
+  const pond = FISHING_POND_FEEDS.find((f) => f.id === id);
+  if (pond) lines.push([`裝了《漁歌》時，可放進魚池的餵食台，一個算 ${pond.meals} 餐。`, `With Kaleidoscope Fishing Voyage, it goes in a fish pond feeder, ${pond.meals} meal${pond.meals > 1 ? "s" : ""} each.`]);
   const wine = TAVERN_WINES.find((w) => w.id === id);
   if (wine) {
     const names = wine.ingredients.map((i) => nameOf(rid(i)));
