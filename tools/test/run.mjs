@@ -263,8 +263,15 @@ function grownMandarin() {
   overworld.biome = "minecraft:swamp";
   tick(plantSapling(), 4);
 }
-const LEAF = at(1, 66);
-const UNDER = at(1, 65);
+// ## The mock grows the trunk at its shortest height with leaves round the top log, so the test
+// ## leaf follows mandarin's trunk height in its feature file.
+const MANDARIN_TRUNK = (() => {
+  const tree = JSON.parse(readFileSync("packs/BP/features/trees/mandarin_tree_feature.json", "utf8"))["minecraft:tree_feature"];
+  const trunk = tree[Object.keys(tree).find((k) => k.endsWith("trunk"))];
+  return trunk.trunk_height.range_min ?? trunk.trunk_height.base;
+})();
+const LEAF = at(1, 64 + MANDARIN_TRUNK - 1);
+const UNDER = at(1, 64 + MANDARIN_TRUNK - 2);
 
 test("tree block ids follow the art: <tree>_leaves, fruitwood_log, banana_trunk, <tree>_fruit", () => {
   const ids = new Set(readdirSync("packs/BP/blocks").map((f) => f.replace(/\.json$/, "")));
@@ -307,7 +314,7 @@ test("when placeFeature fails the sapling stays and tries again later", () => {
 
 test("a sapling with something in the way waits", () => {
   overworld.biome = "minecraft:swamp";
-  __place(overworld, at(1, 66), "minecraft:stone");
+  __place(overworld, LEAF, "minecraft:stone");
   const sapling = tick(plantSapling(), 10);
   equal(sapling.typeId, r("mandarin_sapling"), "still a sapling");
 });
@@ -333,10 +340,10 @@ test("blossoming leaves hang a small green fruit below them, only into air", () 
   equal(fruit.typeId, r("mandarin_fruit"), "fruit below");
   equal(growth(fruit), 0, "small green");
   equal(blossom(leaf), false, "leaf back to bare");
-  // Leaves with a leaf below (y67 over y66) blossom but never fruit.
-  const top = tick(overworld.getBlock(at(1, 67)), 5);
+  // Leaves with a leaf below (the top layer over the ring round the top log) blossom but never fruit.
+  const top = tick(overworld.getBlock(at(1, 64 + MANDARIN_TRUNK)), 5);
   equal(blossom(top), true, "top leaf in blossom");
-  equal(overworld.getBlock(at(1, 66)).typeId, r("mandarin_leaves"), "nothing replaced the leaf below");
+  equal(overworld.getBlock(LEAF).typeId, r("mandarin_leaves"), "nothing replaced the leaf below");
 });
 
 test("hanging fruit grows small green → big green → ripe, each stage its own bone", () => {
@@ -407,8 +414,9 @@ test("off-climate leaves turn grey and do not blossom; fruit off its climate sto
   const leaf = tick(overworld.getBlock(LEAF), 5);
   equal(leaf.permutation.getState(S("off_climate")), true, "grey");
   equal(blossom(leaf), false, "no blossom");
-  __place(overworld, at(-1, 65), r("mandarin_fruit"));
-  equal(growth(tick(overworld.getBlock(at(-1, 65)), 5)), 0, "fruit waits");
+  const underRing = at(-1, 64 + MANDARIN_TRUNK - 2);
+  __place(overworld, underRing, r("mandarin_fruit"));
+  equal(growth(tick(overworld.getBlock(underRing), 5)), 0, "fruit waits");
 });
 
 test("bone meal on leaves: bare → blossom, then a fruit below", () => {
@@ -423,8 +431,8 @@ test("bone meal on leaves: bare → blossom, then a fruit below", () => {
 
 test("chopping the trunk away makes the leaves fall", () => {
   grownMandarin();
-  for (const y of [64, 65, 66]) __break(player("minecraft:iron_axe"), overworld.getBlock(at(0, y)));
-  equal(overworld.dropped(r("fruitwood_log")), 3, "logs dropped");
+  for (let y = 64; y < 64 + MANDARIN_TRUNK; y++) __break(player("minecraft:iron_axe"), overworld.getBlock(at(0, y)));
+  equal(overworld.dropped(r("fruitwood_log")), MANDARIN_TRUNK, "logs dropped");
   tick(overworld.getBlock(LEAF), 1);
   equal(overworld.getBlock(LEAF).typeId, "minecraft:air", "leaf fell");
 });
@@ -473,7 +481,11 @@ test("wild fruit trees come from feature_rules/trees and wild saplings; mandarin
   const rules = readdirSync("packs/BP/feature_rules/trees");
   for (const t of TREES) {
     const file = `${t.id}_tree_feature_rule.json`;
-    equal(rules.includes(file), Boolean(t.wild), `${t.id}: wild tree rule`);
+    // ## Every tree has a rule: the game only registers a feature a rule references. A tree with
+    // ## no wild spawn (mandarin) gets one whose biome tag no biome has, so it never places.
+    assert(rules.includes(file), `${t.id}: tree rule`);
+    const filter = JSON.stringify(JSON.parse(readFileSync(`packs/BP/feature_rules/trees/${file}`, "utf8"))["minecraft:feature_rules"].conditions["minecraft:biome_filter"]);
+    equal(filter.includes("kaleidoscope_harvest_never"), !t.wild, `${t.id}: rule never places only without a wild spawn`);
     if (rules.includes(file)) equal(JSON.parse(readFileSync(`packs/BP/feature_rules/trees/${file}`, "utf8"))["minecraft:feature_rules"].description.places_feature, r(`${t.id}_tree_feature`), `${t.id}: rule places the tree`);
   }
   const saplingRules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.includes("_sapling_"));
