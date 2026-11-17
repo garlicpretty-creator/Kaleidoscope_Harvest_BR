@@ -10,7 +10,8 @@ No anti-aliasing, no randomness that changes between runs.
 Writes, under packs/RP/textures/kaleidoscope_harvest/blocks/:
   crops/<crop>_stage_<0..3>.png, crops/corn_upper_stage_<2|3>.png
   saplings/<tree>_sapling.png
-  trees/<tree>_leaves_<bare|blossom>.png, trees/fruitwood_log(_top).png, trees/banana_trunk.png
+  trees/<tree>_leaves_<bare|blossom>.png, trees/fruitwood_log(_top).png, trees/fruitwood_planks.png,
+  trees/banana_trunk.png
 and for each one <name>_normal.png and <name>_mer.png (flat normal with a bevel from height + brightness;
 MER = metalness 0, emissive 0, roughness by material). Also art/previews/crop_textures.png (4x contact sheet).
 Block states 0..7 map to the visual stage floor(state/2).
@@ -63,6 +64,18 @@ BARK   = [(50, 34, 28), (72, 50, 40), (96, 70, 56), (122, 92, 74), (148, 118, 96
 WOOD   = [(118, 78, 48), (148, 102, 64), (176, 130, 86), (202, 162, 116), (224, 194, 148)]
 BANT   = [(58, 68, 36), (84, 96, 48), (112, 122, 60), (140, 148, 78), (170, 174, 106)]
 SILK   = [(70, 36, 20), (100, 56, 28), (132, 80, 40), (200, 190, 120), (230, 222, 160)]
+# 1.1
+LOTUS  = [(26, 60, 44), (40, 88, 60), (58, 118, 78), (82, 148, 96), (120, 180, 122)]
+BMEL   = [(66, 112, 46), (96, 146, 60), (124, 178, 78), (162, 206, 110), (204, 232, 158)]
+LUFFA  = [(16, 44, 24), (26, 66, 34), (40, 90, 44), (64, 120, 58), (108, 158, 88)]
+ADZ    = [(58, 12, 18), (90, 22, 28), (124, 36, 42), (156, 58, 58), (192, 100, 92)]
+MUNGP  = [(18, 38, 20), (28, 56, 28), (42, 78, 38), (64, 104, 54), (98, 138, 82)]
+LGR    = [(70, 104, 44), (104, 140, 58), (138, 172, 74), (170, 198, 98), (204, 222, 140)]
+LONGL  = [(30, 56, 28), (46, 82, 38), (66, 108, 48), (90, 134, 60), (122, 160, 82)]
+PAPL   = [(34, 72, 30), (52, 102, 40), (74, 134, 50), (102, 164, 64), (138, 194, 90)]
+PAPT   = [(70, 84, 56), (98, 112, 74), (126, 140, 94), (154, 166, 116), (184, 192, 146)]
+MAUVE  = [(118, 58, 98), (158, 88, 138), (194, 126, 174), (220, 152, 202), (240, 196, 226)]
+CREAM  = [(168, 162, 120), (204, 198, 156), (228, 222, 182), (242, 236, 204), (252, 250, 232)]
 
 # material -> (metalness, emissive, roughness, height for the normal map)
 MAT = {'leaf': (0, 0, 185, 2.0), 'stem': (0, 0, 200, 1.5), 'fruit': (0, 0, 150, 2.6), 'flower': (0, 0, 200, 2.0),
@@ -880,11 +893,237 @@ def passion_fruit(c, s):
             stamp(c, x, y, fr, fk)
 
 
-CROPS = {'napa_cabbage': napa_cabbage, 'bok_choy': bok_choy, 'spinach': spinach, 'coriander': coriander, 'cumin': cumin,
+# ---------------------------------------------------------------- 1.1: aquatic crops (stand in one block of water)
+def lotus_root(c, s):
+    """Round leaves held up on long stalks above the water; ripe, a pink lotus flower rises above them."""
+    k = {'d': (PINK, 1, 'flower', True), 'p': (PINK, 3, 'flower', True), 'w': (PINK, 4, 'flower', True),
+         'P': (PINK, 2, 'flower', True), 'y': (YFLW, 3, 'flower', True)}
+    if s == 0:  # a rolled young leaf on its stalk
+        line(c, 7, 15, 7, 10, LOTUS, 2, 'stem')
+        leaf(c, 7.5, 10.5, 75, 4.5, 2.4, LOTUS, lvl=3, shape='lance')
+        return
+    leaves = {1: [(7, 15, 4, 8, 3.2, 1.3), (8, 15, 11, 10, 2.8, 1.2)],
+              2: [(7, 15, 4, 5, 4.0, 1.6), (8, 15, 12, 6, 3.6, 1.5), (7, 15, 7, 10, 3.0, 1.3)],
+              3: [(7, 15, 3, 6, 4.2, 1.8), (8, 15, 12, 7, 4.2, 1.8), (8, 15, 8, 11, 3.4, 1.4)]}[s]
+    if s >= 2:  # the flower stalk stands above the leaves
+        top = 3 if s == 2 else 4
+        line(c, 7, 15, 7, top + 2, LOTUS, 3, 'stem')
+    for x0, y0, x, y, rx, ry in leaves:
+        line(c, x0, y0, x, y, LOTUS, 2, 'stem')
+        o = ellipse(c, x + .5, y + .5, rx, ry, LOTUS, 2, 'leaf')
+        c.put(x, y, LOTUS, 1, 'leaf', o, True)  # where the stalk meets the cupped leaf
+    if s == 2:
+        stamp(c, 6, 1, ['.d.', 'dwd', 'pwp', 'PpP'], k)
+    if s == 3:
+        stamp(c, 4, 0, ['...d...', '.d.p.d.', '.dpwpd.', '.pwywp.', '..pPp..'], k)
+
+
+def water_bamboo(c, s):
+    """Tall grass-like blades in a clump; ripe, the base swells into a pale shoot wrapped by green sheaths."""
+    if s == 0:
+        grass_sprout(c, G, 2, 4, 1.4)
+        return
+    spec = {1: [(104, 9, 1), (84, 10, .5), (124, 7, 2), (62, 7, 2)],
+            2: [(102, 13, 1.5), (86, 14, .5), (122, 11, 3), (60, 11, 3), (140, 8, 3), (40, 8, 3)],
+            3: [(100, 13, 2), (86, 13, 1), (118, 13, 4), (64, 13, 4), (138, 10, 4), (42, 10, 4), (93, 12, .5)]}[s]
+    by = 15.9 if s < 3 else 11.5
+    for a, l, d in spec:
+        leaf(c, 7.5, by, a, l, 1.8, G, droop=d, shape='strap')
+    if s == 3:  # the swollen shoot
+        o = c.new()
+        for y in range(11, 16):
+            for x in range(6, 10):
+                if y == 15 and x in (6, 9):
+                    continue
+                c.put(x, y, WHITE, 4 if x == 6 else (2 if x == 9 else 3), 'root', o, True)
+        for x, y in ((6, 11), (9, 11), (9, 12), (6, 12), (9, 13)):
+            c.put(x, y, G, 2, 'leaf', o, True)
+        c.put(7, 11, PALE, 2, 'root', o, True)
+
+
+ARROW = ['..x..', '.xxx.', '.xvx.', 'xxvxx', 'x...x']
+ARROW_S = ['.x.', 'xvx', 'x.x']
+
+
+def water_spinach(c, s):
+    """Hollow pale stems ending in arrow-shaped leaves; ripe, the leaves turn deep green."""
+    if s == 0:
+        return sprout(c, GL, 2.6, h=2, width=2)
+    ramp = GL if s < 3 else GD
+    k = {'x': (ramp, 2, 'leaf', False), 'v': (ramp, 3 if s < 3 else 4, 'leaf', True)}
+    stems = {1: [(7, 15, 4, 10), (8, 15, 11, 9)],
+             2: [(7, 15, 3, 8), (8, 15, 12, 7), (7, 15, 7, 5), (7, 15, 2, 13), (8, 15, 13, 12)],
+             3: [(7, 15, 2, 6), (8, 15, 13, 5), (7, 15, 7, 3), (7, 15, 1, 12), (8, 15, 14, 11), (8, 15, 10, 9),
+                 (7, 15, 4, 10)]}[s]
+    for x0, y0, x, y in stems:
+        line(c, x0, y0, x, y, PALE, 2, 'stem')
+    for x0, y0, x, y in stems:
+        if s == 1:
+            stamp(c, x - 1, y - 2, ARROW_S, k)
+        else:
+            stamp(c, x - 2, y - 4, ARROW, k)
+
+
+# ---------------------------------------------------------------- 1.1: gourds on the trellis (vine only)
+BMEL_LEAF = ['x.x.x', '.xxx.', 'xxvxx', '.x.x.']
+LUFFA_LEAF = ['.x.x.', 'xxxxx', 'xxvxx', '.xvx.', '..x..']
+
+
+def bitter_melon(c, s):
+    vine(c, s, GL, BMEL_LEAF, G, GL)
+    if s == 2:
+        fk = {'y': (YFLW, 3, 'flower', True), 'Y': (YFLW, 1, 'flower', True)}
+        for x, y in ((2, 12), (12, 9), (6, 5), (13, 3)):
+            stamp(c, x, y, ['yy', 'Y.'], fk)
+    if s == 3:  # warty, pale green, pointed at the tip
+        fk = fruit_key(BMEL, GL)
+        melon = ['.c.', 'hld', 'lxl', 'xlx', 'lxd', 'xld', '.x.', '.d.']
+        for x, y in ((2, 8), (12, 3), (6, 5), (10, 8)):
+            stamp(c, x, y, melon, fk)
+
+
+def luffa(c, s):
+    vine(c, s, G, LUFFA_LEAF, G, GL)
+    fk = {'y': (YFLW, 3, 'flower', True), 'Y': (YFLW, 4, 'flower', True), 'o': (ORANGE, 2, 'flower', True)}
+    flower = ['.y.', 'yoY', '.y.']
+    if s == 2:
+        for x, y in ((2, 11), (11, 8), (6, 4), (12, 2)):
+            stamp(c, x, y, flower, fk)
+    if s == 3:  # long, smooth, dark green, still flowering
+        k = fruit_key(LUFFA, GL, {'x': (LUFFA, 1, 'fruit', True), 'l': (LUFFA, 2, 'fruit', True),
+                                  'd': (LUFFA, 0, 'fruit', True)})
+        gourd = ['.c', 'hx', 'hx', 'hx', 'lx', 'lx', 'lx', 'xd', 'xd', '.d']
+        for x, y in ((2, 4), (12, 2), (7, 6)):
+            stamp(c, x, y, gourd, k)
+        for x, y in ((10, 11), (4, 0)):
+            stamp(c, x, y, flower, fk)
+
+
+# ---------------------------------------------------------------- 1.1: beans (bushes like the soybean)
+# two long thin pods hanging from one node
+BEAN_PODS = ['.ss.', 'h..h', 'x..x', 'd..x', 'x..d', 'd...']
+
+
+def bean(c, s, pods, ripe_from=12):
+    if s == 0:
+        return sprout(c, G, 3, width=2.6)
+    if s < 3:
+        stems = {1: [(110, 4), (70, 4.5)],
+                 2: [(125, 6), (55, 6), (95, 8), (150, 4), (30, 4)]}[s]
+        for a, l in stems:
+            ex, ey = leaf(c, *B, a, l, 1, G, shape='tube', mat='stem')
+            trifol(c, ex, ey, a, 3.2 if s > 1 else 2.6, G)
+        if s == 2:  # small yellow pea flowers
+            fk = {'y': (YFLW, 3, 'flower', True), 'Y': (YFLW, 1, 'flower', True)}
+            for x, y in ((5, 11), (10, 10), (7, 8)):
+                stamp(c, x, y, ['y', 'Y'], fk)
+        return
+    for a, l in ((158, 5.5), (22, 5.5), (132, 8), (48, 8), (104, 10.5), (76, 10.5), (90, 12)):
+        ex, ey = leaf(c, *B, a, l, 1, G, shape='tube', mat='stem')
+        trifol(c, ex, ey, a, 3.4, G)
+    yellow_tips(c, 0, *B, ripe_from, 99)  # the leaves start to turn as the pods ripen
+    pk = {'s': (YG, 1, 'stem', True), 'h': (pods, 3, 'fruit', True), 'x': (pods, 1, 'fruit', True),
+          'd': (pods, 0, 'fruit', True)}
+    for x, y in ((1, 9), (12, 8), (5, 5), (9, 10), (6, 10)):
+        stamp(c, x, y, BEAN_PODS, pk)
+
+
+def adzuki_bean(c, s):
+    bean(c, s, ADZ)
+
+
+def mung_bean(c, s):
+    bean(c, s, MUNGP, 8)
+
+
+# ---------------------------------------------------------------- 1.1: spices
+def garlic_chives(c, s):
+    """A clump of flat chive blades; ripe, stalks of white star flowers stand above it."""
+    if s == 0:
+        grass_sprout(c, G, 3, 4, 1.2)
+        return
+    spec = {1: [(100, 7, .5), (82, 7.5, .5), (118, 5.5, 1), (66, 5.5, 1), (92, 6, 0)],
+            2: [(100, 10, 1), (82, 10.5, 1), (118, 9, 2.5), (64, 9, 2.5), (136, 7, 3), (46, 7, 3), (92, 9, .5)],
+            3: [(102, 10, 1.5), (80, 10.5, 1.5), (120, 9, 3), (62, 9, 3), (138, 7, 3), (44, 7, 3), (92, 9, .5),
+                (150, 6, 2), (30, 6, 2)]}[s]
+    for a, l, d in spec:
+        leaf(c, *B, a, l, 1.4, G, droop=d, shape='strap')
+    if s == 3:
+        fk = {'w': (FLW, 3, 'flower', True), 'W': (FLW, 1, 'flower', True), 'y': (YFLW, 3, 'flower', True)}
+        for x0, x, top in ((7, 4, 2), (8, 11, 1), (8, 8, 4)):
+            line(c, x0, 15, x, top + 2, GL, 3, 'stem')
+            stamp(c, x - 2, top, ['w.w.w', '.wyW.', 'W.w.W'], fk)
+
+
+def lemongrass(c, s):
+    """A pale green clump of long arching blades rising from thick pale stalks."""
+    if s == 0:
+        grass_sprout(c, LGR, 2, 4.5, 1.6)
+        return
+    spec = {1: [(100, 8, 1), (80, 8, 1), (122, 6, 2), (60, 6, 2)],
+            2: [(98, 12, 2), (84, 12, 2), (116, 11, 4), (66, 11, 4), (134, 9, 4), (46, 9, 4), (91, 10, .5)],
+            3: [(98, 13, 3), (84, 13, 3), (114, 12, 5), (68, 12, 5), (130, 10, 5), (50, 10, 5), (150, 8, 3),
+                (30, 8, 3), (91, 12, 1)]}[s]
+    by = {1: 15.9, 2: 13.5, 3: 12.5}[s]
+    first = c.obj
+    for a, l, d in spec:
+        leaf(c, 7.5, by, a, l, 1.8, LGR, droop=d, shape='strap')
+    if s == 3:
+        yellow_tips(c, first, 7.5, by, 11, 99, mid=YG, far=YG)
+    if s >= 2:  # the pale, tightly packed stalks
+        o = c.new()
+        for y in range(int(by), 16):
+            for x in range(6, 10 if s == 3 else 9):
+                c.put(x, y, PALE, 4 if x == 6 else (2 if x >= 8 else 3), 'stem', o, True)
+        c.put(7, 15, SPP, 4, 'stem', o, True)
+
+
+def sichuan_pepper(c, s):
+    """A small thorny shrub with fine leaflets; ripe, clusters of red peppercorns."""
+    if s == 0:
+        line(c, 7, 15, 7, 12, BROWN)
+        for a in (150, 30, 95):
+            leaf(c, 7.5, 12.5, a, 2.2, 1.6, GD, shape='oval')
+        return
+    br = {1: [[(7, 15), (7, 10), (6, 8)], [(7, 12), (4, 10)], [(7, 11), (10, 9)]],
+          2: [[(7, 15), (7, 9), (6, 5)], [(7, 13), (3, 10), (2, 7)], [(7, 12), (11, 9), (12, 6)], [(7, 9), (9, 5)]],
+          3: [[(7, 15), (7, 8), (6, 2)], [(7, 14), (3, 11), (1, 8)], [(7, 13), (11, 10), (14, 7)], [(7, 9), (4, 5),
+              (3, 3)], [(7, 8), (10, 4), (11, 2)], [(7, 15), (2, 13)]]}[s]
+    for b in br:
+        path(c, b, BROWN, 2)
+    pts = []
+    for b in br:
+        for (x0, y0), (x1, y1) in zip(b, b[1:]):
+            n = max(abs(x1 - x0), abs(y1 - y0))
+            for i in range(1, n + 1, 2):
+                pts.append((x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n))
+    for i, (x, y) in enumerate(pts):
+        for a in (40, 140) if i % 2 else (20, 160):
+            leaf(c, x + .5, y + .5, a, 2.2, 1.5, GD, lvl=2 + i % 2, shape='oval')
+    for i, (x, y) in enumerate(pts):  # thorns poke out where nothing covers them
+        tx, ty = int(x) + (1 if i % 2 else -1), int(y) - 1
+        if i % 3 == 0 and c.get(tx, ty) is None:
+            c.put(tx, ty, TAN, 3, 'stem', c.new(), True)
+    if s == 2:
+        fk = {'y': (YG, 4, 'flower', True), 'Y': (YG, 3, 'flower', True)}
+        for x, y in ((3, 9), (10, 8), (7, 5), (12, 11)):
+            stamp(c, x, y, ['yY', 'Yy'], fk)
+    if s == 3:
+        fk = fruit_key(RED, GD)
+        cl = ['.h.', 'hxd', 'xdx', '.x.']
+        for x, y in ((1, 8), (10, 6), (4, 3), (11, 10), (6, 10)):
+            stamp(c, x, y, cl, fk)
+
+
+CROPS = {'napa_cabbage': napa_cabbage,'bok_choy': bok_choy, 'spinach': spinach, 'coriander': coriander, 'cumin': cumin,
          'sesame': sesame, 'soybean': soybean, 'onion': onion, 'scallion': scallion, 'garlic': garlic, 'peanut': peanut,
          'sweet_potato': sweet_potato, 'ginger': ginger, 'daikon': daikon, 'taro': taro, 'eggplant': eggplant,
          'strawberry': strawberry, 'blueberry': blueberry, 'pineapple': pineapple, 'corn': corn, 'cucumber': cucumber,
-         'black_pepper': black_pepper, 'grape': grape, 'passion_fruit': passion_fruit}
+         'black_pepper': black_pepper, 'grape': grape, 'passion_fruit': passion_fruit,
+         # 1.1
+         'lotus_root': lotus_root, 'water_bamboo': water_bamboo, 'water_spinach': water_spinach,
+         'bitter_melon': bitter_melon, 'luffa': luffa, 'adzuki_bean': adzuki_bean, 'mung_bean': mung_bean,
+         'garlic_chives': garlic_chives, 'lemongrass': lemongrass, 'sichuan_pepper': sichuan_pepper}
 
 
 # ---------------------------------------------------------------- trees
@@ -901,6 +1140,11 @@ TREES = {
     'banana':       dict(sap=None, leaf=None),
     'star_anise':   dict(sap=(4, 2.2, GD, .4, 'lance', BRONZE, None), leaf=(4, 2.2, GD, 'lance')),
     'cinnamon':     dict(sap=(4, 2.6, G, .5, 'oval', BRONZE, BRONZE), leaf=(4, 2.6, G, 'oval')),
+    # 1.1
+    'longan':       dict(sap=(3.6, 2.0, LONGL, .6, 'lance', BARK, YG), leaf=(3.6, 2.0, LONGL, 'lance')),
+    'loquat':       dict(sap=(5.5, 2.6, GG, 1.2, 'oblong', BROWN, None), leaf=(5, 2.6, GG, 'oblong')),
+    'star_fruit':   dict(sap=(2.2, 1.7, G, 0, 'oval', BROWN, None), leaf=(2.4, 1.8, G, 'oval')),
+    'papaya':       dict(sap=None, leaf=None),
 }
 SAP_LEAVES = [(7.5, 8.5, 165), (7.5, 8.5, 15), (5.5, 8, 180), (9.5, 7.5, 0), (5.5, 8, 135), (9.5, 7.5, 45),
               (7.5, 6, 160), (7.5, 6, 20), (7.5, 5.5, 120), (7.5, 5.5, 60), (7.5, 5, 90)]
@@ -916,6 +1160,10 @@ def sapling(c, tree):
             leaf(c, 7.5, 9.5, a, l, 4, GL, droop=d, shape='oval', rib=(GL, 4))
         leaf(c, 7.5, 9.5, 92, 8, 1.8, GL, lvl=3, shape='strap')
         return
+    if tree == 'papaya':
+        return papaya_sapling(c)
+    if tree == 'star_fruit':
+        return star_fruit_sapling(c)
     l, w, ramp, droop, shape, stem, young = TREES[tree]['sap']
     if tree in ('mandarin', 'sweet_orange'):
         return citrus_sapling(c, tree, l, w, ramp, droop, stem)
@@ -960,6 +1208,44 @@ def citrus_sapling(c, tree, l, w, ramp, droop, stem):
             c.put(x, y, GD, 4, 'leaf', c.new(), True)
 
 
+def papaya_sapling(c):
+    """One straight grey-green stem; big lobed leaves on long stalks fan out from its top."""
+    o = c.new()
+    for y in range(7, 16):
+        c.put(7, y, PAPT, 3, 'stem', o)
+        c.put(8, y, PAPT, 1, 'stem', o)
+    for ex, ey in ((2, 7), (13, 6), (4, 3), (11, 2)):
+        line(c, 7 if ex < 8 else 8, 7, ex, ey + 1, PAPT, 3, 'stem')
+    for x, y, n in ((2, 7, 5), (13, 6, 5), (4, 3, 5), (11, 2, 5), (7.5, 4.5, 3)):
+        palm_leaf(c, x + .5, y + .5, n, 2.6, PAPL)
+
+
+def palm_leaf(c, x, y, n, l, ramp, lvl=2, spread=180, a0=None, w=1.8):
+    """A palmately lobed leaf: `n` pointed lobes fanning out from (x, y) over `spread` degrees."""
+    a0 = 90 - spread / 2 if a0 is None else a0
+    o = c.new()
+    for i in range(n):
+        a = a0 + spread * (i + .5) / n
+        leaf(c, x, y, a, l * (1 if i % 2 == n % 2 else .8), w, ramp, lvl=lvl, shape='lance', obj=o,
+             rib=(ramp, lvl + 1))
+
+
+def star_fruit_sapling(c):
+    """A thin stem with drooping compound leaves: rows of small leaflets along each stalk."""
+    line(c, 7, 15, 7, 5, BROWN, 2, 'stem')
+    for x0, y0, x1, y1 in ((7, 10, 2, 11), (7, 9, 13, 9), (7, 7, 3, 5), (7, 6, 12, 4), (7, 5, 7, 1)):
+        line(c, x0, y0, x1, y1, G, 1, 'stem')
+        n = max(abs(x1 - x0), abs(y1 - y0))
+        for i in range(2, n + 1, 2):
+            x, y = x0 + (x1 - x0) * i / n + .5, y0 + (y1 - y0) * i / n + .5
+            if x0 == x1:
+                leaf(c, x, y, 160, 2.2, 1.7, G, shape='oval')
+                leaf(c, x, y, 20, 2.2, 1.7, G, shape='oval')
+            else:
+                leaf(c, x, y, 90, 2.2, 1.7, G, lvl=3, shape='oval')
+                leaf(c, x, y, 270, 2.0, 1.7, G, shape='oval')
+
+
 def leaves_base(c, tree):
     rng = random.Random(zlib.crc32(tree.encode()))
     if tree == 'banana':
@@ -971,6 +1257,20 @@ def leaves_base(c, tree):
         for x, y in ((1, 3), (12, 11), (6, 14), (14, 2)):
             c.put(x, y, TAN, 2, 'dry', c.new(), True)
             c.put(x + 1, y, TAN, 1, 'dry', c.obj, True)
+        return rng
+    if tree == 'papaya':  # big palmately lobed leaves overlapping
+        for y in range(16):
+            for x in range(16):
+                c.put(x, y, PAPL, 1, 'leaf', 0)
+        for i in range(7):
+            palm_leaf(c, rng.uniform(0, 16), rng.uniform(0, 16), 7, rng.uniform(5, 6), PAPL,
+                      lvl=rng.choice((2, 2, 3)), spread=320, a0=rng.uniform(0, 360), w=2.2)
+        holes = 0
+        while holes < 9:
+            x, y = rng.randrange(16), rng.randrange(16)
+            if c.get(x, y) and c.get(x, y)[1] <= 2:
+                c.erase(x, y)
+                holes += 1
         return rng
     l, w, ramp, shape = TREES[tree]['leaf']
     for y in range(16):
@@ -1003,7 +1303,10 @@ FRUIT = {  # tree -> (stamp, ripe ramp, number of fruit)
 }
 BLOSSOM = {  # tree -> (ramp, center ramp)
     'mandarin': (FLW, YFLW), 'sweet_orange': (FLW, YFLW), 'lemon': (FLW, PINK), 'peach': (PINK, RED),
-    'pear': (FLW, RED), 'persimmon': (YFLW, FLW), 'lychee': (YFLW, YFLW), 'mango': (YFLW, RED), 'star_anise': (RED, YFLW)}
+    'pear': (FLW, RED), 'persimmon': (YFLW, FLW), 'lychee': (YFLW, YFLW), 'mango': (YFLW, RED), 'star_anise': (RED, YFLW),
+    'longan': (CREAM, YFLW), 'loquat': (FLW, TAN), 'star_fruit': (MAUVE, PURPLE), 'papaya': (CREAM, YFLW)}
+BLOSSOM_ROWS = {'loquat': ['w.w', 'wyw', 'yw.'], 'star_fruit': ['w.w', '.y.', 'w.w'], 'papaya': ['.w.', 'wyw', 'w.w']}
+BLOSSOM_STALK = {'lychee': BROWN, 'mango': RED, 'longan': TAN}
 
 
 def leaves_block(c, tree, stage):
@@ -1040,15 +1343,17 @@ def leaves_block(c, tree, stage):
     if stage == 'blossom':
         petal, mid = BLOSSOM[tree]
         k = {'w': (petal, 3, 'flower', True), 'y': (mid, 2, 'flower', True)}
-        if tree in ('lychee', 'mango'):
+        if tree in BLOSSOM_STALK:
             for x, y in ((2, 2), (10, 1), (5, 9), (12, 10)):
-                line(c, x + 1, y, x + 1, y + 4, BROWN if tree == 'lychee' else RED, 2, 'stem')
+                line(c, x + 1, y, x + 1, y + 4, BLOSSOM_STALK[tree], 2, 'stem')
                 stamp(c, x, y, ['w.w', '.y.', 'w.w', '.w.', 'w.w'], k)
             return
         rows = ['.w.', 'wyw', '.w.'] if tree != 'star_anise' else ['w.w', '.y.', 'www']
         if tree == 'peach':
             rows = ['.w.w.', 'wwyww', '.wyw.', 'ww.ww']
-        for x, y in SLOTS:
+        rows = BLOSSOM_ROWS.get(tree, rows)
+        slots = SLOTS + [(6, 4), (14, 7), (7, 13)] if tree == 'star_fruit' else SLOTS
+        for x, y in slots:
             stamp(c, x, y, rows, k)
         return
     rows, ramp, n = FRUIT[tree]
@@ -1088,6 +1393,25 @@ def fruitwood_log_top(c):
             if d < 1.2:
                 lvl = 0
             c.put(x, y, WOOD, lvl, 'wood', 1, True)
+
+
+def fruitwood_planks(c):
+    """Four boards of the log's heartwood colour, like vanilla planks: a dark gap under each board, staggered
+    end joints, a few grain streaks."""
+    seams = (11, 3, 13, 6)
+    for y in range(16):
+        b, r = y // 4, y % 4
+        for x in range(16):
+            if r == 3:
+                lvl = 0
+            elif x == seams[b]:
+                lvl = 0 if r else 1
+            else:
+                h = ihash(x // 3, y, b, 21) % 7
+                lvl = 1 if h == 0 else (3 if h == 6 or (r == 0 and x % 5 == b) else 2)
+                if x == (seams[b] + 1) % 16:
+                    lvl = 3
+            c.put(x, y, WOOD, lvl, 'wood', 0, True)
 
 
 def banana_trunk(c):
@@ -1158,6 +1482,15 @@ def icon_pixels(name):
     return px
 
 
+def write_png(img, path):
+    """Save unless the file already holds these pixels, so a rerun leaves committed files byte-identical."""
+    if os.path.exists(path):
+        with Image.open(path) as old:
+            if old.size == img.size and old.convert('RGBA').tobytes() == img.convert('RGBA').tobytes():
+                return
+    img.save(path)
+
+
 def save(rel, c, written, px=None):
     px = px or c.shaded()
     img = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
@@ -1166,9 +1499,9 @@ def save(rel, c, written, px=None):
     nrm, mer = maps(px, c.tile)
     path = os.path.join(OUT, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    img.save(path + '.png')
-    nrm.save(path + '_normal.png')
-    mer.save(path + '_mer.png')
+    write_png(img, path + '.png')
+    write_png(nrm, path + '_normal.png')
+    write_png(mer, path + '_mer.png')
     written.append(rel)
     return img
 
@@ -1200,11 +1533,11 @@ def build():
         rows.append((tree, imgs, [None] * 3))
     logs = []
     for name, fn in (('fruitwood_log', fruitwood_log), ('fruitwood_log_top', fruitwood_log_top),
-                     ('banana_trunk', banana_trunk)):
+                     ('banana_trunk', banana_trunk), ('fruitwood_planks', fruitwood_planks)):
         c = Canvas(tile=True, seed=17)
         fn(c)
         logs.append(save('trees/' + name, c, written))
-    rows.append(('wood: log / top / banana', logs, [None] * 3))
+    rows.append(('wood & planks', logs, [None] * 4))
     sheet(rows)
     return written
 
@@ -1234,7 +1567,7 @@ def sheet(rows):
                 im.alpha_composite(above[i].resize((S, S), Image.NEAREST), (x, y))
         y += hgt
     os.makedirs(os.path.dirname(PREVIEW), exist_ok=True)
-    im.save(PREVIEW)
+    write_png(im, PREVIEW)
 
 
 if __name__ == '__main__':
