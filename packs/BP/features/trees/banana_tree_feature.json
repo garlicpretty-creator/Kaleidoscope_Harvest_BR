@@ -1,0 +1,88 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:tree_feature": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:banana_tree_feature"
+    },
+    "trunk": {
+      "trunk_height": {
+        "range_min": 3,
+        "range_max": 4
+      },
+      "trunk_block": "kaleidoscope_harvest:banana_trunk"
+    },
+    "random_spread_canopy": {
+      "canopy_height": 2,
+      "canopy_radius": 3,
+      "leaf_placement_attempts": 30,
+      "leaf_blocks": [
+        [
+          "kaleidoscope_harvest:banana_leaves",
+          1
+        ]
+      ]
+    },
+    "may_grow_on": [
+      "minecraft:grass_block",
+      "minecraft:dirt",
+      "minecraft:coarse_dirt",
+      "minecraft:podzol",
+      "minecraft:dirt_with_roots",
+      "minecraft:moss_block"
+    ],
+    "may_replace": [
+      "minecraft:air",
+      "kaleidoscope_harvest:mandarin_leaves",
+      "kaleidoscope_harvest:sweet_orange_leaves",
+      "kaleidoscope_harvest:lemon_leaves",
+      "kaleidoscope_harvest:peach_leaves",
+      "kaleidoscope_harvest:pear_leaves",
+      "kaleidoscope_harvest:persimmon_leaves",
+      "kaleidoscope_harvest:lychee_leaves",
+      "kaleidoscope_harvest:mango_leaves",
+      "kaleidoscope_harvest:banana_leaves",
+      "kaleidoscope_harvest:star_anise_leaves",
+      "kaleidoscope_harvest:cinnamon_leaves",
+      "kaleidoscope_harvest:mandarin_sapling",
+      "kaleidoscope_harvest:sweet_orange_sapling",
+      "kaleidoscope_harvest:lemon_sapling",
+      "kaleidoscope_harvest:peach_sapling",
+      "kaleidoscope_harvest:pear_sapling",
+      "kaleidoscope_harvest:persimmon_sapling",
+      "kaleidoscope_harvest:lychee_sapling",
+      "kaleidoscope_harvest:mango_sapling",
+      "kaleidoscope_harvest:banana_sapling",
+      "kaleidoscope_harvest:star_anise_sapling",
+      "kaleidoscope_harvest:cinnamon_sapling",
+      "minecraft:oak_leaves",
+      "minecraft:spruce_leaves",
+      "minecraft:birch_leaves",
+      "minecraft:jungle_leaves",
+      "minecraft:acacia_leaves",
+      "minecraft:dark_oak_leaves",
+      "minecraft:mangrove_leaves",
+      "minecraft:cherry_leaves",
+      "minecraft:azalea_leaves",
+      "minecraft:azalea_leaves_flowered",
+      "minecraft:short_grass",
+      "minecraft:fern",
+      "minecraft:tall_grass",
+      "minecraft:large_fern",
+      "minecraft:dandelion",
+      "minecraft:poppy",
+      "minecraft:sunflower",
+      "minecraft:lilac",
+      "minecraft:rose_bush",
+      "minecraft:peony",
+      "minecraft:vine",
+      "minecraft:snow_layer"
+    ],
+    "may_grow_through": [
+      "minecraft:short_grass",
+      "minecraft:fern",
+      "minecraft:tall_grass",
+      "minecraft:large_fern",
+      "minecraft:snow_layer"
+    ]
+  }
+}

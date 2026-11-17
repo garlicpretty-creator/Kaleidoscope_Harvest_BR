@@ -10,7 +10,7 @@ No anti-aliasing, no randomness that changes between runs.
 Writes, under packs/RP/textures/kaleidoscope_harvest/blocks/:
   crops/<crop>_stage_<0..3>.png, crops/corn_upper_stage_<2|3>.png
   saplings/<tree>_sapling.png
-  trees/<tree>_leaves_<bare|blossom|unripe|ripe>.png, trees/fruitwood_log(_top).png, trees/banana_trunk.png
+  trees/<tree>_leaves_<bare|blossom>.png, trees/fruitwood_log(_top).png, trees/banana_trunk.png
 and for each one <name>_normal.png and <name>_mer.png (flat normal with a bevel from height + brightness;
 MER = metalness 0, emissive 0, roughness by material). Also art/previews/crop_textures.png (4x contact sheet).
 Block states 0..7 map to the visual stage floor(state/2).
@@ -1076,11 +1076,11 @@ def build():
         c = Canvas(seed=zlib.crc32(tree.encode()))
         sapling(c, tree)
         imgs = [save('saplings/%s_sapling' % tree, c, written)]
-        for st in ('bare', 'blossom', 'unripe', 'ripe'):
+        for st in ('bare', 'blossom'):  # fruit hangs below the leaves as its own block (tools/art/fruit_models.py)
             c = Canvas(tile=True, seed=zlib.crc32(tree.encode()))
             leaves_block(c, tree, st)
             imgs.append(save('trees/%s_leaves_%s' % (tree, st), c, written))
-        rows.append((tree, imgs, [None] * 5))
+        rows.append((tree, imgs, [None] * 3))
     logs = []
     for name, fn in (('fruitwood_log', fruitwood_log), ('fruitwood_log_top', fruitwood_log_top),
                      ('banana_trunk', banana_trunk)):
@@ -1103,7 +1103,7 @@ def sheet(rows):
         font = ImageFont.load_default(size=15)
     except TypeError:
         font = ImageFont.load_default()
-    d.text((10, 10), 'crops: stage 0-3   trees: sapling, bare, blossom, unripe, ripe', fill=(240, 240, 230), font=font)
+    d.text((10, 10), 'crops: stage 0-3   trees: sapling, bare, blossom', fill=(240, 240, 230), font=font)
     y = 40
     for (label, imgs, above), hgt in zip(rows, heights):
         d.text((10, y + hgt // 2 - 14), label, fill=(245, 245, 235), font=font)
