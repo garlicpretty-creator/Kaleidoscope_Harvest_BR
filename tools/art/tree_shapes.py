@@ -34,7 +34,8 @@ FEATURE_FORMAT = '1.21.60'
 RULE_FORMAT = '1.13.0'
 
 TREE_IDS = ['mandarin', 'sweet_orange', 'lemon', 'peach', 'pear', 'persimmon',
-            'lychee', 'mango', 'banana', 'star_anise', 'cinnamon']
+            'lychee', 'mango', 'banana', 'star_anise', 'cinnamon',
+            'longan', 'loquat', 'star_fruit', 'papaya']  # 1.1: the last four
 
 
 def rng_(a, b):
@@ -140,7 +141,33 @@ TREES = {
         trunk=dict(kind='trunk', height=(6, 7)),
         canopy=dict(kind='pine', height=(5, 6), radius=1),
         wild=dict(filter=[tag('jungle'), tag('edge')], chance=(1, 3), biomes='jungle＋edge（稀疏叢林）')),
+    # --- 1.1
+    'longan': dict(
+        zh='龍眼', note='高一點的幹、比荔枝更寬的圓頂大冠',
+        trunk=dict(kind='acacia', base=5, intervals=[2]),
+        canopy=dict(kind='roofed', height=3, outer=3, inner=4),
+        wild=dict(filter=[tag('jungle'), tag('edge', '!='), tag('bamboo', '!=')], chance=(1, 4),
+                  biomes='jungle，排除 edge / bamboo（叢林）')),
+    'loquat': dict(
+        zh='枇杷', note='中等常綠圓冠',
+        trunk=dict(kind='trunk', height=(4, 5)),
+        canopy=dict(kind='canopy', offset=(-3, 0), variation=[(1, 3), (1, 3), (1, 3), (1, 1)]),
+        wild=dict(filter=[tag('flower_forest')], chance=(1, 4), biomes='flower_forest（繁花森林）')),
+    'star_fruit': dict(
+        zh='楊桃', note='矮幹、低垂的灌木狀冠，常有一根側枝',
+        trunk=dict(kind='acacia', base=3, intervals=[2],
+                   branch=dict(chance=(1, 2), length=(2, 2), position=(1, 1), size=1)),
+        canopy=dict(kind='acacia', size=2),
+        wild=dict(filter=[tag('jungle'), tag('edge')], chance=(1, 3), biomes='jungle＋edge（稀疏叢林）')),
+    'papaya': dict(
+        zh='木瓜', note='細高單幹、頂端一小叢葉，果實貼著樹幹掛在葉叢下',
+        trunk=dict(kind='acacia', base=5, intervals=[3]),
+        canopy=dict(kind='acacia', size=1),
+        wild=dict(filter=[tag('savanna')], chance=(1, 4), biomes='savanna（熱帶草原、高原）')),
 }
+
+# Preview only: leaves to draw a tree with until its own leaf texture exists.
+STAND_IN = {'longan': 'lychee', 'loquat': 'sweet_orange', 'star_fruit': 'lemon', 'papaya': 'banana'}
 
 LEAVES = [f'{NS}:{t}_leaves' for t in TREE_IDS]
 SAPLINGS = [f'{NS}:{t}_sapling' for t in TREE_IDS]
@@ -490,7 +517,7 @@ _cache = {}
 def face_sprite(tex, face):
     key = (id(tex), face)
     if key in _cache:
-        return _cache[key]
+        return _cache[key][1]
     poly, data = FACES[face]
     pad = Image.new('RGBA', (18, 18))  # 1px replicated border so the polygon outline samples real texels
     pad.paste(tex.resize((18, 18), Image.NEAREST), (0, 0))
@@ -505,7 +532,7 @@ def face_sprite(tex, face):
     r, g, b, a = spr.split()
     lut = [min(255, int(i * f)) for i in range(256)]
     spr = Image.merge('RGBA', (r.point(lut), g.point(lut), b.point(lut), a))
-    _cache[key] = spr
+    _cache[key] = (tex, spr)  # keep tex alive so its id is never reused by another texture
     return spr
 
 
@@ -572,6 +599,9 @@ def font(size, bold=False):
         p = os.path.join(os.environ.get('WINDIR', 'C:/Windows'), 'Fonts', name)
         if os.path.exists(p):
             return ImageFont.truetype(p, size)
+    for p in ('/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc', '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc'):
+        if os.path.exists(p):  # Linux
+            return ImageFont.truetype(p, size)
     return ImageFont.load_default()
 
 
@@ -592,10 +622,15 @@ def preview():
     banana = load('banana_trunk.png')
     gtop, gside = grass_textures()
     cells = []
+    missing = set()
     for i, tid in enumerate(TREE_IDS):
         tree = build(tid, seed=1000 + i)
         logs = (banana, banana) if TREES[tid]['trunk'].get('block') == 'banana_trunk' else log
-        leaf = load(f'{tid}_leaves_bare.png')
+        try:
+            leaf = load(f'{tid}_leaves_bare.png')
+        except FileNotFoundError:  # leaves not drawn yet: a stand-in, flagged on the card
+            leaf = load(f'{STAND_IN.get(tid, "mandarin")}_leaves_bare.png')
+            missing.add(tid)
         tex = {LOG: logs, LEAF: (leaf, leaf), 'ground': (gtop, gside)}
         if tid in fm.TREES:  # fruit blocks hanging under some of the lowest leaves
             tex[FRUIT] = fruit_sprite(fm.TREES[tid][0], tid == 'banana')
@@ -618,8 +653,9 @@ def preview():
         dr.rounded_rectangle((cx + 6, cy + 6, cx + cw - 6, cy + ch - 6), 10, fill=(246, 243, 236), outline=(210, 204, 192))
         sheet.alpha_composite(img, (cx + (cw - img.width) // 2, cy + ch - 64 - img.height))
         th, kind = describe(tid)
+        stand = ' · 葉暫用%s' % TREES[STAND_IN.get(tid, 'mandarin')]['zh'] if tid in missing else ''
         dr.text((cx + 16, cy + ch - 58), f"{TREES[tid]['zh']}  {tid}", font=f1, fill=(48, 44, 38))
-        dr.text((cx + 16, cy + ch - 32), f'幹 {th} · {kind} · 圖高 {height}', font=f2, fill=(96, 90, 80))
+        dr.text((cx + 16, cy + ch - 32), f'幹 {th} · {kind} · 圖高 {height}{stand}', font=f2, fill=(96, 90, 80))
     i = len(cells)
     cx, cy = (i % cols) * cw, (i // cols) * ch + 56
     notes = ['等角投影：頂面亮、左面 80%、右面 62%', '底板為示意草地（不在樹形內）',

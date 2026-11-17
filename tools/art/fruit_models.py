@@ -13,6 +13,11 @@ unit, hanging from the top of the block on a stem:
   lychee        a hanging bunch of small bumpy berries on short pedicels, a cone pointing down
   star anise    eight-point star pods (four bars turned 45 degrees apart)
   banana        a stalk with tiers of fingers that curve up and out, the purple bud at the bottom
+  longan (1.1)  a loose bunch of nine small smooth tan berries, four out on pedicels
+  loquat (1.1)  four small upright orange ovals round a short stalk, each with a dark blossom end
+  star fruit    one fruit hanging lengthwise, a core and five ridges: a five-point star seen from below
+  papaya (1.1)  two long fruits on short stalks right under the leaves, shoulder over a wider body,
+                ripe skin orange with green streaks at the stalk end
 Cinnamon has no fruit (its bark is the harvest), so it gets no fruit block.
 
 Writes, under packs/RP:
@@ -181,6 +186,87 @@ def banana(cx, cz, length, skin, s):
     return out
 
 
+# ---- 1.1 fruit
+def axis_pedicel(cx, cz, y, dx, dz):
+    """A short horizontal stalk from the rachis towards (dx, dz), built axis-aligned (no yaw sign to get wrong)."""
+    if abs(dx) >= abs(dz):
+        return box(cx if dx > 0 else cx + dx, y - 0.5, cz - 0.25, abs(dx), 0.5, 0.5, "stem")
+    return box(cx - 0.25, y - 0.5, cz if dz > 0 else cz + dz, 0.5, 0.5, abs(dz), "stem")
+
+
+def hanging_bunch(cx, cz, length, berries, make):
+    """A rachis from the stalk down to the lowest fruit; each fruit (dx, dz, drop) hangs on a pedicel when it
+    sits two or more pixels out, else straight on the rachis."""
+    top = 16 - length
+    bottom = top - max(b[2] for b in berries)
+    out = [stem(cx, cz, length), box(cx - 0.5, bottom - 0.5, cz - 0.5, 1, top - bottom + 0.5, 1, "stem")]
+    for dx, dz, drop in berries:
+        y = top - drop
+        if max(abs(dx), abs(dz)) >= 2:
+            out.append(axis_pedicel(cx, cz, y, dx, dz))
+        out += make(cx + dx, cz + dz, y - 0.5)
+    return out
+
+
+def longan_cluster(cx, cz, length, skin, s):
+    """A loose bunch of small smooth round fruits: four out on pedicels, four tucked round the rachis, one below."""
+    if s < 1:
+        size, berries = 2, [(2, 0, 0), (-2, 0, 0.5), (0, 2, 1), (0, -2, 0.5), (0, 0, 2.5)]
+    else:
+        size, berries = 3, [(3, 0, 0), (-3, 0, 0.5), (0, 3, 1), (0, -3, 0),
+                            (1.5, 1.5, 3), (-1.5, -1.5, 3.5), (1.5, -1.5, 4), (-1.5, 1.5, 3), (0, 0, 6.5)]
+    return hanging_bunch(cx, cz, length, berries, lambda x, z, t: rounded(x, z, t, size, size, size, skin))
+
+
+def loquat_cluster(cx, cz, length, skin, s):
+    """Four small upright ovals at different heights round a short stalk, each with a dark blossom end."""
+    w, h = (2, 3) if s < 1 else (3, 4)
+    r = 2 if s < 1 else 2.5
+
+    def fruit(x, z, t):
+        return rounded(x, z, t, w, h, w, skin) + [box(x - 0.5, t - h - 0.5, z - 0.5, 1, 0.5, 1, "leaf")]
+    return hanging_bunch(cx, cz, length, [(r, 0, 0.5), (-r, 0, 1.5), (0, r, 2.5), (0, -r, 0)], fruit)
+
+
+def star_fruit(cx, cz, length, skin, s):
+    """One fruit hanging lengthwise: a core and five ridges 72 degrees apart, the outer part of each ridge
+    shorter so the ends taper; from below the cross-section is a five-point star (the same set of yaws
+    whichever way the rotation sign goes)."""
+    h = scaled(6, s)
+    reach = 3 if s == 1 else 2
+    top = 16 - length
+    y0 = top - h
+    out = [stem(cx, cz, length), box(cx - 1, y0, cz - 1, 2, h, 2, skin)]
+    for yaw in range(0, 360, 72):
+        out.append(box(cx, y0 + 0.5, cz - 0.5, reach - 1, h - 1, 1, skin, rot=[0, yaw, 0], pivot=[cx, top, cz]))
+        out.append(box(cx + reach - 1, y0 + 1.5, cz - 0.5, 1, h - 3, 1, skin, rot=[0, yaw, 0], pivot=[cx, top, cz]))
+    out.append(box(cx - 0.5, y0 - 0.5, cz - 0.5, 1, 0.5, 1, "leaf"))  # dried blossom end
+    return out
+
+
+def papaya(cx, cz, length, skin, s):
+    """An elongated fruit hanging close under the leaves: a narrow shoulder over a longer, wider body."""
+    n, w, h = scaled(3, s), scaled(4, s), scaled(5, s)
+    top = 16 - length
+    out = [stem(cx, cz, length)] + rounded(cx, cz, top, n, n, n, skin) + rounded(cx, cz, top - n + 1, w, h, w, skin)
+    out.append(box(cx - 0.5, top - n + 1 - h - 0.5, cz - 0.5, 1, 0.5, 1, skin))  # the tip
+    return out
+
+
+# 1.1 ripe palettes (dark -> light)
+LONGAN = [(92, 64, 34), (128, 92, 50), (162, 124, 74), (194, 160, 104), (224, 196, 146)]
+LOQUAT = [(150, 80, 14), (204, 118, 24), (236, 156, 40), (248, 190, 80), (254, 224, 140)]
+STARF = [(132, 118, 18), (188, 168, 28), (226, 204, 48), (244, 230, 98), (252, 246, 168)]
+PAPAYA = [(160, 70, 16), (212, 108, 28), (240, 146, 44), (250, 182, 84), (254, 216, 140)]
+
+
+def papaya_streaks(im):
+    """Green streaks running down from the stalk end of the ripe skin: orange-green, as papayas ripen."""
+    for x in (1, 4, 6):
+        for y in range(0, 4 if x != 4 else 2):
+            im.putpixel((8 + x, y), ct.UNRIPE[2 if y else 3] + (255,))
+
+
 # tree -> (ripe palette, leaf palette, builder, [(x, z, stem length), ...], lychee-style bumpy skin)
 TREES = {
     "mandarin": (ct.ORANGE, ct.G, citrus(4, 3), [(5, 5, 2), (11, 7, 4), (7, 11, 3)], False),
@@ -193,7 +279,13 @@ TREES = {
     "mango": (ct.MANGO, ct.G, mango, [(5, 6, 5), (11, 10, 6)], False),
     "star_anise": (ct.BRONZE, ct.G, star_anise, [(5, 5, 3), (11, 7, 5), (8, 12, 4)], False),
     "banana": (ct.BANY, ct.PURPLE, banana, [(8, 8, 0)], False),
+    # --- 1.1
+    "longan": (LONGAN, ct.BROWN, longan_cluster, [(8, 8, 2)], False),
+    "loquat": (LOQUAT, ct.BARK, loquat_cluster, [(8, 8, 2)], False),
+    "star_fruit": (STARF, ct.BROWN, star_fruit, [(8, 8, 2)], False),
+    "papaya": (PAPAYA, ct.G, papaya, [(5, 8, 1), (11, 8, 1)], False),
 }
+SKIN_EXTRA = {"papaya": papaya_streaks}  # touch-ups on a fruit's texture after the swatches
 
 # ---------------------------------------------------------------- textures
 
@@ -218,6 +310,8 @@ def texture(tree):
     swatch(im, 8, 0, ripe, bumpy)
     swatch(im, 0, 8, ct.BROWN)
     swatch(im, 8, 8, leaf)
+    if tree in SKIN_EXTRA:
+        SKIN_EXTRA[tree](im)
     return im
 
 

@@ -51,7 +51,24 @@
               "kaleidoscope_harvest:blueberry",
               "kaleidoscope_harvest:grape",
               "kaleidoscope_harvest:passion_fruit",
-              "kaleidoscope_harvest:pineapple"
+              "kaleidoscope_harvest:pineapple",
+              "kaleidoscope_harvest:water_spinach_seeds",
+              "kaleidoscope_harvest:bitter_melon_seeds",
+              "kaleidoscope_harvest:luffa_seeds",
+              "kaleidoscope_harvest:garlic_chive_seeds",
+              "kaleidoscope_harvest:sichuan_pepper_seedling",
+              "kaleidoscope_harvest:lotus_root",
+              "kaleidoscope_harvest:lotus_pod",
+              "kaleidoscope_harvest:water_bamboo",
+              "kaleidoscope_harvest:water_spinach",
+              "kaleidoscope_harvest:bitter_melon",
+              "kaleidoscope_harvest:luffa",
+              "kaleidoscope_harvest:adzuki_bean",
+              "kaleidoscope_harvest:mung_bean",
+              "kaleidoscope_harvest:garlic_chives",
+              "kaleidoscope_harvest:lemongrass",
+              "kaleidoscope_harvest:sichuan_peppercorns",
+              "kaleidoscope_harvest:corn_leaves"
             ]
           }
         ]
@@ -93,7 +110,18 @@
               "kaleidoscope_harvest:strawberry_jam",
               "kaleidoscope_harvest:blueberry_jam",
               "kaleidoscope_harvest:persimmon_jam",
-              "kaleidoscope_harvest:orange_marmalade"
+              "kaleidoscope_harvest:orange_marmalade",
+              "kaleidoscope_harvest:lotus_root_slices",
+              "kaleidoscope_harvest:papaya_shreds",
+              "kaleidoscope_harvest:red_bean_paste",
+              "kaleidoscope_harvest:mung_bean_flour",
+              "kaleidoscope_harvest:ground_sichuan_pepper",
+              "kaleidoscope_harvest:dried_longan",
+              "kaleidoscope_harvest:lotus_seeds",
+              "kaleidoscope_harvest:garlic_eggplant_raw",
+              "kaleidoscope_harvest:fermented_tofu",
+              "kaleidoscope_harvest:mung_bean_sprouts",
+              "kaleidoscope_harvest:candied_star_fruit"
             ]
           },
           {
@@ -149,7 +177,34 @@
               "kaleidoscope_harvest:cinnamon_apple",
               "kaleidoscope_harvest:banana_pancake",
               "kaleidoscope_harvest:grape_raisin_bread",
-              "kaleidoscope_harvest:fruit_platter"
+              "kaleidoscope_harvest:fruit_platter",
+              "kaleidoscope_harvest:stir_fried_lotus_root",
+              "kaleidoscope_harvest:water_bamboo_pork",
+              "kaleidoscope_harvest:garlic_water_spinach",
+              "kaleidoscope_harvest:fermented_tofu_water_spinach",
+              "kaleidoscope_harvest:bitter_melon_omelette",
+              "kaleidoscope_harvest:luffa_omelette",
+              "kaleidoscope_harvest:stir_fried_bean_sprouts",
+              "kaleidoscope_harvest:chive_omelette",
+              "kaleidoscope_harvest:lemongrass_chicken",
+              "kaleidoscope_harvest:mapo_tofu",
+              "kaleidoscope_harvest:sichuan_pepper_chicken",
+              "kaleidoscope_harvest:pineapple_fried_rice",
+              "kaleidoscope_harvest:braised_pork_rice",
+              "kaleidoscope_harvest:lotus_root_rib_soup",
+              "kaleidoscope_harvest:luffa_soup",
+              "kaleidoscope_harvest:red_bean_soup",
+              "kaleidoscope_harvest:mung_bean_soup",
+              "kaleidoscope_harvest:lotus_seed_soup",
+              "kaleidoscope_harvest:loquat_syrup",
+              "kaleidoscope_harvest:sweet_potato_congee",
+              "kaleidoscope_harvest:mung_bean_cake",
+              "kaleidoscope_harvest:steamed_garlic_eggplant",
+              "kaleidoscope_harvest:red_bean_cake",
+              "kaleidoscope_harvest:chive_box",
+              "kaleidoscope_harvest:bitter_melon_salad",
+              "kaleidoscope_harvest:papaya_salad",
+              "kaleidoscope_harvest:roasted_water_bamboo"
             ]
           },
           {
@@ -169,7 +224,14 @@
               "kaleidoscope_harvest:cinnamon_tea",
               "kaleidoscope_harvest:ginger_tea",
               "kaleidoscope_harvest:lemon_tea",
-              "kaleidoscope_harvest:passion_fruit_tea"
+              "kaleidoscope_harvest:passion_fruit_tea",
+              "kaleidoscope_harvest:longan_wine",
+              "kaleidoscope_harvest:loquat_juice",
+              "kaleidoscope_harvest:star_fruit_juice",
+              "kaleidoscope_harvest:papaya_milk",
+              "kaleidoscope_harvest:banana_milk",
+              "kaleidoscope_harvest:lemongrass_tea",
+              "kaleidoscope_harvest:longan_tea"
             ]
           },
           {
@@ -217,6 +279,14 @@
               "kaleidoscope_harvest:star_anise_leaves",
               "kaleidoscope_harvest:cinnamon_sapling",
               "kaleidoscope_harvest:cinnamon_leaves",
+              "kaleidoscope_harvest:longan_sapling",
+              "kaleidoscope_harvest:longan_leaves",
+              "kaleidoscope_harvest:loquat_sapling",
+              "kaleidoscope_harvest:loquat_leaves",
+              "kaleidoscope_harvest:star_fruit_sapling",
+              "kaleidoscope_harvest:star_fruit_leaves",
+              "kaleidoscope_harvest:papaya_sapling",
+              "kaleidoscope_harvest:papaya_leaves",
               "kaleidoscope_harvest:mandarin",
               "kaleidoscope_harvest:sweet_orange",
               "kaleidoscope_harvest:lemon",
@@ -227,7 +297,11 @@
               "kaleidoscope_harvest:mango",
               "kaleidoscope_harvest:banana",
               "kaleidoscope_harvest:star_anise",
-              "kaleidoscope_harvest:cinnamon_bark"
+              "kaleidoscope_harvest:cinnamon_bark",
+              "kaleidoscope_harvest:longan",
+              "kaleidoscope_harvest:loquat",
+              "kaleidoscope_harvest:star_fruit",
+              "kaleidoscope_harvest:papaya"
             ]
           }
         ]

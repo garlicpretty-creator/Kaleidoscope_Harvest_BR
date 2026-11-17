@@ -27,8 +27,14 @@ let capabilities = null;
 const reported = new Set();
 
 /** The register_feed payloads Ranching can take with these capabilities. */
+// ## 1.1: a row may name a `fallback` kind for a Ranching without its own kind (corn leaves are
+// ## ruminant feed with feed_1_1, plain grass before).
 export function feedPayloads(caps = capabilities ?? []) {
-  return RANCHING_FEEDS.filter((feed) => caps.includes("register_feed") && caps.includes(KIND_NEEDS[feed.kind])).map((feed) => ({ item: rid(feed.item), kind: feed.kind, units: feed.units }));
+  if (!caps.includes("register_feed")) return [];
+  return RANCHING_FEEDS.flatMap((feed) => {
+    const kind = caps.includes(KIND_NEEDS[feed.kind]) ? feed.kind : feed.fallback && caps.includes(KIND_NEEDS[feed.fallback]) ? feed.fallback : null;
+    return kind ? [{ item: rid(feed.item), kind, units: feed.units }] : [];
+  });
 }
 
 /** Sends every feed Ranching can take; returns how many went out. */

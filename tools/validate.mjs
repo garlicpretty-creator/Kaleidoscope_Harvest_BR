@@ -91,7 +91,7 @@ for (const id of [...ITEMS.map((i) => i.id), ...CROPS.map((c) => `${c.id}_crop`)
   seen.add(id);
 }
 
-const FORMS = ["once", "underground", "repeatable", "tall", "trellis", "bush"];
+const FORMS = ["once", "underground", "repeatable", "tall", "trellis", "bush", "aquatic"];
 for (const crop of CROPS) {
   const where = `crop ${crop.id}`;
   if (!FORMS.includes(crop.form)) fail(`${where}: unknown form ${crop.form}`);
@@ -99,7 +99,10 @@ for (const crop of CROPS) {
   if (!itemIds.has(crop.seed)) fail(`${where}: seed ${crop.seed} is not in data/items.js`);
   if (!itemIds.has(crop.produce)) fail(`${where}: produce ${crop.produce} is not in data/items.js`);
   if (!(crop.growthChance > 0 && crop.growthChance <= 1)) fail(`${where}: growthChance must be in (0, 1]`);
-  if (["repeatable", "trellis", "bush"].includes(crop.form)) {
+  for (const extra of crop.extra ?? []) if (!itemIds.has(extra.item)) fail(`${where}: extra drop ${extra.item} is not in data/items.js`);
+  // ## 1.1: an aquatic crop's wild plant stands in water, and only an aquatic one does.
+  if ((crop.form === "aquatic") !== (crop.wild?.water === true)) fail(`${where}: wild.water must be true exactly for aquatic crops`);
+  if (["repeatable", "trellis", "bush"].includes(crop.form) || (crop.form === "aquatic" && crop.pick)) {
     if (!(crop.harvestResetAge >= 0 && crop.harvestResetAge < crop.maxGrowth)) fail(`${where}: harvestResetAge must be below maxGrowth`);
     if (!crop.pick) fail(`${where}: a ${crop.form} crop needs pick counts`);
   }
@@ -368,6 +371,7 @@ const FEED_KINDS = ["grass", "grain", "veg", "mixed", "concentrate", "ruminant",
 for (const feed of RANCHING_FEEDS) {
   if (!itemOf(feed.item)) fail(`Ranching feed ${feed.item}: not a Harvest item`);
   if (!FEED_KINDS.includes(feed.kind)) fail(`Ranching feed ${feed.item}: unknown kind ${feed.kind}`);
+  if (feed.fallback !== undefined && !FEED_KINDS.slice(0, 5).includes(feed.fallback)) fail(`Ranching feed ${feed.item}: fallback ${feed.fallback} must be a Ranching 1.0 kind`);
   if (!(Number.isInteger(feed.units) && feed.units >= 1 && feed.units <= 9)) fail(`Ranching feed ${feed.item}: units must be 1–9`);
 }
 for (const row of HERBAL_HEAT) {

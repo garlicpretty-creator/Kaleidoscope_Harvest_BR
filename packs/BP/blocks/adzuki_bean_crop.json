@@ -1,0 +1,1042 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:adzuki_bean_crop",
+      "menu_category": {
+        "category": "none"
+      },
+      "states": {
+        "kaleidoscope_harvest:growth": {
+          "values": {
+            "min": 0,
+            "max": 7
+          }
+        },
+        "kaleidoscope_harvest:off_climate": [
+          false,
+          true
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:adzuki_bean_crop.name",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+        "bone_visibility": {
+          "stage0": true,
+          "stage1": false,
+          "stage2": false,
+          "stage3": false
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_adzuki_bean_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage0": {
+          "texture": "kh_adzuki_bean_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage1": {
+          "texture": "kh_adzuki_bean_stage_1",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage2": {
+          "texture": "kh_adzuki_bean_stage_2",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage3": {
+          "texture": "kh_adzuki_bean_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -8,
+          0,
+          -8
+        ],
+        "size": [
+          16,
+          4,
+          16
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 0
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#6ea046",
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ],
+            "block_filter": [
+              "minecraft:farmland",
+              {
+                "tags": "q.any_tag('kaleidoscope_cookery:farmland')"
+              }
+            ]
+          }
+        ]
+      },
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/adzuki_bean_crop_young.json",
+      "tag:kaleidoscope_cookery:crop": {},
+      "kaleidoscope_harvest:crop": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 0 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              3,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 0 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              3,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 1 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              5,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 1 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": true,
+              "stage1": false,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              5,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 2 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              7,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 2 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              7,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 3 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              9,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 3 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": true,
+              "stage2": false,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              9,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              11,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 4 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              11,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              13,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 5 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": true,
+              "stage3": false
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              13,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              15,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 6 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              15,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 7 && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:geometry": {
+            "identifier": "geometry.kaleidoscope_harvest.adzuki_bean_crop",
+            "bone_visibility": {
+              "stage0": false,
+              "stage1": false,
+              "stage2": false,
+              "stage3": true
+            }
+          },
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage0": {
+              "texture": "kh_adzuki_bean_stage_0_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage1": {
+              "texture": "kh_adzuki_bean_stage_1_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage2": {
+              "texture": "kh_adzuki_bean_stage_2_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            },
+            "stage3": {
+              "texture": "kh_adzuki_bean_stage_3_grey",
+              "render_method": "alpha_test",
+              "face_dimming": false,
+              "ambient_occlusion": false
+            }
+          },
+          "minecraft:selection_box": {
+            "origin": [
+              -8,
+              0,
+              -8
+            ],
+            "size": [
+              16,
+              16,
+              16
+            ]
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:growth') == 7",
+        "components": {
+          "minecraft:loot": "loot_tables/kaleidoscope_harvest/adzuki_bean_crop_ripe.json"
+        }
+      }
+    ]
+  }
+}

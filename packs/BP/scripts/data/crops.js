@@ -14,6 +14,10 @@
 //                the trellis back.
 //   bush         a shrub planted on grass or dirt, not farmland (blueberries); picked like
 //                `repeatable`, never needs replanting.
+//   aquatic      1.1: stands in water. Planted on Cookery's paddy field, or in one block of water
+//                over mud, clay or dirt (the block is waterlogged); without water it stops and
+//                greys like a crop off its climate. Once-harvested unless it has `pick`
+//                (then picked like `repeatable`).
 //   tree         see data/trees.js.
 //
 // Rule fields copy the names of Cookery's `crop_growth` (企劃書): growthChance (per random
@@ -24,6 +28,8 @@
 // climate: cold | temperate | warm | hot (data/climate.js).
 // drops: what a ripe crop gives when broken; [min, max] counts.
 // pick: what a ripe repeatable / trellis crop gives when used.
+// extra: 1.1, other things a ripe crop gives when broken: [{ item, count: [min, max] }] (a lotus
+//   pod with the root, corn leaves with the cob).
 // wild: where its first seed is found (企劃書「第一份來源」): Bedrock biome tags, and
 //   the soil the wild plant stands on (default: grass, dirt, podzol, coarse dirt).
 //   Breaking a wild plant gives the produce and, for seed crops, seeds.
@@ -36,6 +42,8 @@
 const GROWTH = { growthChance: 0.45, minLightLevel: 9, maxGrowth: 7 };
 const SAND = ["minecraft:sand", "minecraft:red_sand", "minecraft:grass_block", "minecraft:coarse_dirt"];
 const WET = ["minecraft:grass_block", "minecraft:dirt", "minecraft:mud", "minecraft:clay"];
+/** What an aquatic crop's water stands on (wild plants and planting in plain water). */
+export const WATER_SOIL = ["minecraft:mud", "minecraft:clay", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand"];
 
 export const CROPS = [
   // --- Vegetables (12) -----------------------------------------------------------------------
@@ -84,7 +92,7 @@ export const CROPS = [
   },
   {
     id: "corn", zh: "玉米", en: "Corn", form: "tall", climate: "warm", ...GROWTH, growthChance: 0.4, tallFrom: 4,
-    seed: "corn_seeds", produce: "corn", drops: { produce: [1, 2], seed: [1, 2] },
+    seed: "corn_seeds", produce: "corn", drops: { produce: [1, 2], seed: [1, 2] }, extra: [{ item: "corn_leaves", count: [0, 1] }],
     wild: { biomes: ["plains"] },
     look: { leaf: [118, 170, 70], ripe: [240, 200, 70] },
   },
@@ -191,6 +199,77 @@ export const CROPS = [
     seed: "pineapple_crown", produce: "pineapple", drops: { produce: [1, 1], seed: [1, 1] }, pick: [1, 1],
     wild: { biomes: ["savanna"] },
     look: { leaf: [90, 140, 80], ripe: [230, 180, 60] },
+  },
+  // --- 1.1: aquatic (3) --------------------------------------------------------------------------
+  {
+    id: "lotus_root", zh: "蓮藕", en: "Lotus Root", form: "aquatic", climate: "warm", ...GROWTH, growthChance: 0.35,
+    seed: "lotus_root", produce: "lotus_root", drops: { produce: [1, 2], seed: [0, 0] }, extra: [{ item: "lotus_pod", count: [0, 1] }],
+    wild: { biomes: ["swamp"], water: true },
+    look: { leaf: [80, 150, 90], ripe: [240, 160, 190] },
+  },
+  {
+    id: "water_bamboo", zh: "茭白筍", en: "Water Bamboo", form: "aquatic", climate: "warm", ...GROWTH, harvestResetAge: 4,
+    seed: "water_bamboo", produce: "water_bamboo", drops: { produce: [1, 2], seed: [0, 0] }, pick: [1, 2],
+    wild: { biomes: ["river"], water: true },
+    look: { leaf: [100, 160, 80], ripe: [236, 234, 210] },
+  },
+  {
+    id: "water_spinach", zh: "空心菜", en: "Water Spinach", form: "aquatic", climate: "hot", ...GROWTH, harvestResetAge: 4,
+    seed: "water_spinach_seeds", produce: "water_spinach", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 3],
+    wild: { biomes: ["mangrove_swamp", "swamp"], water: true },
+    look: { leaf: [70, 150, 60], ripe: [50, 130, 50] },
+  },
+
+  // --- 1.1: gourds (2) ---------------------------------------------------------------------------
+  {
+    id: "bitter_melon", zh: "苦瓜", en: "Bitter Melon", form: "trellis", climate: "hot", ...GROWTH, growthChance: 0.4, harvestResetAge: 5,
+    seed: "bitter_melon_seeds", produce: "bitter_melon", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 2],
+    wild: { biomes: ["jungle"] },
+    look: { leaf: [80, 150, 60], ripe: [120, 180, 80] },
+  },
+  {
+    id: "luffa", zh: "絲瓜", en: "Luffa", form: "trellis", climate: "warm", ...GROWTH, growthChance: 0.4, harvestResetAge: 5,
+    seed: "luffa_seeds", produce: "luffa", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 2],
+    // ## 1.1 企劃: 村莊箱子; also wild in swamps for players who meet no village.
+    wild: { biomes: ["swamp"] }, village: ["plains", "savanna"],
+    look: { leaf: [90, 160, 70], ripe: [90, 140, 70] },
+  },
+
+  // --- 1.1: beans (2) ----------------------------------------------------------------------------
+  {
+    id: "adzuki_bean", zh: "紅豆", en: "Adzuki Bean", form: "once", climate: "temperate", ...GROWTH,
+    seed: "adzuki_bean", produce: "adzuki_bean", drops: { produce: [2, 3], seed: [0, 0] },
+    wild: { biomes: ["plains"] },
+    look: { leaf: [110, 160, 70], ripe: [150, 40, 50] },
+  },
+  {
+    id: "mung_bean", zh: "綠豆", en: "Mung Bean", form: "once", climate: "hot", ...GROWTH,
+    seed: "mung_bean", produce: "mung_bean", drops: { produce: [2, 3], seed: [0, 0] },
+    wild: { biomes: ["savanna"] },
+    look: { leaf: [100, 160, 70], ripe: [80, 130, 60] },
+  },
+
+  // --- 1.1: spices (3) ---------------------------------------------------------------------------
+  {
+    id: "garlic_chives", zh: "韭菜", en: "Garlic Chives", form: "repeatable", climate: "temperate", ...GROWTH, harvestResetAge: 4,
+    seed: "garlic_chive_seeds", produce: "garlic_chives", drops: { produce: [1, 2], seed: [1, 2] }, pick: [1, 2],
+    wild: { biomes: ["plains"] },
+    look: { leaf: [80, 160, 70], ripe: [60, 140, 60] },
+  },
+  {
+    id: "lemongrass", zh: "香茅", en: "Lemongrass", form: "repeatable", climate: "hot", ...GROWTH, harvestResetAge: 4,
+    seed: "lemongrass", produce: "lemongrass", drops: { produce: [1, 2], seed: [0, 0] }, pick: [1, 2],
+    // ## 1.1 企劃「叢林邊緣」: jungle edge is jungle + edge; the wild-crop rules take one tag, so jungle.
+    wild: { biomes: ["jungle"] },
+    look: { leaf: [150, 190, 90], ripe: [180, 200, 110] },
+  },
+  {
+    // ## A shrub like the blueberry (1.1 企劃：花椒是小灌木). Wild in meadows and birch woods:
+    // ## the hill country it grows in has no vanilla biome of its own.
+    id: "sichuan_pepper", zh: "花椒", en: "Sichuan Pepper", form: "bush", climate: "temperate", ...GROWTH, growthChance: 0.35, harvestResetAge: 4,
+    seed: "sichuan_pepper_seedling", produce: "sichuan_peppercorns", drops: { produce: [1, 2], seed: [1, 1] }, pick: [1, 3],
+    wild: { biomes: ["meadow", "birch"] },
+    look: { leaf: [70, 130, 60], ripe: [180, 50, 40] },
   },
 ];
 

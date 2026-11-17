@@ -25,6 +25,13 @@ export const PLACED_FOODS = [
   drink("mango_juice"), drink("mixed_juice"), drink("passion_fruit_juice"),
   drink("lychee_wine", "wine"), drink("peach_wine", "wine"),
   tea("cinnamon_tea"), tea("ginger_tea"), tea("lemon_tea"), tea("passion_fruit_tea"),
+  // --- 1.1 (1.1 企劃「可放置」) ----------------------------------------------------------------------
+  pot("lotus_root_rib_soup"), pot("luffa_soup"), pot("red_bean_soup"), pot("mung_bean_soup"), pot("mapo_tofu"),
+  { item: "red_bean_cake", shape: "cakes", bites: SHARED_BITES },
+  { item: "mung_bean_cake", shape: "cakes", bites: SHARED_BITES },
+  drink("loquat_juice"), drink("star_fruit_juice"), drink("papaya_milk"),
+  drink("longan_wine", "wine"),
+  tea("lemongrass_tea"), tea("longan_tea"),
 ];
 
 const BY_ITEM = new Map(PLACED_FOODS.map((row) => [row.item, row]));

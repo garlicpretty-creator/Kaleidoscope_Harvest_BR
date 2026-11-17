@@ -1,0 +1,30 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:item": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:fruitwood_planks",
+      "menu_category": {
+        "category": "construction",
+        "group": "minecraft:itemGroup.name.planks"
+      }
+    },
+    "components": {
+      "minecraft:icon": "kh_fruitwood_planks",
+      "minecraft:display_name": {
+        "value": "item.kaleidoscope_harvest:fruitwood_planks.name"
+      },
+      "minecraft:block_placer": {
+        "block": "kaleidoscope_harvest:fruitwood_planks",
+        "replace_block_item": true
+      },
+      "minecraft:fuel": {
+        "duration": 15
+      },
+      "minecraft:tags": {
+        "tags": [
+          "minecraft:planks"
+        ]
+      }
+    }
+  }
+}

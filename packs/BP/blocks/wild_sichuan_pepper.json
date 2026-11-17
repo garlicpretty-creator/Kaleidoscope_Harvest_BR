@@ -1,0 +1,95 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:wild_sichuan_pepper",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:wild_sichuan_pepper.name",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.sichuan_pepper_crop",
+        "bone_visibility": {
+          "stage0": false,
+          "stage1": false,
+          "stage2": false,
+          "stage3": true
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_sichuan_pepper_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage0": {
+          "texture": "kh_sichuan_pepper_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage1": {
+          "texture": "kh_sichuan_pepper_stage_1",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage2": {
+          "texture": "kh_sichuan_pepper_stage_2",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage3": {
+          "texture": "kh_sichuan_pepper_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 0
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": {
+        "movement_type": "popped"
+      },
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ],
+            "block_filter": [
+              "minecraft:grass_block",
+              "minecraft:dirt",
+              "minecraft:podzol",
+              "minecraft:coarse_dirt"
+            ]
+          }
+        ]
+      },
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/wild_sichuan_pepper.json"
+    },
+    "permutations": []
+  }
+}

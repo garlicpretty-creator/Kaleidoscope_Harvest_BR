@@ -1,11 +1,11 @@
 // One custom component, `kaleidoscope_harvest:crop`, grows every field crop
-// in data/crops.js: once, underground, repeatable, tall and trellis forms all
-// share it and differ only by their row's fields.
+// in data/crops.js: once, underground, repeatable, tall, trellis, bush and (1.1)
+// aquatic forms all share it and differ only by their row's fields.
 //
 // Block states (tools/generate.mjs declares them):
 //   kaleidoscope_harvest:growth       0 … maxGrowth
-//   kaleidoscope_harvest:off_climate  true while the crop stands in a climate it cannot grow in
-//                                     (its leaves turn grey: no text on screen)
+//   kaleidoscope_harvest:off_climate  true while the crop stands in a climate it cannot grow in, or
+//                                     (aquatic) out of water: its leaves turn grey, no text on screen
 //   kaleidoscope_harvest:upper        tall crops only: the upper block
 //
 // Breaking drops come from the blocks' loot tables (one per stage band), so the
@@ -15,10 +15,20 @@ import { CROPS, cropBlockId } from "../data/crops.js";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid, state } from "../data/ns.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
-import { bright, growthMultiplier, isFarmland, isSoil } from "./environment.js";
+import { bright, growthMultiplier, hasWater, isFarmland, isSoil, isWaterBed } from "./environment.js";
 
 /** Forms that are picked by using them and grow back. */
 export const PICKED_FORMS = ["repeatable", "trellis", "bush"];
+/** A crop that is picked (and grows back) rather than broken: those forms, and aquatic crops with `pick`. */
+export const isPicked = (crop) => PICKED_FORMS.includes(crop.form) || (crop.form === "aquatic" && Boolean(crop.pick));
+
+/** The ground a crop needs under it. */
+function onGround(block, crop) {
+  const below = block.below();
+  if (crop.form === "bush") return isSoil(below);
+  if (crop.form === "aquatic") return isWaterBed(below);
+  return isFarmland(below);
+}
 
 /** Stages a bone meal adds to a field crop. */
 export const BONE_MEAL_STAGES = 2;
@@ -61,9 +71,9 @@ export function setStage(block, crop, stage) {
 /** One random tick: climate, light and soil decide whether the crop grows a stage. */
 export function tickCrop(block, crop) {
   if (isUpper(block, crop)) return;
-  if (!(crop.form === "bush" ? isSoil(block.below()) : isFarmland(block.below()))) return;
+  if (!onGround(block, crop)) return;
   const multiplier = growthMultiplier(block, crop.climate);
-  const offClimate = multiplier <= 0;
+  const offClimate = multiplier <= 0 || (crop.form === "aquatic" && !hasWater(block));
   if (getState(block, "off_climate") !== offClimate) {
     setStates(block, { off_climate: offClimate });
     const upper = crop.form === "tall" ? upperOf(block) : undefined;
@@ -97,7 +107,7 @@ export function useCrop(block, crop, player) {
     return true;
   }
 
-  const picked = PICKED_FORMS.includes(crop.form);
+  const picked = isPicked(crop);
   if (!picked || stage < crop.maxGrowth) return false;
   dropAt(block, rid(crop.produce), rollRange(crop.pick));
   setStates(block, { growth: crop.harvestResetAge });

@@ -24,7 +24,7 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 | 方向 | 事件 | 內容 |
 | --- | --- | --- |
 | → 豐收 | `kaleidoscope_harvest:api_ping` | 任意字串（建議放你的 `source`） |
-| ← 豐收 | `kaleidoscope_harvest:api_ready` | `{"api":1,"source":"kaleidoscope_harvest","version":"1.0.0","capabilities":["catalog"]}` |
+| ← 豐收 | `kaleidoscope_harvest:api_ready` | `{"api":1,"source":"kaleidoscope_harvest","version":"1.1.0","capabilities":["catalog","catalog_foods"]}` |
 
 豐收在世界載入後 20 tick 會主動廣播一次 `api_ready`；比較晚載入的附加包自己送 `api_ping` 會得到同樣的回覆。
 
@@ -33,6 +33,7 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 | 名稱 | 意義 |
 | --- | --- |
 | `catalog` | 可以查詢作物與果樹的清單：`catalog_request` |
+| `catalog_foods` | 1.1：`catalog_request` 多一種 `kind: "foods"`，列出所有可吃喝的東西 |
 
 ## 清單 — `catalog`
 
@@ -46,10 +47,12 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 
 | `kind` | `items` 每筆 |
 | --- | --- |
-| `crops` | `{id, seed, form, climate}`：`id` 是收成的物品，`seed` 是種下去的物品；`form` 是 `once`、`underground`、`repeatable`、`tall`、`trellis`、`bush`；`climate` 是 `cold`、`temperate`、`warm`、`hot` |
+| `crops` | `{id, seed, form, climate}`：`id` 是收成的物品，`seed` 是種下去的物品；`form` 是 `once`、`underground`、`repeatable`、`tall`、`trellis`、`bush`，1.1 多了 `aquatic`（水生）；`climate` 是 `cold`、`temperate`、`warm`、`hot`。之後可能再多新的 `form`：看不懂的請當成 `once` |
 | `trees` | `{id, sapling, climate, bark?}`：`id` 是摘下的果實（肉桂是樹皮，帶 `bark: true`），`sapling` 是樹苗方塊 |
 
-所有 ID 都是完整的 `kaleidoscope_harvest:` ID。未知的 `kind` 回 `{"ok":false,"code":"UNKNOWN_KIND","kinds":["crops","trees"]}`。
+| `foods`（需要 `catalog_foods`） | `{id, hunger, saturation, placeable, container?}`：`hunger` 是恢復的飢餓值，`saturation` 是飽和係數；`placeable` 為 `true` 表示能放在桌上吃；`container` 是吃完還回的容器（碗、玻璃瓶、廚房空杯） |
+
+所有 ID 都是完整的 `kaleidoscope_harvest:` ID（`container` 是原版或廚房的 ID）。未知的 `kind` 回 `{"ok":false,"code":"UNKNOWN_KIND","kinds":["crops","trees","foods"]}`。
 
 ## 豐收會主動找的附加包
 
@@ -57,10 +60,10 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 
 | 附加包 | 豐收送出 | 效果 |
 | --- | --- | --- |
-| 森羅物語：樂牧 `kaleidoscope_ranching` | `register_feed`（需要 `register_feed`） | 玉米、大豆、豆渣、大白菜、白蘿蔔、地瓜等 9 種進飼槽 |
-| 森羅物語：草本 `kaleidoscope_herbal` | `heat_register`（`external_heat`）、`adjuvant_register`（`external_adjuvants`） | 20 樣食物有寒熱值；陳皮、肉桂皮可當砂鍋佐使 |
-| 森羅物語：漁歌 `kaleidoscope_fishing` | `register_bait`（`bait`）、`register_pond_feed`（`pond_feed`，1.5.0） | 玉米種子（0.7）、大豆（0.8）當魚餌；豆渣（2 餐）、玉米種子（1 餐）當魚池飼料 |
-| 森羅物語：酒館 `kaleidoscope_tavern` | 酒館 SDK | 荔枝酒、桃子酒可以用酒桶釀 |
+| 森羅物語：樂牧 `kaleidoscope_ranching` | `register_feed`（需要 `register_feed`；玉米葉在有 `feed_1_1` 時是 `ruminant`，否則 `grass`） | 玉米、大豆、紅豆、綠豆、豆渣、大白菜、空心菜、白蘿蔔、地瓜、玉米葉等 13 種進飼槽 |
+| 森羅物語：草本 `kaleidoscope_herbal` | `heat_register`（`external_heat`）、`adjuvant_register`（`external_adjuvants`） | 32 樣食物有寒熱值；陳皮、肉桂皮可當砂鍋佐使 |
+| 森羅物語：漁歌 `kaleidoscope_fishing` | `register_bait`（`bait`）、`register_pond_feed`（`pond_feed`，1.5.0） | 玉米種子（0.7）、綠豆（0.7）、大豆（0.8）當魚餌；豆渣（2 餐）、玉米種子與紅豆餡（1 餐）當魚池飼料 |
+| 森羅物語：酒館 `kaleidoscope_tavern` | 酒館 SDK | 荔枝酒、桃子酒、龍眼酒可以用酒桶釀 |
 
 反過來，漁歌裝了豐收時多 7 道用豐收作物的料理，樂牧裝了豐收時可以把玉米放進青貯桶做青貯料。
 

@@ -6,7 +6,8 @@ Two shapes, both sunk one pixel into the farmland like Cookery's crops:
   "#"  four planes at 4 and 12 pixels on both axes (vanilla wheat, carrots, potatoes; Cookery `crop`)
        -> root, bulb and grain crops
   "X"  two crossed planes 20.4 wide (vanilla flowers and sweet berry bush; Cookery `crossedcrop`)
-       -> leafy heads and fruiting plants
+       -> leafy heads and fruiting plants, bushes, and the 1.1 aquatic crops (which stand in a water block
+          over their bed and sink the same pixel into it)
 No extra fruit boxes: like vanilla, a crop is its textures. Vines are the vine texture on two planes in
 front of and behind the bamboo trellis. A sapling is one X, like vanilla saplings.
 
@@ -33,7 +34,13 @@ SAPLINGS = os.path.join(ROOT, "packs", "RP", "textures", "kaleidoscope_harvest",
 GEO = os.path.join(ROOT, "packs", "RP", "models", "blocks")
 PREVIEW = os.path.join(ROOT, "art", "previews", "plant_models.png")
 
-VINES = ["cucumber", "black_pepper", "grape", "passion_fruit"]
+VINES = ["cucumber", "black_pepper", "grape", "passion_fruit", "bitter_melon", "luffa"]
+# ## 1.1 crops get their models before their stage textures are drawn (crop_textures.py), so they are
+# ## listed here instead of found from the texture files. Aquatic crops (lotus_root, water_bamboo,
+# ## water_spinach) stand in the water block over their bed and use the same sunk crossed planes:
+# ## the 1 px goes into the paddy / mud below and the water hides the stem base anyway.
+NEW_CROPS = ["lotus_root", "water_bamboo", "water_spinach", "bitter_melon", "luffa",
+             "adzuki_bean", "mung_bean", "garlic_chives", "lemongrass", "sichuan_pepper"]
 X = (45, -45)
 
 
@@ -51,7 +58,8 @@ def planes(mat, size, yaws, z=0.0):
              "uv": {"north": face(mat, 0, 0, 16, 16), "south": face(mat, 16, 0, -16, 16)}} for yaw in yaws]
 
 
-HASH_CROPS = {"onion", "garlic", "scallion", "daikon", "peanut", "sweet_potato", "ginger", "soybean", "sesame", "cumin", "corn"}
+HASH_CROPS = {"onion", "garlic", "scallion", "daikon", "peanut", "sweet_potato", "ginger", "soybean", "sesame", "cumin", "corn",
+              "adzuki_bean", "mung_bean", "garlic_chives", "lemongrass"}
 
 
 def hash_planes(mat):
@@ -119,7 +127,12 @@ def preview(models):
             if not name:
                 continue
             folder = SAPLINGS if label == "sapling" else CROPS
-            im = Image.open(os.path.join(folder, name + ".png")).convert("RGBA").resize((64, 64), Image.NEAREST)
+            path = os.path.join(folder, name + ".png")
+            if not os.path.exists(path):  # model written before its texture is drawn
+                draw.rectangle((190 + col * cell, y, 190 + col * cell + 63, y + 63), outline=(200, 200, 190))
+                draw.text((194 + col * cell, y + 26), "no texture", fill=(220, 220, 210))
+                continue
+            im = Image.open(path).convert("RGBA").resize((64, 64), Image.NEAREST)
             sheet.paste(im, (190 + col * cell, y), im)
     sheet.save(PREVIEW)
 
@@ -128,7 +141,7 @@ def main():
     os.makedirs(GEO, exist_ok=True)
     rows = []
     field = sorted({f.rsplit("_stage_", 1)[0] for f in os.listdir(CROPS) if "_stage_" in f and not f.endswith(("_normal.png", "_mer.png"))})
-    for crop in field:
+    for crop in sorted(set(field) | set(NEW_CROPS)):
         if crop in VINES or crop == "corn_upper":
             continue
         bones = [("stage%d" % n, stage_cubes(crop, "%s_stage_%d" % (crop, n), n)) for n in range(4)]

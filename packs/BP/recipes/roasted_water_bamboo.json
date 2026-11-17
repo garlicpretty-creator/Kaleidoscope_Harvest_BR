@@ -1,0 +1,18 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_furnace": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:roasted_water_bamboo"
+    },
+    "tags": [
+      "furnace",
+      "smoker",
+      "campfire",
+      "soul_campfire"
+    ],
+    "input": {
+      "item": "kaleidoscope_harvest:water_bamboo"
+    },
+    "output": "kaleidoscope_harvest:roasted_water_bamboo"
+  }
+}

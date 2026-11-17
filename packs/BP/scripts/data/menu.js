@@ -11,7 +11,8 @@
 //   steamer         { input, time }
 //   teapot          { input, time, count }     water as the base, poured into Cookery's cups
 //   bamboo_tray     { input, time }            dried in the sun
-//   juicer          { input }                  Harvest's own: two of one fruit, see data/stations.js
+//   juicer          { input, milk? }           Harvest's own: two of one fruit, or (1.1) one fruit and a
+//                                              milk bucket when `milk`, see data/stations.js
 //   pickling_jar    { inputs, time, count }    Harvest's own: an exact set of 1–4 items, sealed
 //   crafting        { inputs }                 vanilla shapeless crafting table recipe
 //   furnace         { input }                  vanilla furnace and smoker
@@ -28,6 +29,11 @@ const mc = (id) => `minecraft:${id}`;
 const BOWL = mc("bowl");
 const CUP = "kaleidoscope_cookery:empty_cup";
 const DAY = 24000;
+// ## Cookery's rice (1.1 企劃「白米料理」): raw rice for congee, cooked rice for rice dishes,
+// ## the ids its own recipes and Fishing Voyage's use.
+const RICE = "kaleidoscope_cookery:rice";
+const COOKED_RICE = "kaleidoscope_cookery:cooked_rice";
+const RED_CHILI = "kaleidoscope_cookery:red_chili";
 
 const ing = (id, zh, en, look, make, extra = {}) => ({ item: { id, kind: "ingredient", zh, en, look, ...extra }, make });
 const dish = (id, zh, en, food, look, make, extra = {}) => ({ item: { id, kind: "dish", zh, en, food, look, ...extra }, make });
@@ -146,6 +152,68 @@ export const MENU = [
   dish("banana_pancake", "香蕉煎餅", "Banana Pancake", [7, 0.6], ["round", [230, 200, 120]], { station: "crafting", inputs: ["banana", mc("wheat"), mc("egg")] }),
   dish("grape_raisin_bread", "葡萄乾麵包", "Raisin Bread", [6, 0.6], ["round", [190, 140, 90]], { station: "crafting", inputs: ["raisins", mc("wheat"), mc("wheat"), mc("wheat")] }),
   dish("fruit_platter", "水果拼盤", "Fruit Platter", [10, 0.8], ["bowl", [240, 140, 80]], { station: "crafting", inputs: ["sweet_orange", "grape", "strawberry", "mango", mc("bowl")] }),
+  // === 1.1 ========================================================================================
+  // --- Prepared ingredients ---------------------------------------------------------------------
+  ing("lotus_root_slices", "藕片", "Lotus Root Slices", ["bits", [240, 222, 204]], { station: "chopping_board", input: "lotus_root", count: 2, cuts: 3 }),
+  ing("papaya_shreds", "木瓜絲", "Shredded Papaya", ["bits", [200, 220, 120]], { station: "chopping_board", input: "papaya", count: 2, cuts: 3 }),
+  ing("red_bean_paste", "紅豆餡", "Red Bean Paste", ["powder", [110, 40, 40]], { station: "millstone", input: "adzuki_bean", outputs: [["red_bean_paste", 2]] }),
+  ing("mung_bean_flour", "綠豆粉", "Mung Bean Flour", ["powder", [210, 220, 160]], { station: "millstone", input: "mung_bean", outputs: [["mung_bean_flour", 1]] }),
+  ing("ground_sichuan_pepper", "花椒粉", "Ground Sichuan Pepper", ["powder", [150, 60, 40]], { station: "millstone", input: "sichuan_peppercorns", outputs: [["ground_sichuan_pepper", 2]] }),
+  ing("dried_longan", "桂圓", "Dried Longan", ["pod", [130, 80, 40]], { station: "bamboo_tray", input: "longan", time: 12000 }, { food: [3, 0.5] }),
+  ing("lotus_seeds", "蓮子", "Lotus Seeds", ["seeds", [236, 226, 190]], { station: "bamboo_tray", input: "lotus_pod", time: 12000 }, { food: [2, 0.3] }),
+  // ## The steamer takes one item, so garlic and eggplant are put together first (1.1 企劃「蒜蓉蒸茄子」).
+  ing("garlic_eggplant_raw", "蒜蓉茄子（生）", "Garlic Eggplant (Raw)", ["long", [140, 80, 140]], { station: "crafting", inputs: ["eggplant", "minced_garlic"] }),
+  // ## Two jar recipes with no salt or sugar: Cookery has no salt (1.1 企劃).
+  ing("fermented_tofu", "豆腐乳", "Fermented Tofu", ["bottle", [200, 120, 70]], { station: "pickling_jar", inputs: ["tofu", "tofu", "soy_sauce"], time: 3 * DAY, count: 2 }),
+  ing("mung_bean_sprouts", "綠豆芽", "Mung Bean Sprouts", ["bits", [240, 240, 210]], { station: "pickling_jar", inputs: ["mung_bean", "mung_bean"], time: DAY / 2, count: 3 }),
+
+  // --- Pickling jar ------------------------------------------------------------------------------
+  ing("candied_star_fruit", "蜜餞楊桃", "Candied Star Fruit", ["bottle", [240, 200, 70]], { station: "pickling_jar", inputs: ["star_fruit", "star_fruit", mc("sugar")], time: DAY, count: 2 }, { food: [4, 0.4] }),
+  drink("longan_wine", "龍眼酒", "Longan Wine", [3, 0.3], ["bottle", [220, 190, 150]], { station: "pickling_jar", inputs: ["longan", "longan", mc("sugar")], time: 5 * DAY, count: 2 }, mc("glass_bottle")),
+
+  // --- Drinks --------------------------------------------------------------------------------------
+  drink("loquat_juice", "枇杷汁", "Loquat Juice", [4, 0.4], ["bottle", [246, 176, 60]], { station: "juicer", input: "loquat" }, mc("glass_bottle")),
+  drink("star_fruit_juice", "楊桃汁", "Star Fruit Juice", [4, 0.4], ["bottle", [240, 220, 90]], { station: "juicer", input: "star_fruit" }, mc("glass_bottle")),
+  drink("papaya_milk", "木瓜牛奶", "Papaya Milk", [6, 0.5], ["bottle", [250, 190, 130]], { station: "juicer", input: "papaya", milk: true }, mc("glass_bottle")),
+  drink("banana_milk", "香蕉牛奶", "Banana Milk", [6, 0.5], ["bottle", [250, 236, 170]], { station: "juicer", input: "banana", milk: true }, mc("glass_bottle")),
+  drink("lemongrass_tea", "香茅茶", "Lemongrass Tea", [2, 0.3], ["bowl", [210, 210, 120]], { station: "teapot", input: "lemongrass", time: 240, count: 4 }, CUP),
+  drink("longan_tea", "桂圓茶", "Longan Tea", [2, 0.4], ["bowl", [150, 90, 50]], { station: "teapot", input: "dried_longan", time: 240, count: 4 }, CUP),
+
+  // --- Wok --------------------------------------------------------------------------------------------
+  dish("stir_fried_lotus_root", "炒藕片", "Stir-Fried Lotus Root", [6, 0.6], ["bowl", [236, 216, 190]], wok(S("lotus_root_slices", "lotus_root_slices", "minced_garlic"))),
+  dish("water_bamboo_pork", "茭白筍炒肉絲", "Water Bamboo with Pork", [10, 0.8], ["bowl", [220, 200, 160]], wok(S("water_bamboo", mc("porkchop"), "soy_sauce"), 300)),
+  dish("garlic_water_spinach", "蒜炒空心菜", "Garlic Water Spinach", [5, 0.6], ["bowl", [70, 150, 60]], wok(S("water_spinach", "water_spinach", "minced_garlic"))),
+  dish("fermented_tofu_water_spinach", "腐乳空心菜", "Water Spinach with Fermented Tofu", [6, 0.6], ["bowl", [110, 140, 60]], wok(S("water_spinach", "water_spinach", "fermented_tofu"))),
+  dish("bitter_melon_omelette", "苦瓜炒蛋", "Bitter Melon Omelette", [6, 0.6], ["bowl", [180, 210, 110]], wok(S("bitter_melon", mc("egg")))),
+  dish("luffa_omelette", "絲瓜炒蛋", "Luffa Omelette", [6, 0.6], ["bowl", [200, 220, 120]], wok(S("luffa", mc("egg")))),
+  dish("stir_fried_bean_sprouts", "炒豆芽", "Stir-Fried Bean Sprouts", [5, 0.6], ["bowl", [236, 236, 200]], wok(S("mung_bean_sprouts", "mung_bean_sprouts", "chopped_scallion"))),
+  dish("chive_omelette", "韭菜炒蛋", "Garlic Chive Omelette", [6, 0.6], ["bowl", [220, 210, 100]], wok(S("garlic_chives", mc("egg")))),
+  dish("lemongrass_chicken", "香茅烤雞", "Lemongrass Chicken", [10, 0.8], ["bowl", [210, 170, 90]], wok(S(mc("chicken"), "lemongrass", "minced_garlic"), 300)),
+  dish("mapo_tofu", "麻婆豆腐", "Mapo Tofu", [11, 0.8], ["bowl", [190, 60, 40]], wok(S("tofu", mc("beef"), "ground_sichuan_pepper", RED_CHILI), 300)),
+  // ## Not 椒麻雞: Cookery already has a numbing spicy chicken.
+  dish("sichuan_pepper_chicken", "花椒雞丁", "Sichuan Pepper Chicken", [10, 0.8], ["bowl", [200, 110, 60]], wok(S(mc("chicken"), "ground_sichuan_pepper", "chopped_scallion"), 300)),
+  dish("pineapple_fried_rice", "鳳梨炒飯", "Pineapple Fried Rice", [9, 0.7], ["bowl", [240, 200, 90]], wok(S(COOKED_RICE, "pineapple", mc("egg")))),
+  dish("braised_pork_rice", "滷肉飯", "Braised Pork Rice", [11, 0.8], ["bowl", [140, 80, 50]], wok(S(COOKED_RICE, mc("porkchop"), "soy_sauce", "five_spice_powder"), 300)),
+
+  // --- Stockpot ------------------------------------------------------------------------------------------
+  dish("lotus_root_rib_soup", "蓮藕排骨湯", "Lotus Root and Rib Soup", [10, 0.8], ["bowl", [220, 200, 180]], pot(S("lotus_root", mc("porkchop"), "shredded_ginger"), 600)),
+  dish("luffa_soup", "絲瓜湯", "Luffa Soup", [6, 0.6], ["bowl", [180, 210, 150]], pot(S("luffa", "luffa", mc("egg")))),
+  dish("red_bean_soup", "紅豆湯", "Red Bean Soup", [5, 0.5], ["bowl", [130, 40, 40]], pot(S("adzuki_bean", "adzuki_bean", mc("sugar")), 400)),
+  dish("mung_bean_soup", "綠豆湯", "Mung Bean Soup", [5, 0.5], ["bowl", [150, 180, 110]], pot(S("mung_bean", "mung_bean", mc("sugar")), 400)),
+  dish("lotus_seed_soup", "蓮子湯", "Lotus Seed Soup", [6, 0.6], ["bowl", [240, 230, 200]], pot(S("lotus_seeds", "lotus_seeds", mc("sugar")), 300)),
+  dish("loquat_syrup", "枇杷膏", "Loquat Syrup", [6, 0.5], ["bowl", [200, 120, 40]], pot(S("loquat", "loquat", mc("honey_bottle")), 400)),
+  dish("sweet_potato_congee", "地瓜粥", "Sweet Potato Congee", [7, 0.6], ["bowl", [240, 200, 150]], pot(S(RICE, "sweet_potato", "sweet_potato"))),
+
+  // --- Steamer ---------------------------------------------------------------------------------------------
+  dish("mung_bean_cake", "綠豆糕", "Mung Bean Cake", [6, 0.5], ["round", [220, 226, 160]], { station: "steamer", input: "mung_bean_flour", time: 300 }),
+  dish("steamed_garlic_eggplant", "蒜蓉蒸茄子", "Steamed Garlic Eggplant", [7, 0.6], ["bowl", [140, 70, 130]], { station: "steamer", input: "garlic_eggplant_raw", time: 300 }),
+
+  // --- Crafting table and furnace ---------------------------------------------------------------------------
+  dish("red_bean_cake", "紅豆餅", "Red Bean Wheel Cake", [6, 0.5], ["round", [220, 170, 90]], { station: "crafting", inputs: ["red_bean_paste", mc("wheat"), mc("egg"), mc("sugar")] }),
+  dish("chive_box", "韭菜盒子", "Chive Pocket", [7, 0.6], ["round", [230, 200, 120]], { station: "crafting", inputs: [mc("wheat"), mc("wheat"), "garlic_chives", mc("egg")] }),
+  dish("bitter_melon_salad", "涼拌苦瓜", "Bitter Melon Salad", [4, 0.5], ["bowl", [150, 200, 110]], { station: "crafting", inputs: ["bitter_melon", "minced_garlic", mc("sugar"), mc("bowl")] }),
+  dish("papaya_salad", "涼拌木瓜絲", "Papaya Salad", [5, 0.5], ["bowl", [210, 220, 120]], { station: "crafting", inputs: ["papaya_shreds", "papaya_shreds", "lemon", mc("bowl")] }),
+  dish("roasted_water_bamboo", "烤茭白筍", "Roasted Water Bamboo", [5, 0.6], ["long", [220, 190, 120]], { station: "furnace", input: "water_bamboo" }),
 ];
 
 /** Harvest item ids a row needs (bare ids), whatever the station. */

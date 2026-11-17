@@ -1,0 +1,105 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:wild_water_spinach",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:wild_water_spinach.name",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.water_spinach_crop",
+        "bone_visibility": {
+          "stage0": false,
+          "stage1": false,
+          "stage2": false,
+          "stage3": true
+        }
+      },
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_water_spinach_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage0": {
+          "texture": "kh_water_spinach_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage1": {
+          "texture": "kh_water_spinach_stage_1",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage2": {
+          "texture": "kh_water_spinach_stage_2",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage3": {
+          "texture": "kh_water_spinach_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        }
+      },
+      "minecraft:collision_box": false,
+      "minecraft:selection_box": {
+        "origin": [
+          -6,
+          0,
+          -6
+        ],
+        "size": [
+          12,
+          12,
+          12
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 0
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:movable": {
+        "movement_type": "popped"
+      },
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ],
+            "block_filter": [
+              "minecraft:mud",
+              "minecraft:clay",
+              "minecraft:dirt",
+              "minecraft:grass_block",
+              "minecraft:sand"
+            ]
+          }
+        ]
+      },
+      "minecraft:liquid_detection": {
+        "detection_rules": [
+          {
+            "liquid_type": "water",
+            "can_contain_liquid": true,
+            "on_liquid_touches": "no_reaction"
+          }
+        ]
+      },
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/wild_water_spinach.json"
+    },
+    "permutations": []
+  }
+}

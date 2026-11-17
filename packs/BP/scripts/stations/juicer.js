@@ -1,7 +1,9 @@
 // The Juicer (榨汁機). Use a fruit on it to put the fruit in (two at most); use a
 // glass bottle on it when it holds two to take a bottle of juice. Two of the same
-// fruit give that fruit's juice, two different fruits give mixed juice. An empty
-// hand takes the fruit back out; breaking it drops what is inside.
+// fruit give that fruit's juice, two different fruits give mixed juice. 1.1: a fruit
+// and a milk bucket give that fruit's milk (papaya, banana); the bucket comes back
+// empty at once. An empty hand takes the contents back out (the milk as a milk
+// bucket); breaking it drops what is inside.
 //
 // State kaleidoscope_harvest:fruit 0–2 (how full), kaleidoscope_harvest:juice (jug colour).
 // The fruits themselves are kept in utils/blockStore.js.
@@ -11,21 +13,30 @@ import { SOUND } from "../data/feedback.js";
 import { NAMESPACE, rid } from "../data/ns.js";
 import { JUICER, SPLASH_PARTICLE } from "../data/stations.js";
 import { clearBlockData, getBlockData, setBlockData } from "../utils/blockStore.js";
-import { consumeMainhand, dropAt, getState, mainhand, playAt, setStates, tintedParticleAt } from "../utils/blocks.js";
+import { consumeMainhand, dropAt, getState, mainhand, playAt, replaceMainhand, setStates, tintedParticleAt } from "../utils/blocks.js";
 import { removeVisual, syncVisual } from "./visuals.js";
 
 /** fruit id → juice id, for every juice that can be made right now. */
-const JUICE_OF = new Map(RECIPES.filter((r) => r.station === "juicer" && r.input !== "*").map((r) => [rid(r.input), r.result]));
+const JUICE_OF = new Map(RECIPES.filter((r) => r.station === "juicer" && r.input !== "*" && !r.milk).map((r) => [rid(r.input), r.result]));
+/** fruit id → milk drink id (1.1). */
+const MILK_OF = new Map(RECIPES.filter((r) => r.station === "juicer" && r.milk).map((r) => [rid(r.input), r.result]));
+/** Fruits the juicer takes: those with a juice, and those with only a milk drink. */
+const TAKES = new Set([...JUICE_OF.keys(), ...MILK_OF.keys()]);
 const MIXED = RECIPES.some((r) => r.station === "juicer" && r.input === "*") ? JUICER.mixed : null;
 const bare = (id) => id.slice(NAMESPACE.length + 1);
 
-export const juicerFruits = () => [...JUICE_OF.keys()];
+export const juicerFruits = () => [...TAKES];
 
-/** The juice two fruits make, or null. */
+/** The juice two fruits (or a fruit and milk) make, or null. */
 export function juiceFor([a, b]) {
   if (!a || !b) return null;
+  if (a === JUICER.milk || b === JUICER.milk) {
+    const fruit = a === JUICER.milk ? b : a;
+    return fruit === JUICER.milk ? null : MILK_OF.get(fruit) ?? null;
+  }
   if (a === b) return JUICE_OF.get(a) ?? null;
-  return MIXED;
+  // ## Mixed juice is two juicing fruits; a fruit kept only for milk makes nothing with another fruit.
+  return JUICE_OF.has(a) && JUICE_OF.has(b) ? MIXED : null;
 }
 
 /** Copies the block's fill and colour onto the display entity (the moving juice and reamer). */
@@ -36,7 +47,8 @@ export function syncJuicer(block) {
 }
 
 function show(block, fruits) {
-  const colour = fruits.length ? JUICER.colourOf[bare(fruits[0])] ?? "orange" : "empty";
+  const fruit = fruits.find((id) => id !== JUICER.milk);
+  const colour = !fruits.length ? "empty" : fruits.includes(JUICER.milk) ? JUICER.milkColour : JUICER.colourOf[bare(fruit)] ?? "orange";
   setStates(block, { fruit: fruits.length, juice: colour });
   syncJuicer(block);
 }
@@ -48,10 +60,14 @@ export function useJuicer(block, player) {
   const fruits = getBlockData(block, { fruits: [] }).fruits;
   const held = mainhand(player);
 
-  if (held && JUICE_OF.has(held.typeId)) {
+  const milk = held?.typeId === JUICER.milk && MILK_OF.size > 0;
+  if (held && (TAKES.has(held.typeId) || milk)) {
     if (fruits.length >= JUICER.capacity) return false;
+    // ## One milk at most: two buckets make nothing.
+    if (milk && fruits.includes(JUICER.milk)) return false;
     fruits.push(held.typeId);
-    consumeMainhand(player);
+    if (milk) replaceMainhand(player, JUICER.bucket);
+    else consumeMainhand(player);
     setBlockData(block, { fruits });
     show(block, fruits);
     splash(block, getState(block, "juice"));

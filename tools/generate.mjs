@@ -22,8 +22,8 @@ const RP = join(root, "packs", "RP");
 const load = (name) => import(pathToFileURL(join(BP, "scripts", "data", name)).href);
 
 const { NAMESPACE, rid, state } = await load("ns.js");
-const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
-const { TREES, TRUNKS, FRUITWOOD_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId, wildSaplingFeature, saplingBiomes } = await load("trees.js");
+const { CROPS, TRELLIS, WILD_SOIL, WATER_SOIL, cropBlockId, wildBlockId } = await load("crops.js");
+const { TREES, TRUNKS, FRUITWOOD_LOG, FRUITWOOD_PLANKS, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId, wildSaplingFeature, saplingBiomes } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
 const { JUICER, PICKLING_JAR, VISUAL_PROPS, SPLASH_PARTICLE, BUBBLE_PARTICLE } = await load("stations.js");
@@ -156,6 +156,11 @@ const CROSS_GEO = `geometry.${NS}.cross`;
 const material = (texture) => ({ "*": { texture: `kh_${texture}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } });
 const intRange = (max) => ({ values: { min: 0, max } });
 const FARMLAND = ["minecraft:farmland", { tags: "q.any_tag('kaleidoscope_cookery:farmland')" }];
+// ## 1.1 aquatic crops: Cookery's paddy field, or the bed of shallow water (growth/environment.js).
+const PADDY = { tags: "q.any_tag('kaleidoscope_cookery:farmland')" };
+const WATER_BED = [PADDY, ...WATER_SOIL];
+/** Lets a block stand in water (waterlogged) instead of being washed away. */
+const IN_WATER = { "minecraft:liquid_detection": { detection_rules: [{ liquid_type: "water", can_contain_liquid: true, on_liquid_touches: "no_reaction" }] } };
 const SOIL = ["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:dirt_with_roots", "minecraft:moss_block", "minecraft:mud"];
 /** Drawn crop textures have 4 stages; block state 0–7 shows stage floor(state / 2) (docs/art/CROP_TEXTURES.md). */
 const artStage = (s) => Math.floor(s / 2);
@@ -186,6 +191,8 @@ function stagedMaterials(name, stages, shown, grey, extra = {}) {
 }
 /** The bounding box of a drawn model's bone, in block units, for selection boxes. */
 function boneBounds(geoFile, bone) {
+  // ## A model not drawn yet: a small box under the leaf until it is.
+  if (!existsSync(join(RP, "models", "blocks", geoFile))) return { origin: [-4, 8, -4], size: [8, 8, 8] };
   const geo = JSON.parse(readFileSync(join(RP, "models", "blocks", geoFile), "utf8"))["minecraft:geometry"][0];
   const min = [Infinity, Infinity, Infinity];
   const max = [-Infinity, -Infinity, -Infinity];
@@ -231,6 +238,7 @@ for (const crop of CROPS) {
   const tall = crop.form === "tall";
   const trellis = crop.form === "trellis";
   const bush = crop.form === "bush";
+  const aquatic = crop.form === "aquatic";
   names[`tile.${rid(id)}.name`] = [crop.zh, crop.en];
 
   // ## The art's models: <crop>_crop (vines: bamboo_trellis_<vine>, with the frame as its
@@ -256,6 +264,8 @@ for (const crop of CROPS) {
   const young = lootTable(`${id}_young`, [countEntry(crop.seed, [1, 1]), ...back]);
   const ripePools = [countEntry(crop.produce, crop.drops.produce), ...back];
   if (crop.drops.seed[1] > 0 && crop.seed !== crop.produce) ripePools.push(countEntry(crop.seed, crop.drops.seed));
+  // ## 1.1: what else comes off a ripe plant (a lotus pod, corn leaves).
+  for (const extra of crop.extra ?? []) ripePools.push(countEntry(extra.item, extra.count));
   const ripe = lootTable(`${id}_ripe`, ripePools);
   const none = tall ? lootTable(`${id}_upper`, []) : null;
 
@@ -297,7 +307,8 @@ for (const crop of CROPS) {
       "minecraft:destructible_by_explosion": { explosion_resistance: 0 },
       "minecraft:light_dampening": 0,
       "minecraft:map_color": `#${crop.look.leaf.map((v) => v.toString(16).padStart(2, "0")).join("")}`,
-      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: tall ? [...FARMLAND, rid(id)] : bush ? [...SOIL, "minecraft:farmland"] : FARMLAND }] },
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: tall ? [...FARMLAND, rid(id)] : bush ? [...SOIL, "minecraft:farmland"] : aquatic ? WATER_BED : FARMLAND }] },
+      ...(aquatic ? IN_WATER : {}),
       "minecraft:loot": young,
       // ## So Cookery's sickle reaps Harvest crops too (企劃書; to be checked in game).
       "tag:kaleidoscope_cookery:crop": {},
@@ -317,7 +328,8 @@ for (const crop of CROPS) {
 
 function wildPlant(crop) {
   const id = wildBlockId(crop);
-  const soil = crop.wild.soil ?? WILD_SOIL;
+  const water = crop.wild.water === true;
+  const soil = crop.wild.soil ?? (water ? WATER_SOIL : WILD_SOIL);
   names[`tile.${rid(id)}.name`] = [`野生${crop.zh}`, `Wild ${crop.en}`];
   const pools = [countEntry(crop.produce, [1, 2])];
   if (crop.seed !== crop.produce) pools.push(countEntry(crop.seed, [1, 2]));
@@ -334,16 +346,17 @@ function wildPlant(crop) {
       "minecraft:light_dampening": 0,
       "minecraft:movable": { movement_type: "popped" },
       "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"], block_filter: soil }] },
+      ...(water ? IN_WATER : {}),
       "minecraft:loot": lootTable(id, pools),
     },
   });
   blockSounds[rid(id)] = { sound: "grass" };
 
-  wildFeature(id, id, soil, crop.wild.biomes);
+  wildFeature(id, id, soil, crop.wild.biomes, WILD_SPREAD, water);
 }
 
 /** World generation for one wild block: a rule per biome tag → a surface search → the block. */
-function wildFeature(name, blockId, soil, biomes, spread = WILD_SPREAD) {
+function wildFeature(name, blockId, soil, biomes, spread = WILD_SPREAD, water = false) {
   const feature = `${name}_feature`;
   const search = `${name}_search`;
   writeJson(join(BP, "features", "wild", `${feature}.json`), {
@@ -353,7 +366,8 @@ function wildFeature(name, blockId, soil, biomes, spread = WILD_SPREAD) {
       places_block: { name: rid(blockId) },
       enforce_placement_rules: false,
       enforce_survivability_rules: false,
-      may_replace: ["minecraft:air", "minecraft:short_grass"],
+      // ## An aquatic wild plant stands in the water over the bed (1.1), any other one in the air.
+      may_replace: water ? ["minecraft:water"] : ["minecraft:air", "minecraft:short_grass"],
       may_attach_to: { bottom: soil },
     },
   });
@@ -450,6 +464,54 @@ for (const trunk of TRUNKS) {
   });
   blockSounds[rid(trunk.id)] = { sound: trunk === BANANA_TRUNK ? "grass" : "wood" };
   catalog.trees.push(rid(trunk.id));
+}
+
+// 1.1: Fruitwood Planks. The block item is replaced by an item of the same id (as the placeable foods are)
+// so it can carry the minecraft:planks tag: vanilla recipes that take any planks (sticks, crafting table,
+// chests…) then take these too.
+{
+  const planks = FRUITWOOD_PLANKS;
+  names[`tile.${rid(planks.id)}.name`] = [planks.zh, planks.en];
+  names[`item.${rid(planks.id)}.name`] = [planks.zh, planks.en];
+  addTerrain(planks.id, { from: `trees/${planks.id}` });
+  addIcon(planks.id);
+  block(planks.id, {
+    components: {
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": { "*": { texture: `kh_${planks.id}`, render_method: "opaque" } },
+      "minecraft:destructible_by_mining": {
+        seconds_to_destroy: 2,
+        item_specific_speeds: [{ item: { tags: "q.any_tag('minecraft:is_axe')" }, destroy_speed: 0.5 }],
+      },
+      "minecraft:flammable": { catch_chance_modifier: 5, destroy_chance_modifier: 20 },
+      "minecraft:map_color": "#9c7048",
+      "tag:wood": {},
+    },
+  });
+  blockSounds[rid(planks.id)] = { sound: "wood" };
+  writeJson(join(BP, "items", `${planks.id}.json`), {
+    format_version: ITEM_FORMAT,
+    "minecraft:item": {
+      description: { identifier: rid(planks.id), menu_category: { category: "construction", group: "minecraft:itemGroup.name.planks" } },
+      components: {
+        "minecraft:icon": `kh_${planks.id}`,
+        "minecraft:display_name": { value: `item.${rid(planks.id)}.name` },
+        "minecraft:block_placer": { block: rid(planks.id), replace_block_item: true },
+        "minecraft:fuel": { duration: 15 },
+        "minecraft:tags": { tags: ["minecraft:planks"] },
+      },
+    },
+  });
+  writeJson(join(BP, "recipes", `${planks.id}.json`), {
+    format_version: "1.20.10",
+    "minecraft:recipe_shapeless": {
+      description: { identifier: rid(planks.id) },
+      tags: ["crafting_table"],
+      ingredients: [{ item: rid(planks.from) }],
+      result: { item: rid(planks.id), count: planks.count },
+      unlock: [{ item: rid(planks.from) }],
+    },
+  });
 }
 
 /** The leaves' two looks (企劃書 as revised in art PR #4): state blossom false → bare, true → blossom. */
@@ -594,7 +656,7 @@ for (const item of ITEMS) {
     "minecraft:max_stack_size": item.oil ? 1 : item.kind === "drink" ? 16 : 64,
   };
   const plants = PLANTS.get(item.id);
-  if (plants) components["minecraft:block_placer"] = { block: rid(cropBlockId(plants)), use_on: plants.form === "bush" ? [...SOIL, "minecraft:farmland"] : FARMLAND };
+  if (plants) components["minecraft:block_placer"] = { block: rid(cropBlockId(plants)), use_on: plants.form === "bush" ? [...SOIL, "minecraft:farmland"] : plants.form === "aquatic" ? WATER_BED : FARMLAND };
   if (item.food) {
     const drink = item.kind === "drink" || converts === "minecraft:glass_bottle";
     components["minecraft:food"] = {

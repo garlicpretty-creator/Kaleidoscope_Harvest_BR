@@ -11,6 +11,9 @@
     "kh_banana_trunk": {
       "textures": "textures/kaleidoscope_harvest/items/banana_trunk"
     },
+    "kh_fruitwood_planks": {
+      "textures": "textures/kaleidoscope_harvest/items/fruitwood_planks"
+    },
     "kh_mandarin_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/mandarin_sapling"
     },
@@ -76,6 +79,30 @@
     },
     "kh_cinnamon_leaves": {
       "textures": "textures/kaleidoscope_harvest/items/cinnamon_leaves"
+    },
+    "kh_longan_sapling": {
+      "textures": "textures/kaleidoscope_harvest/items/longan_sapling"
+    },
+    "kh_longan_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/longan_leaves"
+    },
+    "kh_loquat_sapling": {
+      "textures": "textures/kaleidoscope_harvest/items/loquat_sapling"
+    },
+    "kh_loquat_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/loquat_leaves"
+    },
+    "kh_star_fruit_sapling": {
+      "textures": "textures/kaleidoscope_harvest/items/star_fruit_sapling"
+    },
+    "kh_star_fruit_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/star_fruit_leaves"
+    },
+    "kh_papaya_sapling": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya_sapling"
+    },
+    "kh_papaya_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya_leaves"
     },
     "kh_napa_cabbage_seeds": {
       "textures": "textures/kaleidoscope_harvest/items/napa_cabbage_seeds"
@@ -229,6 +256,69 @@
     },
     "kh_cinnamon_bark": {
       "textures": "textures/kaleidoscope_harvest/items/cinnamon_bark"
+    },
+    "kh_water_spinach_seeds": {
+      "textures": "textures/kaleidoscope_harvest/items/water_spinach_seeds"
+    },
+    "kh_bitter_melon_seeds": {
+      "textures": "textures/kaleidoscope_harvest/items/bitter_melon_seeds"
+    },
+    "kh_luffa_seeds": {
+      "textures": "textures/kaleidoscope_harvest/items/luffa_seeds"
+    },
+    "kh_garlic_chive_seeds": {
+      "textures": "textures/kaleidoscope_harvest/items/garlic_chive_seeds"
+    },
+    "kh_sichuan_pepper_seedling": {
+      "textures": "textures/kaleidoscope_harvest/items/sichuan_pepper_seedling"
+    },
+    "kh_lotus_root": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_root"
+    },
+    "kh_lotus_pod": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_pod"
+    },
+    "kh_water_bamboo": {
+      "textures": "textures/kaleidoscope_harvest/items/water_bamboo"
+    },
+    "kh_water_spinach": {
+      "textures": "textures/kaleidoscope_harvest/items/water_spinach"
+    },
+    "kh_bitter_melon": {
+      "textures": "textures/kaleidoscope_harvest/items/bitter_melon"
+    },
+    "kh_luffa": {
+      "textures": "textures/kaleidoscope_harvest/items/luffa"
+    },
+    "kh_adzuki_bean": {
+      "textures": "textures/kaleidoscope_harvest/items/adzuki_bean"
+    },
+    "kh_mung_bean": {
+      "textures": "textures/kaleidoscope_harvest/items/mung_bean"
+    },
+    "kh_garlic_chives": {
+      "textures": "textures/kaleidoscope_harvest/items/garlic_chives"
+    },
+    "kh_lemongrass": {
+      "textures": "textures/kaleidoscope_harvest/items/lemongrass"
+    },
+    "kh_sichuan_peppercorns": {
+      "textures": "textures/kaleidoscope_harvest/items/sichuan_peppercorns"
+    },
+    "kh_corn_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/corn_leaves"
+    },
+    "kh_longan": {
+      "textures": "textures/kaleidoscope_harvest/items/longan"
+    },
+    "kh_loquat": {
+      "textures": "textures/kaleidoscope_harvest/items/loquat"
+    },
+    "kh_star_fruit": {
+      "textures": "textures/kaleidoscope_harvest/items/star_fruit"
+    },
+    "kh_papaya": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya"
     },
     "kh_chopped_scallion": {
       "textures": "textures/kaleidoscope_harvest/items/chopped_scallion"
@@ -496,6 +586,141 @@
     },
     "kh_fruit_platter": {
       "textures": "textures/kaleidoscope_harvest/items/fruit_platter"
+    },
+    "kh_lotus_root_slices": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_root_slices"
+    },
+    "kh_papaya_shreds": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya_shreds"
+    },
+    "kh_red_bean_paste": {
+      "textures": "textures/kaleidoscope_harvest/items/red_bean_paste"
+    },
+    "kh_mung_bean_flour": {
+      "textures": "textures/kaleidoscope_harvest/items/mung_bean_flour"
+    },
+    "kh_ground_sichuan_pepper": {
+      "textures": "textures/kaleidoscope_harvest/items/ground_sichuan_pepper"
+    },
+    "kh_dried_longan": {
+      "textures": "textures/kaleidoscope_harvest/items/dried_longan"
+    },
+    "kh_lotus_seeds": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_seeds"
+    },
+    "kh_garlic_eggplant_raw": {
+      "textures": "textures/kaleidoscope_harvest/items/garlic_eggplant_raw"
+    },
+    "kh_fermented_tofu": {
+      "textures": "textures/kaleidoscope_harvest/items/fermented_tofu"
+    },
+    "kh_mung_bean_sprouts": {
+      "textures": "textures/kaleidoscope_harvest/items/mung_bean_sprouts"
+    },
+    "kh_candied_star_fruit": {
+      "textures": "textures/kaleidoscope_harvest/items/candied_star_fruit"
+    },
+    "kh_longan_wine": {
+      "textures": "textures/kaleidoscope_harvest/items/longan_wine"
+    },
+    "kh_loquat_juice": {
+      "textures": "textures/kaleidoscope_harvest/items/loquat_juice"
+    },
+    "kh_star_fruit_juice": {
+      "textures": "textures/kaleidoscope_harvest/items/star_fruit_juice"
+    },
+    "kh_papaya_milk": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya_milk"
+    },
+    "kh_banana_milk": {
+      "textures": "textures/kaleidoscope_harvest/items/banana_milk"
+    },
+    "kh_lemongrass_tea": {
+      "textures": "textures/kaleidoscope_harvest/items/lemongrass_tea"
+    },
+    "kh_longan_tea": {
+      "textures": "textures/kaleidoscope_harvest/items/longan_tea"
+    },
+    "kh_stir_fried_lotus_root": {
+      "textures": "textures/kaleidoscope_harvest/items/stir_fried_lotus_root"
+    },
+    "kh_water_bamboo_pork": {
+      "textures": "textures/kaleidoscope_harvest/items/water_bamboo_pork"
+    },
+    "kh_garlic_water_spinach": {
+      "textures": "textures/kaleidoscope_harvest/items/garlic_water_spinach"
+    },
+    "kh_fermented_tofu_water_spinach": {
+      "textures": "textures/kaleidoscope_harvest/items/fermented_tofu_water_spinach"
+    },
+    "kh_bitter_melon_omelette": {
+      "textures": "textures/kaleidoscope_harvest/items/bitter_melon_omelette"
+    },
+    "kh_luffa_omelette": {
+      "textures": "textures/kaleidoscope_harvest/items/luffa_omelette"
+    },
+    "kh_stir_fried_bean_sprouts": {
+      "textures": "textures/kaleidoscope_harvest/items/stir_fried_bean_sprouts"
+    },
+    "kh_chive_omelette": {
+      "textures": "textures/kaleidoscope_harvest/items/chive_omelette"
+    },
+    "kh_lemongrass_chicken": {
+      "textures": "textures/kaleidoscope_harvest/items/lemongrass_chicken"
+    },
+    "kh_mapo_tofu": {
+      "textures": "textures/kaleidoscope_harvest/items/mapo_tofu"
+    },
+    "kh_sichuan_pepper_chicken": {
+      "textures": "textures/kaleidoscope_harvest/items/sichuan_pepper_chicken"
+    },
+    "kh_pineapple_fried_rice": {
+      "textures": "textures/kaleidoscope_harvest/items/pineapple_fried_rice"
+    },
+    "kh_braised_pork_rice": {
+      "textures": "textures/kaleidoscope_harvest/items/braised_pork_rice"
+    },
+    "kh_lotus_root_rib_soup": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_root_rib_soup"
+    },
+    "kh_luffa_soup": {
+      "textures": "textures/kaleidoscope_harvest/items/luffa_soup"
+    },
+    "kh_red_bean_soup": {
+      "textures": "textures/kaleidoscope_harvest/items/red_bean_soup"
+    },
+    "kh_mung_bean_soup": {
+      "textures": "textures/kaleidoscope_harvest/items/mung_bean_soup"
+    },
+    "kh_lotus_seed_soup": {
+      "textures": "textures/kaleidoscope_harvest/items/lotus_seed_soup"
+    },
+    "kh_loquat_syrup": {
+      "textures": "textures/kaleidoscope_harvest/items/loquat_syrup"
+    },
+    "kh_sweet_potato_congee": {
+      "textures": "textures/kaleidoscope_harvest/items/sweet_potato_congee"
+    },
+    "kh_mung_bean_cake": {
+      "textures": "textures/kaleidoscope_harvest/items/mung_bean_cake"
+    },
+    "kh_steamed_garlic_eggplant": {
+      "textures": "textures/kaleidoscope_harvest/items/steamed_garlic_eggplant"
+    },
+    "kh_red_bean_cake": {
+      "textures": "textures/kaleidoscope_harvest/items/red_bean_cake"
+    },
+    "kh_chive_box": {
+      "textures": "textures/kaleidoscope_harvest/items/chive_box"
+    },
+    "kh_bitter_melon_salad": {
+      "textures": "textures/kaleidoscope_harvest/items/bitter_melon_salad"
+    },
+    "kh_papaya_salad": {
+      "textures": "textures/kaleidoscope_harvest/items/papaya_salad"
+    },
+    "kh_roasted_water_bamboo": {
+      "textures": "textures/kaleidoscope_harvest/items/roasted_water_bamboo"
     },
     "kh_juicer": {
       "textures": "textures/kaleidoscope_harvest/items/juicer"

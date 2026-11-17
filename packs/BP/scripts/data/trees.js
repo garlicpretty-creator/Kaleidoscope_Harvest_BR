@@ -27,6 +27,8 @@ export const LEAF_LOG_RANGE = 4;
 export const FRUITWOOD_LOG = { id: "fruitwood_log", zh: "果木原木", en: "Fruitwood Log" };
 export const BANANA_TRUNK = { id: "banana_trunk", zh: "香蕉假莖", en: "Banana Trunk" };
 export const TRUNKS = [FRUITWOOD_LOG, BANANA_TRUNK];
+/** 1.1: planks sawn from the Fruitwood Log, tagged as planks so vanilla wood recipes take them. */
+export const FRUITWOOD_PLANKS = { id: "fruitwood_planks", zh: "果木木板", en: "Fruitwood Planks", from: FRUITWOOD_LOG.id, count: 4 };
 
 const tree = (id, zh, en, climate, fruit, look, extra = {}) => ({
   id, zh, en, climate,
@@ -53,6 +55,12 @@ export const TREES = [
   // ## 繁茂山丘: no such vanilla biome; the tree rule uses bamboo jungles (docs/art/TREE_SHAPES.md).
   tree("star_anise", "八角", "Star Anise", "warm", "star_anise", leaf([140, 70, 40]), { wild: ["bamboo"] }),
   tree("cinnamon", "肉桂", "Cinnamon", "warm", "cinnamon_bark", leaf([170, 70, 50], [200, 120, 90]), { wild: ["jungle_edge"], pick: [1, 1], bark: true }),
+  // --- 1.1 -----------------------------------------------------------------------------------------
+  tree("longan", "龍眼", "Longan", "hot", "longan", leaf([190, 150, 90], [240, 230, 180]), { wild: ["jungle"] }),
+  tree("loquat", "枇杷", "Loquat", "warm", "loquat", leaf([246, 170, 50]), { wild: ["flower_forest"] }),
+  tree("star_fruit", "楊桃", "Star Fruit", "hot", "star_fruit", leaf([240, 210, 70], [220, 150, 200]), { wild: ["jungle_edge"] }),
+  // ## A tall single trunk with a tuft of leaves at the top; the fruit hangs under the tuft.
+  tree("papaya", "木瓜", "Papaya", "hot", "papaya", leaf([246, 160, 60], [250, 250, 230]), { wild: ["savanna"] }),
 ];
 
 export const TREE_BY_ID = new Map(TREES.map((t) => [t.id, t]));

@@ -12,6 +12,9 @@
 
 import { system } from "@minecraft/server";
 import { CROPS } from "../data/crops.js";
+import { recipeMaking } from "../data/dishes.js";
+import { ITEMS } from "../data/items.js";
+import { placedFood } from "../data/placedFood.js";
 import { NAMESPACE, rid } from "../data/ns.js";
 import { TREES, saplingBlockId } from "../data/trees.js";
 import { VERSION } from "../data/version.js";
@@ -23,7 +26,8 @@ export const EVENTS = Object.freeze({
   catalogRequest: `${NAMESPACE}:catalog_request`,
   catalog: `${NAMESPACE}:catalog`,
 });
-export const CAPABILITIES = Object.freeze(["catalog"]);
+// ## 1.1: catalog_foods adds kind "foods" to catalog_request; old packs that only know "catalog" see no change.
+export const CAPABILITIES = Object.freeze(["catalog", "catalog_foods"]);
 /** Ticks after load before the first api_ready; Fishing answers its own at 10, Ranching at 20. */
 export const ANNOUNCE_TICKS = 20;
 /** Script events carry at most 2048 characters; stay well inside it. */
@@ -32,10 +36,24 @@ const SOURCE_RE = /^[a-z0-9_.-]{1,64}$/;
 
 export const readyPayload = () => ({ api: 1, source: NAMESPACE, version: VERSION, capabilities: [...CAPABILITIES] });
 
+/** What eating an item gives back (as tools/generate.mjs writes using_converts_to), or undefined. */
+export function containerOf(item) {
+  if (item.converts) return item.converts;
+  const made = recipeMaking(item.id);
+  const bowl = made && (made.carrier === "minecraft:bowl" || (made.inputs ?? []).includes("minecraft:bowl"));
+  return bowl ? "minecraft:bowl" : undefined;
+}
+
 /** Catalog rows by kind. Every id is a full item or block id. */
 export const CATALOGS = Object.freeze({
   crops: () => CROPS.map((c) => ({ id: rid(c.produce), seed: rid(c.seed), form: c.form, climate: c.climate })),
   trees: () => TREES.map((t) => ({ id: rid(t.fruit), sapling: rid(saplingBlockId(t)), climate: t.climate, ...(t.bark ? { bark: true } : {}) })),
+  // ## 1.1 (catalog_foods): everything that can be eaten or drunk.
+  foods: () =>
+    ITEMS.filter((item) => item.food).map((item) => {
+      const container = containerOf(item);
+      return { id: rid(item.id), hunger: item.food[0], saturation: item.food[1], placeable: Boolean(placedFood(item.id)), ...(container ? { container } : {}) };
+    }),
 });
 
 /** The catalog replies for one request, split so that each stays under MAX_MESSAGE. */
