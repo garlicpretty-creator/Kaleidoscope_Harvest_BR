@@ -17,6 +17,10 @@ export const JUICER = {
   },
   /** Made from two different fruits. */
   mixed: "mixed_juice",
+  // ## Splash drops, RGB 0..1, the mid tone of each juice texture (tools/art/station_models.py).
+  splash: { orange: [0.94, 0.57, 0.16], grape: [0.41, 0.14, 0.36], mango: [0.96, 0.72, 0.16] },
+  /** The display entity holding the moving parts: the reamer and the juice (設計：station-animations). */
+  visual: "juicer_visual",
 };
 
 /** Pickling jar: put in 1–4 items, seal it with an empty hand, open it when it is done. */
@@ -25,4 +29,18 @@ export const PICKLING_JAR = {
   capacity: 4,
   // ## The contents in the mouth change colour (tools/art/station_models.py).
   contents: ["empty", "fresh", "fermenting", "done"],
+  /** The display entity holding the lid. */
+  visual: "pickling_jar_visual",
 };
+
+/** Display-entity properties (client_sync), set by stations/visuals.js and read by the animations. */
+export const VISUAL_PROPS = {
+  level: "level", // juicer: fruits in it, 0..capacity
+  juice: "juice", // juicer: index in JUICER.colours
+  stage: "stage", // pickling jar: index in PICKLING_JAR.contents
+};
+
+/** Seconds between sweeps for display entities left with no station under them. */
+export const VISUAL_SWEEP_SECONDS = 5;
+export const SPLASH_PARTICLE = "splash";
+export const BUBBLE_PARTICLE = "jar_bubble";

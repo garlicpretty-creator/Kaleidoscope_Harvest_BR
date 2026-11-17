@@ -1,0 +1,36 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.kaleidoscope_harvest.pickling_jar_visual.pose": {
+      "loop": true,
+      "bones": {
+        "lid": {
+          "rotation": [
+            "35.0 * (1.0 - v.seal) + v.rattle",
+            0,
+            "v.rattle * 0.6"
+          ],
+          "position": [
+            0,
+            "(1.0 - v.seal) * 1.0 + v.hop",
+            "(1.0 - v.seal) * 3.5"
+          ]
+        }
+      }
+    },
+    "animation.kaleidoscope_harvest.pickling_jar_visual.bubbles": {
+      "loop": true,
+      "animation_length": 1.6,
+      "particle_effects": {
+        "0.0": {
+          "effect": "bubble",
+          "locator": "moat"
+        },
+        "0.9": {
+          "effect": "bubble",
+          "locator": "moat"
+        }
+      }
+    }
+  }
+}

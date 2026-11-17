@@ -3,6 +3,8 @@ pack.name=森羅物語：豐收
 pack.description=非官方的森羅物語擴充：為廚房加入新的蔬菜、香料、水果與果樹。需要《森羅物語：廚房》。
 
 ## generated from packs/BP/scripts/data — do not edit by hand
+entity.kaleidoscope_harvest:juicer_visual.name=榨汁機
+entity.kaleidoscope_harvest:pickling_jar_visual.name=醃漬缸
 item.kaleidoscope_harvest:banana.name=香蕉
 item.kaleidoscope_harvest:banana_pancake.name=香蕉煎餅
 item.kaleidoscope_harvest:black_pepper_seedling.name=黑胡椒藤苗

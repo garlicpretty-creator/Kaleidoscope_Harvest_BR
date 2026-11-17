@@ -66,6 +66,9 @@
           }
         ]
       },
+      "minecraft:movable": {
+        "movement_type": "immovable"
+      },
       "kaleidoscope_harvest:pickling_jar": {}
     },
     "permutations": [

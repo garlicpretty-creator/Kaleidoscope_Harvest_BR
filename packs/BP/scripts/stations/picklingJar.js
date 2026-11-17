@@ -14,6 +14,17 @@ import { rid } from "../data/ns.js";
 import { PICKLING_JAR } from "../data/stations.js";
 import { clearBlockData, getBlockData, now, setBlockData } from "../utils/blockStore.js";
 import { consumeMainhand, dropAt, getState, mainhand, playAt, setStates } from "../utils/blocks.js";
+import { removeVisual, syncVisual } from "./visuals.js";
+
+/** Copies the contents stage onto the display entity (the lid: open, sealed and rattling, hopping when done). */
+export function syncJar(block) {
+  syncVisual(block, PICKLING_JAR.visual, { stage: Math.max(PICKLING_JAR.contents.indexOf(getState(block, "contents")), 0) });
+}
+
+function setContents(block, contents) {
+  setStates(block, { contents });
+  syncJar(block);
+}
 
 const JAR_RECIPES = RECIPES.filter((r) => r.station === "pickling_jar").map((r) => ({ ...r, set: r.inputs.map(rid).sort() }));
 const ACCEPTED = new Set(JAR_RECIPES.flatMap((r) => r.set));
@@ -33,7 +44,7 @@ export function refreshJar(block) {
   if (jar.sealedAt !== null && getState(block, "contents") === "fermenting") {
     const recipe = JAR_RECIPES.find((r) => r.result === jar.recipe);
     if (recipe && now() - jar.sealedAt >= recipe.time) {
-      setStates(block, { contents: "done" });
+      setContents(block, "done");
       playAt(block, SOUND.jarDone);
     }
   }
@@ -50,7 +61,7 @@ export function useJar(block, player) {
     jar.items.push(held.typeId);
     consumeMainhand(player);
     setBlockData(block, jar);
-    setStates(block, { contents: "fresh" });
+    setContents(block, "fresh");
     playAt(block, SOUND.jarAdd);
     return true;
   }
@@ -60,7 +71,7 @@ export function useJar(block, player) {
     const recipe = JAR_RECIPES.find((r) => r.result === jar.recipe);
     if (recipe) dropAt(block, rid(recipe.result), recipe.count ?? 1);
     clearBlockData(block);
-    setStates(block, { contents: "empty" });
+    setContents(block, "empty");
     playAt(block, SOUND.jarOpen);
     return true;
   }
@@ -69,12 +80,12 @@ export function useJar(block, player) {
   const recipe = jarRecipeFor(jar.items);
   if (recipe) {
     setBlockData(block, { ...jar, sealedAt: now(), recipe: recipe.result });
-    setStates(block, { contents: "fermenting" });
+    setContents(block, "fermenting");
     playAt(block, SOUND.jarSeal);
   } else {
     for (const item of jar.items) dropAt(block, item, 1);
     clearBlockData(block);
-    setStates(block, { contents: "empty" });
+    setContents(block, "empty");
   }
   return true;
 }
@@ -82,14 +93,20 @@ export function useJar(block, player) {
 export function brokeJar(block) {
   for (const item of getBlockData(block, emptyJar()).items) dropAt(block, item, 1);
   clearBlockData(block);
+  removeVisual(block, PICKLING_JAR.visual);
 }
 
 export const picklingJarComponent = {
+  onPlace({ block }) {
+    syncJar(block);
+  },
   onRandomTick({ block }) {
     refreshJar(block);
+    syncJar(block);
   },
   onPlayerInteract({ block, player }) {
-    if (player) useJar(block, player);
+    if (!player) return;
+    if (!useJar(block, player)) syncJar(block);
   },
   onPlayerBreak({ block }) {
     brokeJar(block);

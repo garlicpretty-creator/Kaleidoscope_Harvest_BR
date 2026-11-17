@@ -81,6 +81,18 @@ export function playAt(block, sound) {
   }
 }
 
+/** A tinted particle just above the block (variable.color = rgb, alpha 1); used for juice splashes. */
+export function tintedParticleAt(block, particle, [red, green, blue], dy = 0.85) {
+  try {
+    const vars = new MolangVariableMap();
+    vars.setColorRGBA("variable.color", { red, green, blue, alpha: 1 });
+    const { x, y, z } = block.location;
+    block.dimension.spawnParticle(particle, { x: x + 0.5, y: y + dy, z: z + 0.5 }, vars);
+  } catch {
+    // ## Feedback only: never worth an error.
+  }
+}
+
 export function particleAt(block, particle) {
   try {
     const wants = PARTICLE_VARIABLES[particle];

@@ -4,7 +4,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import * as mc from "@minecraft/server";
 
-const { world, system, ItemStack, Player, GameMode, __skipTime, __advance, __place, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom, __componentsOf, BlockPermutation } = mc;
+const { world, system, ItemStack, Player, GameMode, __skipTime, __advance, __place, __placeByPlayer, __randomTick, __interact, __break, __reset, __registerComponents, __setLootRandom, __componentsOf, BlockPermutation } = mc;
 const overworld = world.getDimension("overworld");
 
 const results = [];
@@ -665,6 +665,98 @@ test("juicer: an empty hand or breaking it gives the fruit back", () => {
   __interact(player(r("mandarin")), overworld.getBlock(at(0)));
   __break(player(), overworld.getBlock(at(0)));
   equal(overworld.dropped(r("mandarin")), 2, "dropped on breaking");
+});
+
+// --- Station display entities (docs/superpowers/specs/2026-11-17-station-animations-design.md) ---------------
+const visuals = (type) => overworld.getEntities({ type: r(type) });
+const prop = (entity, name) => entity.getProperty(S(name));
+
+test("juicer visual: placing spawns one; fruit and pours drive level, colour and splashes", () => {
+  __placeByPlayer(overworld, at(0), r("juicer"));
+  equal(visuals("juicer_visual").length, 1, "spawned on place");
+  const v = visuals("juicer_visual")[0];
+  equal(v.location.x, 0.5, "stands at the block centre");
+  equal(v.location.y, 64, "on the block floor");
+  equal(prop(v, "level"), 0, "empty");
+  __interact(player(r("grape"), 2), overworld.getBlock(at(0)));
+  equal(prop(v, "level"), 1, "one fruit: half full");
+  equal(prop(v, "juice"), 2, "grape colour index");
+  const splash = overworld.particles.filter((p) => p.id === r("splash"));
+  equal(splash.length, 1, "a splash when the fruit goes in");
+  equal(splash[0].variables["variable.color"].red, 0.41, "grape-coloured drops");
+  __interact(player(r("grape")), overworld.getBlock(at(0)));
+  equal(prop(v, "level"), 2, "full");
+  __interact(player("minecraft:glass_bottle"), overworld.getBlock(at(0)));
+  equal(prop(v, "level"), 0, "poured out");
+  equal(prop(v, "juice"), 0, "no colour left");
+  equal(overworld.particles.filter((p) => p.id === r("splash")).length, 3, "a splash on the pour too");
+  equal(visuals("juicer_visual").length, 1, "still one entity");
+});
+
+test("juicer visual: breaking removes it; a random tick brings back a missing one and removes extras", () => {
+  const juicer = __place(overworld, at(0), r("juicer"), { [S("fruit")]: 1, [S("juice")]: "mango" });
+  equal(visuals("juicer_visual").length, 0, "an old-world juicer has none yet");
+  __randomTick(juicer);
+  equal(visuals("juicer_visual").length, 1, "random tick spawns it");
+  equal(prop(visuals("juicer_visual")[0], "juice"), 3, "and copies the block's state");
+  overworld.spawnEntity(r("juicer_visual"), { x: 0.5, y: 64, z: 0.5 });
+  __randomTick(overworld.getBlock(at(0)));
+  equal(visuals("juicer_visual").length, 1, "duplicate removed");
+  __break(player(), overworld.getBlock(at(0)));
+  equal(visuals("juicer_visual").length, 0, "gone with the block");
+});
+
+test("pickling jar visual: stage follows fill, seal, done and open", () => {
+  __placeByPlayer(overworld, at(0), r("pickling_jar"));
+  const v = visuals("pickling_jar_visual")[0];
+  equal(prop(v, "stage"), 0, "empty");
+  const p = player(r("napa_cabbage"), 2);
+  __interact(p, overworld.getBlock(at(0)));
+  __interact(p, overworld.getBlock(at(0)));
+  equal(prop(v, "stage"), 1, "fresh");
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(prop(v, "stage"), 2, "sealed: fermenting");
+  __skipTime(24000);
+  __randomTick(overworld.getBlock(at(0)));
+  equal(prop(v, "stage"), 3, "done");
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(prop(v, "stage"), 0, "opened");
+  __break(player(), overworld.getBlock(at(0)));
+  equal(visuals("pickling_jar_visual").length, 0, "gone with the block");
+});
+
+test("station visuals: the sweep removes entities left without their block", () => {
+  __placeByPlayer(overworld, at(0), r("pickling_jar"));
+  __placeByPlayer(overworld, at(3), r("juicer"));
+  overworld.getBlock(at(0)).setType("minecraft:air"); // blown up: no break event
+  __advance(5 * 20);
+  equal(visuals("pickling_jar_visual").length, 0, "orphan swept");
+  equal(visuals("juicer_visual").length, 1, "the juicer's stays");
+});
+
+test("station visuals: entity, client entity, model, animations and particles all line up", () => {
+  for (const name of ["juicer_visual", "pickling_jar_visual"]) {
+    const bp = JSON.parse(readFileSync(`packs/BP/entities/${name}.json`, "utf8"))["minecraft:entity"];
+    const rp = JSON.parse(readFileSync(`packs/RP/entity/${name}.entity.json`, "utf8"))["minecraft:client_entity"].description;
+    equal(rp.identifier, bp.description.identifier, `${name} ids`);
+    for (const [prop, def] of Object.entries(bp.description.properties)) assert(def.client_sync, `${prop} reaches the client`);
+    const geo = JSON.parse(readFileSync(`packs/RP/models/entity/${name}.geo.json`, "utf8"))["minecraft:geometry"][0];
+    equal(geo.description.identifier, rp.geometry.default, `${name} geometry`);
+    const bones = new Set(geo.bones.map((b) => b.name));
+    const anims = JSON.parse(readFileSync(`packs/RP/animations/${name}.animation.json`, "utf8")).animations;
+    for (const id of Object.values(rp.animations)) {
+      assert(anims[id], `${id} defined`);
+      for (const bone of Object.keys(anims[id].bones ?? {})) assert(bones.has(bone), `${id} moves ${bone}, which the model has`);
+      for (const fx of Object.values(anims[id].particle_effects ?? {})) {
+        assert(rp.particle_effects?.[fx.effect], `${fx.effect} named in the client entity`);
+        assert(geo.bones.some((b) => b.locators?.[fx.locator]), `locator ${fx.locator}`);
+      }
+    }
+    for (const fx of Object.values(rp.particle_effects ?? {})) assert(readdirSync("packs/RP/particles").includes(`${fx.split(":")[1]}.json`), `${fx} file`);
+  }
+  assert(readdirSync("packs/RP/particles").includes("splash.json"), "splash particle file");
+  const juicer = JSON.parse(readFileSync("packs/BP/blocks/juicer.json", "utf8"))["minecraft:block"].components;
+  equal(juicer["minecraft:movable"].movement_type, "immovable", "pistons cannot split block and entity");
 });
 
 test("pickling jar: fill, seal, wait a day, open", () => {

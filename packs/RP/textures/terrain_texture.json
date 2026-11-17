@@ -811,15 +811,6 @@
     "kh_station_juice_empty": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_empty"
     },
-    "kh_station_juice_orange": {
-      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_orange"
-    },
-    "kh_station_juice_grape": {
-      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_grape"
-    },
-    "kh_station_juice_mango": {
-      "textures": "textures/kaleidoscope_harvest/blocks/stations/juice_mango"
-    },
     "kh_station_contents_fresh": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_fresh"
     },

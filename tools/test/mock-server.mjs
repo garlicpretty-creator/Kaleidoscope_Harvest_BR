@@ -207,9 +207,33 @@ export class Block {
   }
 }
 
+// --- Entities (only what the stations' display entities use) --------------------------------
+
+export class Entity {
+  constructor(dimension, typeId, location) {
+    this.dimension = dimension;
+    this.typeId = typeId;
+    this.location = { ...location };
+    this.properties = {};
+    this.isValid = true;
+  }
+  setProperty(name, value) {
+    if (!this.isValid) throw new Error("mock: entity removed");
+    this.properties[name] = value;
+  }
+  getProperty(name) {
+    return this.properties[name];
+  }
+  remove() {
+    this.isValid = false;
+    this.dimension.entities = this.dimension.entities.filter((e) => e !== this);
+  }
+}
+
 class Dimension {
   constructor(id) {
     this.id = id;
+    this.entities = [];
     this.blocks = new Map();
     this.items = [];
     this.sounds = [];
@@ -230,6 +254,14 @@ class Dimension {
   }
   playSound(id, location) {
     this.sounds.push({ id, location });
+  }
+  spawnEntity(typeId, location) {
+    const entity = new Entity(this, typeId, location);
+    this.entities.push(entity);
+    return entity;
+  }
+  getEntities({ type, location, maxDistance } = {}) {
+    return this.entities.filter((e) => (!type || e.typeId === type) && (!location || Math.hypot(e.location.x - location.x, e.location.y - location.y, e.location.z - location.z) <= maxDistance));
   }
   spawnParticle(id, location, variables) {
     this.particles.push({ id, location, variables: variables?.values });
@@ -346,6 +378,15 @@ export const system = {
     scheduled.push({ at: currentTick + ticks, fn, handle });
     return handle;
   },
+  runInterval(fn, ticks = 1) {
+    const handle = ++lastHandle;
+    const again = () => {
+      fn();
+      scheduled.push({ at: currentTick + ticks, fn: again, handle });
+    };
+    scheduled.push({ at: currentTick + ticks, fn: again, handle });
+    return handle;
+  },
   clearRun(handle) {
     const i = scheduled.findIndex((t) => t.handle === handle);
     if (i >= 0) scheduled.splice(i, 1);
@@ -393,6 +434,13 @@ export function __place(dimension, location, typeId, states = {}) {
   return dimension.getBlock(location);
 }
 
+/** A player places a block: like __place, then onPlace runs. */
+export function __placeByPlayer(dimension, location, typeId, states = {}) {
+  const block = __place(dimension, location, typeId, states);
+  for (const component of customComponentsOf(block)) component.onPlace?.({ block, dimension });
+  return dimension.getBlock(location);
+}
+
 export function __randomTick(block) {
   for (const component of customComponentsOf(block)) component.onRandomTick?.({ block, dimension: block.dimension });
 }
@@ -413,6 +461,7 @@ export function __break(player, block) {
 export function __reset() {
   for (const dimension of Object.values(DIMENSIONS)) {
     dimension.blocks = new Map();
+    dimension.entities = [];
     dimension.items = [];
     dimension.sounds = [];
     dimension.particles = [];
