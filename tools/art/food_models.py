@@ -513,6 +513,230 @@ def teacup_painters(item):
     return {"cup": cup, "saucer": saucer, "tea": tea_top(TEAS[item]), "empty": empty_top}
 
 
+# ============================================================================================ 1.1 foods
+# Same shapes, new textures (docs/PROPOSAL_1.1.zh-TW.md「可放置」). The painters above stay as they were, so the 21
+# earlier textures do not change; the new foods get painters of their own where the old ones could not show them.
+def stew(broth, pieces, specks=(), cell=3, seed=40, glint=0.78):
+    """Broth seen from above, like soup(), with shaped pieces: on a cell x cell grid, each cell holds at most one
+    piece drawn by shape(ramp, lx, lz, a, b) (lx, lz inside the cell, a and b the cell's own random numbers;
+    None leaves broth). The pieces stay put as the broth drops; specks = [(colour, lo, hi)] of the broth's noise."""
+    B = R(broth, 0.8, 1.12)
+
+    @painter
+    def p(t):
+        x, z = wx(t), wz(t)
+        cx, cz = x // cell, z // cell
+        k, acc = noise(cx, cz, seed), 0.0
+        for shape, r, chance in pieces:
+            acc += chance
+            if k < acc:
+                c = shape(r, x % cell, z % cell, noise(cx, cz, seed + 1), noise(cx, cz, seed + 2))
+                if c is not None:
+                    return c
+                break
+        n = nz(t, seed + 3)
+        for colour, lo, hi in specks:
+            if lo <= n < hi:
+                return colour
+        return B[3] if n > glint else B[2]
+    p.shade_k = 0.5
+    return p
+
+
+def chunk(r, lx, lz, a, b):
+    """A 2 x 2 chunk somewhere in its cell: lit corner, shaded corner (as soup())."""
+    lx, lz = lx - int(a * 2), lz - int(b * 2)
+    if 0 <= lx < 2 and 0 <= lz < 2:
+        return r[4] if (lx, lz) == (0, 0) else (r[1] if (lx, lz) == (1, 1) else r[2])
+    return None
+
+
+def lotus_slice(hole):
+    """A lotus-root slice filling its 3 x 3 cell: a pale ring round a dark hole, one corner cut so it reads round."""
+    def s(r, lx, lz, a, b):
+        if (lx, lz) == (1, 1):
+            return hole
+        cut = [(0, 0), (2, 0), (0, 2), (2, 2)][int(a * 4)]
+        if (lx, lz) == cut:
+            return None
+        return r[4] if lx + lz <= 1 else (r[2] if lx + lz >= 3 else r[3])
+    return s
+
+
+def rib(bone):
+    """A spare rib across its 3 x 3 cell: a bar of meat with the bone end showing."""
+    def s(r, lx, lz, a, b):
+        along, across = (lx, lz) if a < 0.5 else (lz, lx)
+        if across != int(b * 3):
+            return None
+        return bone if along == (0 if b < 0.5 else 2) else (r[3] if along == 1 else r[1])
+    return s
+
+
+def bean(r, lx, lz, a, b):
+    """One bean per 2 x 2 cell, with a lit pixel and the shadow it sits in."""
+    ox, oz = int(a * 2), int(b * 2)
+    if (lx, lz) == (ox, oz):
+        return r[1]
+    other = (1 - ox, oz) if (a * 7) % 1 < 0.5 else (ox, 1 - oz)  # the bean lies across two pixels, either way
+    if (lx, lz) == other:
+        return r[4] if b > 0.5 else r[2]                         # one of them catching the light
+    return None
+
+
+def cube(r, lx, lz, a, b):
+    """A tofu cube: 2 x 2, lit edge towards the light, the cut edge in shadow."""
+    lx, lz = lx - int(a * 2), lz - int(b * 2)
+    if 0 <= lx < 2 and 0 <= lz < 2:
+        return r[4] if lz == 0 and lx == 0 else (r[2] if lz == 1 and lx == 1 else r[3])
+    return None
+
+
+def luffa_slice(r, lx, lz, a, b):
+    """A luffa round filling its 3 x 3 cell: dark green skin round soft pale flesh, the seedy heart a shade deeper."""
+    if (lx, lz) == (1, 1):
+        return r[2]
+    if lx != 1 and lz != 1:
+        return None if (lx, lz) == [(0, 0), (2, 0), (0, 2), (2, 2)][int(a * 4)] else r[1]
+    return r[4] if lx + lz <= 1 else r[3]
+
+
+def egg_ribbon(r, lx, lz, a, b):
+    """Egg drop: a thin curl of yellow and white across the cell."""
+    if (lx + (lz if a < 0.5 else 2 - lz)) == 2:
+        return r[4] if (lx + lz) % 2 else r[3]
+    return None
+
+
+POTS_1_1 = {  # item: (broth colour, the broth seen from above)
+    # 蓮藕排骨湯: clear amber broth, pale lotus slices with their holes, ribs with the bone end, oil beads
+    "lotus_root_rib_soup": ((214, 178, 112), dict(pieces=[
+        (lotus_slice((140, 104, 64)), R((244, 236, 214), 0.8, 1.05), 0.5),
+        (rib((242, 234, 214)), R((166, 96, 64), 0.7, 1.25), 0.45)],
+        specks=[((255, 230, 140), 0.92, 1.0)], seed=41)),
+    # 絲瓜湯: pale green broth with soft luffa rounds and egg drop
+    "luffa_soup": ((226, 220, 164), dict(pieces=[
+        (luffa_slice, R((160, 204, 112), 0.5, 1.32), 0.55),
+        (egg_ribbon, R((248, 214, 96), 0.8, 1.15), 0.35)],
+        specks=[((250, 246, 228), 0.93, 1.0)], seed=50)),
+    # 紅豆湯: red-brown soup full of glossy adzuki beans
+    "red_bean_soup": ((150, 62, 52), dict(pieces=[(bean, R((92, 22, 28), 0.7, 2.0), 0.85)],
+                                          specks=[((184, 96, 80), 0.92, 1.0)], cell=2, seed=43, glint=0.75)),
+    # 綠豆湯: olive-green soup, green beans and a few split yellow ones
+    "mung_bean_soup": ((180, 180, 112), dict(pieces=[(bean, R((80, 124, 48), 0.7, 1.45), 0.55),
+                                                     (bean, R((232, 214, 112), 0.8, 1.1), 0.14)],
+                                             specks=[((218, 214, 156), 0.92, 1.0)], cell=2, seed=50, glint=0.75)),
+    # 麻婆豆腐: red chili oil, white tofu cubes, minced beef, spring onion, Sichuan pepper
+    "mapo_tofu": ((176, 44, 26), dict(pieces=[(cube, R((250, 244, 226), 0.8, 1.03), 0.9)],
+                                      specks=[((236, 118, 46), 0.88, 1.0), ((104, 50, 32), 0.0, 0.13),
+                                              ((104, 168, 64), 0.13, 0.19), ((64, 30, 24), 0.19, 0.22)], seed=45, glint=0.8)),
+}
+
+
+def pot_1_1_painters(item):
+    c, kw = POTS_1_1[item]
+    return {"pot_out": pot_out, "pot_in": pot_in, "rim": rim, "handle": handle, "pot_floor": pot_floor,
+            "soup": stew(c, **kw), "broth": broth(c)}
+
+
+# 紅豆餅 (wheel cake): a round golden-brown top, the iron's darker ring round it, the seam where the two halves meet
+WHEEL = R((222, 162, 82), 0.62, 1.2)
+
+
+@painter
+def wheel_side(t):
+    if 1 <= t.y - 0.5 < 1.5:
+        return WHEEL[1]                                          # the seam between the two halves
+    if t.v == 0:
+        return WHEEL[3]
+    return WHEEL[2] if nz(t, 46) > 0.2 else WHEEL[1]
+
+
+@painter
+def wheel_top(t):
+    du, dv = (t.u + 0.5) - t.w / 2, (t.v + 0.5) - t.h / 2
+    d = math.hypot(du / (t.w / 2), dv / (t.h / 2))
+    if d > 1.05:
+        return WHEEL[0]                                          # outside the round: the crisp brown edge
+    if d > 0.72:
+        return WHEEL[2]                                          # the ring the iron browns
+    if (t.u, t.v) == (t.w // 2 - 1, t.h // 2 - 1):
+        return WHEEL[4]                                          # shine
+    return (132, 40, 40) if (t.u, t.v) == (t.w // 2, t.h // 2) else WHEEL[3]   # a touch of red bean showing
+
+
+# 綠豆糕: pale green, powdery, with a pressed flower from the mould
+MUNG = R((214, 224, 158), 0.7, 1.12)
+
+
+@painter
+def mung_side(t):
+    if t.v == 0:
+        return MUNG[4]
+    return MUNG[3] if nz(t, 47) > 0.85 else MUNG[2]
+
+
+@painter
+def mung_top(t):
+    u, v, w, h = t.u, t.v, t.w, t.h
+    if u in (0, w - 1) or v in (0, h - 1):
+        return MUNG[3]                                           # the mould's raised border
+    cu, cv = (w - 1) / 2, (h - 1) / 2
+    du, dv = abs(u - cu), abs(v - cv)
+    if du + dv <= 0.6:
+        return MUNG[0]                                           # the flower's heart, pressed deep
+    if (du < 0.6 and dv <= 1.6) or (dv < 0.6 and du <= 1.6):
+        return MUNG[1]                                           # four petals
+    return MUNG[4] if nz(t, 48) > 0.8 else MUNG[3]
+
+
+def cake_1_1_painters(item):
+    if item == "red_bean_cake":
+        return {"plate": plate, "cake_side": wheel_side, "cake_top": wheel_top}
+    return {"plate": plate, "cake_side": mung_side, "cake_top": mung_top}
+
+
+BOTTLES_1_1 = {
+    "loquat_juice": (248, 184, 82),        # 枇杷汁: apricot
+    "star_fruit_juice": (236, 222, 98),    # 楊桃汁: pale yellow
+    "papaya_milk": (255, 192, 120),        # 木瓜牛奶: creamy orange
+    "longan_wine": (226, 184, 110),        # 龍眼酒: pale amber
+}
+MARKS_1_1 = {"loquat_juice": (214, 120, 34), "star_fruit_juice": (150, 176, 56), "papaya_milk": (232, 108, 52)}
+
+
+def bottle_1_1_painters(item, wine):
+    c = BOTTLES_1_1[item]
+    fill_to, label = (5, (1.5, 4)) if wine else (6.5, (3, 5))
+    return {"body": bottle_body(c, R(MARKS_1_1.get(item, c)), fill_to, label, wine), "body_top": bottle_top(c, fill_to),
+            "empty": empty_glass, "empty_top": bottle_top(c, fill_to), "neck": neck, "neck_top": neck_top,
+            "cork": cork, "seal": seal}
+
+
+def tea_top_with(c, floats):
+    """tea_top() with something floating in the cup: floats = {(u, v): colour}."""
+    base = tea_top(c)
+
+    @painter
+    def p(t):
+        if (t.u, t.v) in floats and 0 < t.u < t.w - 1 and 0 < t.v < t.h - 1:
+            return floats[(t.u, t.v)]
+        return base(t)
+    p.shade = False
+    return p
+
+
+TEAS_1_1 = {
+    "lemongrass_tea": ((204, 206, 112), {(2, 2): (122, 172, 70)}),                        # a ring of lemongrass stalk
+    "longan_tea": ((182, 110, 50), {(2, 1): (176, 44, 38), (2, 2): (108, 58, 30)}),     # a red date and a dried longan
+}
+
+
+def teacup_1_1_painters(item):
+    c, floats = TEAS_1_1[item]
+    return {"cup": cup, "saucer": saucer, "tea": tea_top_with(c, floats), "empty": empty_top}
+
+
 # ============================================================================================ shapes and foods
 def variants(shape):
     """{geometry suffix: boxes} for every state the block can show."""
@@ -545,6 +769,12 @@ FOODS = {  # = packs/BP/scripts/data/placedFood.js (a test checks every item has
     "fruit_platter": ("platter", platter_painters),
     **{i: ("wine" if i.endswith("_wine") else "bottle", lambda i: bottle_painters(i, i.endswith("_wine"))) for i in BOTTLES},
     **{i: ("teacup", teacup_painters) for i in TEAS},
+    # 1.1
+    **{i: ("pot", pot_1_1_painters) for i in POTS_1_1},
+    "red_bean_cake": ("cakes", cake_1_1_painters),
+    "mung_bean_cake": ("cakes", cake_1_1_painters),
+    **{i: ("wine" if i.endswith("_wine") else "bottle", lambda i: bottle_1_1_painters(i, i.endswith("_wine"))) for i in BOTTLES_1_1},
+    **{i: ("teacup", teacup_1_1_painters) for i in TEAS_1_1},
 }
 
 
