@@ -8,6 +8,8 @@ import { trellisComponent } from "./trellis.js";
 import { hangingFruitComponent, leavesComponent, saplingComponent } from "./trees.js";
 import { juicerComponent } from "../stations/juicer.js";
 import { picklingJarComponent } from "../stations/picklingJar.js";
+import { startVisualSweep } from "../stations/visuals.js";
+import { JUICER, PICKLING_JAR } from "../data/stations.js";
 
 export const COMPONENTS = {
   [`${NAMESPACE}:crop`]: cropComponent,
@@ -23,4 +25,5 @@ export function registerComponents() {
   system.beforeEvents.startup.subscribe(({ blockComponentRegistry }) => {
     for (const [id, component] of Object.entries(COMPONENTS)) blockComponentRegistry.registerCustomComponent(id, component);
   });
+  startVisualSweep([JUICER, PICKLING_JAR]);
 }

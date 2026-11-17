@@ -1,0 +1,41 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:juicer_visual",
+      "materials": {
+        "default": "entity_alphablend"
+      },
+      "textures": {
+        "default": "textures/kaleidoscope_harvest/blocks/stations/juicer"
+      },
+      "geometry": {
+        "default": "geometry.kaleidoscope_harvest.juicer_visual"
+      },
+      "animations": {
+        "pose": "animation.kaleidoscope_harvest.juicer_visual.pose"
+      },
+      "scripts": {
+        "initialize": [
+          "v.shown = q.property('kaleidoscope_harvest:level');",
+          "v.spin = 0.0;",
+          "v.colour = q.property('kaleidoscope_harvest:juice');"
+        ],
+        "pre_animation": [
+          "v.level = q.property('kaleidoscope_harvest:level');",
+          "v.colour = q.property('kaleidoscope_harvest:juice') > 0 ? q.property('kaleidoscope_harvest:juice') : v.colour;",
+          "v.shown = v.shown + (v.level - v.shown) * math.min(1.0, q.delta_time * 2.5);",
+          "v.rising = math.clamp(v.level - v.shown, 0.0, 1.0);",
+          "v.spin = math.mod(v.spin + q.delta_time * 900.0 * v.rising, 360.0);"
+        ],
+        "animate": [
+          "pose"
+        ]
+      },
+      "render_controllers": [
+        "controller.render.kaleidoscope_harvest.juicer_visual"
+      ],
+      "enable_attachables": false
+    }
+  }
+}

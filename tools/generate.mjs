@@ -26,7 +26,7 @@ const { CROPS, TRELLIS, WILD_SOIL, cropBlockId, wildBlockId } = await load("crop
 const { TREES, TRUNKS, FRUITWOOD_LOG, BANANA_TRUNK, FRUIT_STAGES, saplingBlockId, leavesBlockId, fruitBlockId, wildSaplingFeature, saplingBiomes } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, recipeMaking } = await load("dishes.js");
-const { JUICER, PICKLING_JAR } = await load("stations.js");
+const { JUICER, PICKLING_JAR, VISUAL_PROPS, SPLASH_PARTICLE, BUBBLE_PARTICLE } = await load("stations.js");
 const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
 const { toSimplified } = await load("zh_cn.js");
 
@@ -647,7 +647,8 @@ for (const row of RECIPES) {
 // --- Juicer and pickling jar (models and textures from tools/art/station_models.py) -----------------------
 
 const stationTex = (name) => `textures/${NS}/blocks/stations/${name}`;
-for (const name of [JUICER.id, PICKLING_JAR.id, ...JUICER.colours.map((c) => `juice_${c}`), ...PICKLING_JAR.contents.slice(1).map((c) => `contents_${c}`)])
+// ## juice_empty is the jar's empty mouth; the juice itself is on the juicer's display entity.
+for (const name of [JUICER.id, PICKLING_JAR.id, "juice_empty", ...PICKLING_JAR.contents.slice(1).map((c) => `contents_${c}`)])
   terrain[`kh_station_${name}`] = { textures: stationTex(name) };
 
 function station(def, { states, materials, permutations, component, recipe, sound }) {
@@ -665,6 +666,8 @@ function station(def, { states, materials, permutations, component, recipe, soun
       "minecraft:destructible_by_mining": { seconds_to_destroy: 1 },
       "minecraft:light_dampening": 0,
       "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"] }] },
+      // ## A piston would leave the display entity behind (設計：station-animations).
+      "minecraft:movable": { movement_type: "immovable" },
       [`${NS}:${def.id}`]: {},
     },
     permutations,
@@ -679,13 +682,9 @@ function station(def, { states, materials, permutations, component, recipe, soun
 const opaque = (name) => ({ texture: `kh_station_${name}`, render_method: "alpha_test" });
 station(JUICER, {
   states: { [state("fruit")]: intRange(JUICER.capacity), [state("juice")]: JUICER.colours },
-  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" }, juice: { texture: "kh_station_juice_empty", render_method: "blend" } },
-  permutations: JUICER.colours.slice(1).map((colour) => ({
-    condition: `${S("juice")} == '${colour}'`,
-    components: {
-      "minecraft:material_instances": { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" }, juice: { texture: `kh_station_juice_${colour}`, render_method: "blend" } },
-    },
-  })),
+  // ## The juice is drawn by the display entity (it rises and drains), so the block has no juice permutations.
+  materials: { "*": opaque(JUICER.id), glass: { texture: `kh_station_${JUICER.id}`, render_method: "blend" } },
+  permutations: [],
   recipe: { pattern: [" I ", "GGG", "PPP"], key: { I: { item: "minecraft:iron_ingot" }, G: { item: "minecraft:glass" }, P: { item: "minecraft:oak_planks" } }, unlock: [{ item: "minecraft:glass" }] },
   sound: "glass",
 });
@@ -698,6 +697,170 @@ station(PICKLING_JAR, {
   })),
   recipe: { pattern: ["P", "C", "C"], key: { P: { item: "minecraft:oak_planks" }, C: { item: "minecraft:clay_ball" } }, unlock: [{ item: "minecraft:clay_ball" }] },
   sound: "stone",
+});
+
+// --- Station display entities: the moving parts (docs/superpowers/specs/2026-11-17-station-animations-design.md) ---
+//
+// BP entities/, RP entity/, animations/, render_controllers/, particles/ hold only these, so they are rewritten
+// each run. Models: RP/models/entity from tools/art/station_models.py. The scripts only set the properties;
+// every motion is eased on the client from them. Eased values start at the property in `initialize` (as
+// Cookery's millstone does), so walking up to a full juicer does not replay the fill. ## q.life_time stays 0
+// on these entities (found in game), so timed motions run on their own clock, v.clock.
+
+for (const dir of [join(BP, "entities"), join(RP, "entity"), join(RP, "animations"), join(RP, "render_controllers"), join(RP, "particles")]) wipe(dir);
+const P = (name) => `q.property('${rid(VISUAL_PROPS[name])}')`;
+const stationAtlas = `textures/${NS}/blocks/stations/${JUICER.id}`;
+
+function visualEntity(def, props, client) {
+  const id = rid(def.visual);
+  names[`entity.${id}.name`] = [def.zh, def.en];
+  writeJson(join(BP, "entities", `${def.visual}.json`), {
+    format_version: "1.21.0",
+    "minecraft:entity": {
+      description: {
+        identifier: id,
+        is_spawnable: false,
+        is_summonable: true,
+        is_experimental: false,
+        properties: Object.fromEntries(Object.entries(props).map(([name, max]) => [rid(VISUAL_PROPS[name]), { type: "int", range: [0, max], default: 0, client_sync: true }])),
+      },
+      components: {
+        "minecraft:type_family": { family: [`${NS}_visual`, "inanimate"] },
+        "minecraft:collision_box": { width: 0, height: 0 },
+        // ## No hitbox: clicks and hits go through to the station block.
+        "minecraft:custom_hit_test": { hitboxes: [{ width: 0, height: 0, pivot: [0, 0, 0] }] },
+        "minecraft:health": { value: 1, max: 1 },
+        "minecraft:damage_sensor": { triggers: [{ cause: "all", deals_damage: "no" }] },
+        "minecraft:physics": { has_gravity: false, has_collision: false },
+        "minecraft:pushable": { is_pushable: false, is_pushable_by_piston: false },
+        "minecraft:persistent": {},
+      },
+    },
+  });
+  const controller = `controller.render.${NS}.${def.visual}`;
+  writeJson(join(RP, "render_controllers", `${def.visual}.render_controllers.json`), {
+    format_version: "1.8.0",
+    render_controllers: {
+      [controller]: {
+        geometry: "Geometry.default",
+        materials: [{ "*": "Material.default" }],
+        textures: ["Texture.default"],
+        ...(client.parts ? { part_visibility: client.parts } : {}),
+      },
+    },
+  });
+  const animations = Object.fromEntries(Object.keys(client.animations).map((name) => [name, `animation.${NS}.${def.visual}.${name}`]));
+  writeJson(join(RP, "animations", `${def.visual}.animation.json`), {
+    format_version: "1.8.0",
+    animations: Object.fromEntries(Object.entries(client.animations).map(([name, body]) => [animations[name], body])),
+  });
+  writeJson(join(RP, "entity", `${def.visual}.entity.json`), {
+    format_version: "1.10.0",
+    "minecraft:client_entity": {
+      description: {
+        identifier: id,
+        materials: { default: "entity_alphablend" },
+        textures: { default: stationAtlas },
+        geometry: { default: `geometry.${NS}.${def.visual}` },
+        ...(client.particles ? { particle_effects: client.particles } : {}),
+        animations,
+        scripts: { initialize: client.initialize, pre_animation: client.pre, animate: client.animate },
+        render_controllers: [controller],
+        enable_attachables: false,
+      },
+    },
+  });
+}
+
+// Juicer: the juice rises and drains (eased to the fruit count); while it rises the reamer spins and presses down.
+// v.colour keeps the last juice colour, so a pour drains in its own colour instead of vanishing.
+visualEntity(JUICER, { level: JUICER.capacity, juice: JUICER.colours.length - 1 }, {
+  initialize: [`v.shown = ${P("level")};`, "v.spin = 0.0;", `v.colour = ${P("juice")};`],
+  pre: [
+    `v.level = ${P("level")};`,
+    `v.colour = ${P("juice")} > 0 ? ${P("juice")} : v.colour;`,
+    "v.shown = v.shown + (v.level - v.shown) * math.min(1.0, q.delta_time * 2.5);",
+    "v.rising = math.clamp(v.level - v.shown, 0.0, 1.0);",
+    "v.spin = math.mod(v.spin + q.delta_time * 900.0 * v.rising, 360.0);",
+  ],
+  animate: ["pose"],
+  animations: {
+    pose: {
+      loop: true,
+      bones: {
+        reamer: { rotation: [0, "v.spin", 0], position: [0, "-1.5 * v.rising", 0] },
+        ...Object.fromEntries(JUICER.colours.slice(1).map((c) => [`juice_${c}`, { scale: [1, `math.max(v.shown / ${JUICER.capacity}, 0.0)`, 1] }])),
+      },
+    },
+  },
+  parts: JUICER.colours.slice(1).map((c, i) => ({ [`juice_${c}`]: `v.colour == ${i + 1} && v.shown > 0.02` })),
+});
+
+// Pickling jar: the lid leans back on the rim while open and swings shut when sealed; while fermenting it
+// rattles briefly every few seconds and the water seal bubbles; when done it hops every three seconds.
+const STAGE = Object.fromEntries(PICKLING_JAR.contents.map((c, i) => [c, i]));
+visualEntity(PICKLING_JAR, { stage: PICKLING_JAR.contents.length - 1 }, {
+  initialize: [`v.seal = ${P("stage")} >= ${STAGE.fermenting} ? 1.0 : 0.0;`, "v.clock = 0.0;"],
+  pre: [
+    `v.stage = ${P("stage")};`,
+    "v.clock = math.mod(v.clock + q.delta_time, 900.0);",
+    `v.target = v.stage >= ${STAGE.fermenting} ? 1.0 : 0.0;`,
+    "v.seal = v.seal + (v.target - v.seal) * math.min(1.0, q.delta_time * 6.0);",
+    `v.rattle = (v.stage == ${STAGE.fermenting} && math.mod(v.clock, 4.5) < 0.45) ? math.sin(v.clock * 1500.0) * 3.0 : 0.0;`,
+    `v.hop = (v.stage == ${STAGE.done} && math.mod(v.clock, 3.0) < 0.35) ? math.sin(math.mod(v.clock, 3.0) / 0.35 * 180.0) * 1.5 : 0.0;`,
+  ],
+  animate: ["pose", { bubbles: `v.stage == ${STAGE.fermenting}` }],
+  particles: { bubble: rid(BUBBLE_PARTICLE) },
+  animations: {
+    pose: {
+      loop: true,
+      bones: {
+        lid: {
+          rotation: ["35.0 * (1.0 - v.seal) + v.rattle", 0, "v.rattle * 0.6"],
+          position: [0, "(1.0 - v.seal) * 1.0 + v.hop", "(1.0 - v.seal) * 3.5"],
+        },
+      },
+    },
+    bubbles: {
+      loop: true,
+      animation_length: 1.6,
+      particle_effects: { "0.0": { effect: "bubble", locator: "moat" }, "0.9": { effect: "bubble", locator: "moat" } },
+    },
+  },
+});
+
+// Particles, on the vanilla particle sheet (its round bubble frame at 0,16).
+const sheet = { texture_width: 128, texture_height: 128, uv: [0, 16], uv_size: [8, 8] };
+function particle(name, components) {
+  writeJson(join(RP, "particles", `${name}.json`), {
+    format_version: "1.10.0",
+    particle_effect: { description: { identifier: rid(name), basic_render_parameters: { material: "particles_alpha", texture: "textures/particle/particles" } }, components },
+  });
+}
+// Juice drops thrown up from the jug mouth and falling back; colour from variable.color (the script's MolangVariableMap).
+particle(SPLASH_PARTICLE, {
+  "minecraft:emitter_rate_instant": { num_particles: 12 },
+  "minecraft:emitter_lifetime_once": { active_time: 0.1 },
+  "minecraft:emitter_shape_point": { direction: ["math.random(-0.5, 0.5)", 1, "math.random(-0.5, 0.5)"] },
+  "minecraft:particle_lifetime_expression": { max_lifetime: "math.random(0.45, 0.75)" },
+  "minecraft:particle_initial_speed": "math.random(1.6, 2.4)",
+  "minecraft:particle_motion_dynamic": { linear_acceleration: [0, -12, 0] },
+  "minecraft:particle_motion_collision": { collision_radius: 0.03, expire_on_contact: true },
+  "minecraft:particle_appearance_billboard": { size: ["0.07 + variable.particle_random_1 * 0.04", "0.07 + variable.particle_random_1 * 0.04"], facing_camera_mode: "rotate_xyz", uv: sheet },
+  "minecraft:particle_appearance_tinting": { color: ["variable.color.r", "variable.color.g", "variable.color.b", 1] },
+  "minecraft:particle_appearance_lighting": {},
+});
+// Small bubbles rising out of the water seal round the jar's neck.
+particle(BUBBLE_PARTICLE, {
+  "minecraft:emitter_rate_instant": { num_particles: "math.random_integer(2, 4)" },
+  "minecraft:emitter_lifetime_once": { active_time: 0.1 },
+  "minecraft:emitter_shape_disc": { radius: 0.29, surface_only: true, direction: [0, 1, 0] },
+  "minecraft:particle_lifetime_expression": { max_lifetime: "math.random(0.5, 0.9)" },
+  "minecraft:particle_initial_speed": 0.12,
+  "minecraft:particle_motion_dynamic": { linear_acceleration: [0, 0.25, 0], linear_drag_coefficient: 2 },
+  "minecraft:particle_appearance_billboard": { size: ["0.05 + variable.particle_random_1 * 0.03", "0.05 + variable.particle_random_1 * 0.03"], facing_camera_mode: "rotate_xyz", uv: sheet },
+  "minecraft:particle_appearance_tinting": { color: [0.88, 0.92, 0.8, 0.85] },
+  "minecraft:particle_appearance_lighting": {},
 });
 
 // --- Village house chests: vanilla tables plus one Harvest pool (data/village.js) --------------------

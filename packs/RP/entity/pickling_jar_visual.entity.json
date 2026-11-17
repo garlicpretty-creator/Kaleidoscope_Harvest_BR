@@ -1,0 +1,48 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:pickling_jar_visual",
+      "materials": {
+        "default": "entity_alphablend"
+      },
+      "textures": {
+        "default": "textures/kaleidoscope_harvest/blocks/stations/juicer"
+      },
+      "geometry": {
+        "default": "geometry.kaleidoscope_harvest.pickling_jar_visual"
+      },
+      "particle_effects": {
+        "bubble": "kaleidoscope_harvest:jar_bubble"
+      },
+      "animations": {
+        "pose": "animation.kaleidoscope_harvest.pickling_jar_visual.pose",
+        "bubbles": "animation.kaleidoscope_harvest.pickling_jar_visual.bubbles"
+      },
+      "scripts": {
+        "initialize": [
+          "v.seal = q.property('kaleidoscope_harvest:stage') >= 2 ? 1.0 : 0.0;",
+          "v.clock = 0.0;"
+        ],
+        "pre_animation": [
+          "v.stage = q.property('kaleidoscope_harvest:stage');",
+          "v.clock = math.mod(v.clock + q.delta_time, 900.0);",
+          "v.target = v.stage >= 2 ? 1.0 : 0.0;",
+          "v.seal = v.seal + (v.target - v.seal) * math.min(1.0, q.delta_time * 6.0);",
+          "v.rattle = (v.stage == 2 && math.mod(v.clock, 4.5) < 0.45) ? math.sin(v.clock * 1500.0) * 3.0 : 0.0;",
+          "v.hop = (v.stage == 3 && math.mod(v.clock, 3.0) < 0.35) ? math.sin(math.mod(v.clock, 3.0) / 0.35 * 180.0) * 1.5 : 0.0;"
+        ],
+        "animate": [
+          "pose",
+          {
+            "bubbles": "v.stage == 2"
+          }
+        ]
+      },
+      "render_controllers": [
+        "controller.render.kaleidoscope_harvest.pickling_jar_visual"
+      ],
+      "enable_attachables": false
+    }
+  }
+}

@@ -3,6 +3,8 @@ pack.name=Kaleidoscope Harvest
 pack.description=An unofficial Kaleidoscope expansion: new vegetables, spices, fruit and fruit trees for Cookery. Requires Kaleidoscope Cookery.
 
 ## generated from packs/BP/scripts/data — do not edit by hand
+entity.kaleidoscope_harvest:juicer_visual.name=Juicer
+entity.kaleidoscope_harvest:pickling_jar_visual.name=Pickling Jar
 item.kaleidoscope_harvest:banana.name=Banana
 item.kaleidoscope_harvest:banana_pancake.name=Banana Pancake
 item.kaleidoscope_harvest:black_pepper_seedling.name=Black Pepper Seedling

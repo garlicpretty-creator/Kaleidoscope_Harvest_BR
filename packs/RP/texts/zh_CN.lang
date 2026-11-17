@@ -3,6 +3,8 @@ pack.name=森罗物语：丰收
 pack.description=非官方的森罗物语扩充：为厨房加入新的蔬菜、香料、水果与果树。需要《森罗物语：厨房》。
 
 ## generated from packs/BP/scripts/data — do not edit by hand
+entity.kaleidoscope_harvest:juicer_visual.name=榨汁机
+entity.kaleidoscope_harvest:pickling_jar_visual.name=腌渍缸
 item.kaleidoscope_harvest:banana.name=香蕉
 item.kaleidoscope_harvest:banana_pancake.name=香蕉煎饼
 item.kaleidoscope_harvest:black_pepper_seedling.name=黑胡椒藤苗

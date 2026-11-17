@@ -1,0 +1,43 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.kaleidoscope_harvest.juicer_visual.pose": {
+      "loop": true,
+      "bones": {
+        "reamer": {
+          "rotation": [
+            0,
+            "v.spin",
+            0
+          ],
+          "position": [
+            0,
+            "-1.5 * v.rising",
+            0
+          ]
+        },
+        "juice_orange": {
+          "scale": [
+            1,
+            "math.max(v.shown / 2, 0.0)",
+            1
+          ]
+        },
+        "juice_grape": {
+          "scale": [
+            1,
+            "math.max(v.shown / 2, 0.0)",
+            1
+          ]
+        },
+        "juice_mango": {
+          "scale": [
+            1,
+            "math.max(v.shown / 2, 0.0)",
+            1
+          ]
+        }
+      }
+    }
+  }
+}

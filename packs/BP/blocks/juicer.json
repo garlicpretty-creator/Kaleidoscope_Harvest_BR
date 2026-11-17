@@ -33,10 +33,6 @@
         "glass": {
           "texture": "kh_station_juicer",
           "render_method": "blend"
-        },
-        "juice": {
-          "texture": "kh_station_juice_empty",
-          "render_method": "blend"
         }
       },
       "minecraft:collision_box": {
@@ -76,66 +72,11 @@
           }
         ]
       },
+      "minecraft:movable": {
+        "movement_type": "immovable"
+      },
       "kaleidoscope_harvest:juicer": {}
     },
-    "permutations": [
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'orange'",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_station_juicer",
-              "render_method": "alpha_test"
-            },
-            "glass": {
-              "texture": "kh_station_juicer",
-              "render_method": "blend"
-            },
-            "juice": {
-              "texture": "kh_station_juice_orange",
-              "render_method": "blend"
-            }
-          }
-        }
-      },
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'grape'",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_station_juicer",
-              "render_method": "alpha_test"
-            },
-            "glass": {
-              "texture": "kh_station_juicer",
-              "render_method": "blend"
-            },
-            "juice": {
-              "texture": "kh_station_juice_grape",
-              "render_method": "blend"
-            }
-          }
-        }
-      },
-      {
-        "condition": "q.block_state('kaleidoscope_harvest:juice') == 'mango'",
-        "components": {
-          "minecraft:material_instances": {
-            "*": {
-              "texture": "kh_station_juicer",
-              "render_method": "alpha_test"
-            },
-            "glass": {
-              "texture": "kh_station_juicer",
-              "render_method": "blend"
-            },
-            "juice": {
-              "texture": "kh_station_juice_mango",
-              "render_method": "blend"
-            }
-          }
-        }
-      }
-    ]
+    "permutations": []
   }
 }
