@@ -79,3 +79,22 @@ export const TAVERN_WINES = [
   },
 ];
 export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, carrier: "minecraft:glass_bottle", unitTime: 4800 };
+
+// --- 漁歌 Fishing Voyage: baits (kaleidoscope_fishing:register_bait) -------------------------
+//
+// biteFactor: the wait for a bite is multiplied by it, 0.5–1 (Fishing docs/API.md); Fishing's
+// own best bait is 0.5 and Ranching's offal baits 0.75–0.85. Corn kernels are the classic
+// carp bait, so they are the best of Harvest's; soybeans come next.
+export const FISHING_BAITS = [
+  { id: "corn_seeds", biteFactor: 0.7, why: "玉米粒是釣鯉魚的老餌" },
+  { id: "soybean", biteFactor: 0.8, why: "泡過的黃豆也是常見的底餌" },
+];
+
+// --- 漁歌 Fishing Voyage: fish-pond feed (kaleidoscope_fishing:register_pond_feed) ------------
+//
+// meals: how many feedings one item gives, 1–4 (Fishing's fish meal 4, small dried fish 1).
+export const FISHING_POND_FEEDS = [
+  // ## Okara's only other use is Ranching's trough; fish farms feed it too.
+  { id: "okara", meals: 2, why: "豆渣是魚塭常用的飼料，蛋白質高" },
+  { id: "corn_seeds", meals: 1, why: "玉米粒，一把一餐" },
+];

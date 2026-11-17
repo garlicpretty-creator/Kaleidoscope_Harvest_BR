@@ -32,6 +32,9 @@ __advance(2); // startup: api_ping and guidebook_ping go out
 /** Every script event sent while the packs started. */
 const STARTUP = system.sentEvents.map((e) => e.id);
 const PINGED = ["kaleidoscope_cookery:api_ping", "kaleidoscope_cookery:guidebook_ping"].every((id) => system.sentEvents.some((e) => e.id === id));
+// ## Harvest's own api_ready goes out by itself a little later (api/harvestApi.js ANNOUNCE_TICKS).
+__advance(20);
+const ANNOUNCED = system.sentEvents.filter((e) => e.id === "kaleidoscope_harvest:api_ready").map((e) => JSON.parse(e.message));
 const { setRandom } = await import("../../packs/BP/scripts/utils/blocks.js");
 const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
 const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
@@ -1151,6 +1154,92 @@ test("Tavern: the SDK waits for the required capabilities, then sends the payloa
   __advance(300);
   equal(sent("kaleidoscope_tavern:extension_begin").length, 0, "no resend after the ack");
   equal(world.messages.length, 0, "no chat text");
+});
+
+// --- Sister packs: Fishing Voyage, and Harvest's own API ---------------------------------------------------
+
+const { fishingMessages, __resetFishing } = await import("../../packs/BP/scripts/api/fishing.js");
+const { EVENTS: HARVEST_EVENTS, CATALOGS, catalogReplies, handleHarvestEvent, ANNOUNCE_TICKS } = await import("../../packs/BP/scripts/api/harvestApi.js");
+const { FISHING_BAITS, FISHING_POND_FEEDS } = await import("../../packs/BP/scripts/data/integrations.js");
+const { VERSION } = await import("../../packs/BP/scripts/data/version.js");
+
+test("startup pings Fishing and announces Harvest's own api_ready once, after the sister packs subscribe", () => {
+  assert(STARTUP.includes("kaleidoscope_fishing:api_ping"), "Fishing pinged at startup");
+  for (const id of ["kaleidoscope_fishing:register_bait", "kaleidoscope_fishing:register_pond_feed"]) assert(!STARTUP.includes(id), `${id} waits for api_ready`);
+  assert(!STARTUP.includes(HARVEST_EVENTS.ready), "no api_ready on the first ticks");
+  assert(ANNOUNCE_TICKS <= 22, "announced within the startup ticks the test waits for");
+  const ready = ANNOUNCED;
+  equal(ready.length, 1, "one api_ready by itself");
+  equal(ready[0].api, 1, "api");
+  equal(ready[0].source, NS, "source");
+  equal(ready[0].version, VERSION, "version from data/version.js");
+  assert(ready[0].capabilities.includes("catalog"), "catalog capability");
+});
+
+test("Fishing: bait needs `bait`, pond feed needs `pond_feed`, and every api_ready sends them again", () => {
+  __resetFishing();
+  system.sentEvents = [];
+  fire("kaleidoscope_fishing:api_ready", { api: 2, capabilities: ["bait", "pond_feed"] });
+  fire("kaleidoscope_fishing:api_ready", "{broken");
+  equal(sent("kaleidoscope_fishing:register_bait").length + sent("kaleidoscope_fishing:register_pond_feed").length, 0, "nothing for api 2 or broken JSON");
+  fire("kaleidoscope_fishing:api_ready", { api: 1, version: "1.4.0", capabilities: ["bait", "catch"] });
+  equal(sent("kaleidoscope_fishing:register_bait").length, 1, "1.4.0: bait");
+  equal(sent("kaleidoscope_fishing:register_pond_feed").length, 0, "1.4.0 has no pond feed");
+  fire("kaleidoscope_fishing:api_ready", { api: 1, version: "1.5.0", capabilities: ["bait", "catch", "pond_feed"] });
+  equal(sent("kaleidoscope_fishing:register_bait").length, 2, "bait sent again");
+  const [feed] = sentJson("kaleidoscope_fishing:register_pond_feed");
+  equal(feed.source, NS, "source");
+  equal(feed.feeds.map((f) => f.id).join(), FISHING_POND_FEEDS.map((f) => r(f.id)).join(), "the pond feeds");
+  const [bait] = sentJson("kaleidoscope_fishing:register_bait");
+  equal(bait.api, 1, "api");
+  equal(bait.baits.map((b) => b.id).join(), FISHING_BAITS.map((b) => r(b.id)).join(), "the baits");
+  for (const b of bait.baits) assert(b.id.startsWith(`${NS}:`) && b.biteFactor >= 0.5 && b.biteFactor <= 1, `${b.id} own and in range`);
+  for (const e of [...sent("kaleidoscope_fishing:register_bait"), ...sent("kaleidoscope_fishing:register_pond_feed")]) assert(e.message.length < SCRIPT_EVENT_LIMIT, "under 2048 characters");
+  equal(fishingMessages(null).length, 0, "nothing before api_ready");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("Harvest API: api_ping is answered with api_ready", () => {
+  system.sentEvents = [];
+  fire(HARVEST_EVENTS.ping, "kaleidoscope_fishing");
+  const [ready] = sentJson(HARVEST_EVENTS.ready);
+  equal(ready?.source, NS, "answered");
+  system.sentEvents = [];
+  fire(HARVEST_EVENTS.ping, "x", "Entity");
+  equal(sent(HARVEST_EVENTS.ready).length, 0, "a /scriptevent typed by a player is ignored");
+});
+
+test("Harvest API: catalog lists every crop and tree with full ids, split under 2048 characters", () => {
+  for (const kind of ["crops", "trees"]) {
+    const replies = handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", req: 7, kind }));
+    assert(replies.length >= 1, `${kind}: answered`);
+    for (const [index, reply] of replies.entries()) {
+      equal(reply.to, "my_pack", "to");
+      equal(reply.req, 7, "req echoed as a number");
+      equal(reply.index, index, "index");
+      equal(reply.parts, replies.length, "parts");
+      assert(JSON.stringify(reply).length < SCRIPT_EVENT_LIMIT, `${kind} part ${index} under 2048`);
+    }
+    const items = replies.flatMap((reply) => reply.items);
+    equal(items.length, CATALOGS[kind]().length, `${kind}: nothing lost between parts`);
+    for (const row of items) assert(row.id.startsWith(`${NS}:`) && ITEMS.some((i) => r(i.id) === row.id), `${row.id} is a Harvest item`);
+  }
+  equal(handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", req: "x".repeat(40), kind: "crops" }))[0].req.length, 32, "a long req is cut to 32");
+  const crops = catalogReplies("my_pack", undefined, "crops").flatMap((reply) => reply.items);
+  equal(crops.length, CROPS.length, "one row per crop");
+  assert(crops.every((c) => c.seed && c.form && c.climate), "seed, form and climate");
+  const trees = catalogReplies("my_pack", undefined, "trees").flatMap((reply) => reply.items);
+  equal(trees.length, TREES.length, "one row per tree");
+  assert(trees.find((t) => t.id === r("cinnamon_bark"))?.bark, "cinnamon is bark");
+});
+
+test("Harvest API: bad catalog requests get no answer; an unknown kind lists the kinds", () => {
+  for (const raw of ["{broken", JSON.stringify({ api: 2, source: "my_pack", kind: "crops" }), JSON.stringify({ api: 1, source: "Bad Pack", kind: "crops" }), JSON.stringify({ api: 1, source: NS, kind: "crops" }), JSON.stringify({ api: 1, kind: "crops" })])
+    equal(handleHarvestEvent(HARVEST_EVENTS.catalogRequest, raw).length, 0, `no answer to ${raw}`);
+  const [reply] = handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", kind: "dishes" }));
+  equal(reply.ok, false, "not ok");
+  equal(reply.code, "UNKNOWN_KIND", "code");
+  equal(reply.kinds.join(), "crops,trees", "kinds");
 });
 
 // --- Report ------------------------------------------------------------------------------------------------------
