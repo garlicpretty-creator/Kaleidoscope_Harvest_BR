@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "fermented_tofu",
+    "normal": "fermented_tofu_normal",
+    "metalness_emissive_roughness": "fermented_tofu_mer"
+  }
+}

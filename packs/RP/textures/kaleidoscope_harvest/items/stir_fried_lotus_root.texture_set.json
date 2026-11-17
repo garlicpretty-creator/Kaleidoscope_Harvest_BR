@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "stir_fried_lotus_root",
+    "normal": "stir_fried_lotus_root_normal",
+    "metalness_emissive_roughness": "stir_fried_lotus_root_mer"
+  }
+}

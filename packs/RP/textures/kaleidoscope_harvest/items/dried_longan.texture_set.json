@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "dried_longan",
+    "normal": "dried_longan_normal",
+    "metalness_emissive_roughness": "dried_longan_mer"
+  }
+}

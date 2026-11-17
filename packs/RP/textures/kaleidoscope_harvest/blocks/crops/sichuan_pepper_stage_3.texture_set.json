@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "sichuan_pepper_stage_3",
+    "normal": "sichuan_pepper_stage_3_normal",
+    "metalness_emissive_roughness": "sichuan_pepper_stage_3_mer"
+  }
+}

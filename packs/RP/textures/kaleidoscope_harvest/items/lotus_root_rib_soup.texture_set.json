@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lotus_root_rib_soup",
+    "normal": "lotus_root_rib_soup_normal",
+    "metalness_emissive_roughness": "lotus_root_rib_soup_mer"
+  }
+}

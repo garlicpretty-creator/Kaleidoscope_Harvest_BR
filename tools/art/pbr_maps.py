@@ -34,7 +34,7 @@ PAINTED = {"bamboo_trellis"}
 
 # name pattern -> (metalness, roughness, relief). First match wins; relief scales the normal map.
 MATERIALS = [
-    (r"juice|wine|bottle|jam|jelly|syrup|honey|sauce|oil|glass", (0, 96, 0.7)),     # glass and what shines through it
+    (r"juice|wine|bottle|jam|jelly|syrup|honey|sauce|oil|glass|(papaya|banana)_milk", (0, 96, 0.7)),  # glass and what shines through it
     (r"tea|cup|bowl|plate|platter|jar|pot|soup|stew|chowder|contents", (0, 132, 0.8)),  # glazed ware, wet food
     (r"juicer|knife|blade|iron|steel", (170, 120, 0.9)),                           # metal parts
     (r"", (0, 205, 1.0)),                                                          # food, plants, wood: matt

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "mung_bean_flour",
+    "normal": "mung_bean_flour_normal",
+    "metalness_emissive_roughness": "mung_bean_flour_mer"
+  }
+}

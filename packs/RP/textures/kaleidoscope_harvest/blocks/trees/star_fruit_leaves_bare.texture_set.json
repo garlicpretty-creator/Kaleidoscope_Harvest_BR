@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "star_fruit_leaves_bare",
+    "normal": "star_fruit_leaves_bare_normal",
+    "metalness_emissive_roughness": "star_fruit_leaves_bare_mer"
+  }
+}

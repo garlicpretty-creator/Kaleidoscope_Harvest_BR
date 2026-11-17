@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "longan_wine",
+    "normal": "longan_wine_normal",
+    "metalness_emissive_roughness": "longan_wine_mer"
+  }
+}

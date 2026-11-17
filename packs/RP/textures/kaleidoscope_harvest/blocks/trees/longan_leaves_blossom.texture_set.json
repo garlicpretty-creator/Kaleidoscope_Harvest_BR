@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "longan_leaves_blossom",
+    "normal": "longan_leaves_blossom_normal",
+    "metalness_emissive_roughness": "longan_leaves_blossom_mer"
+  }
+}

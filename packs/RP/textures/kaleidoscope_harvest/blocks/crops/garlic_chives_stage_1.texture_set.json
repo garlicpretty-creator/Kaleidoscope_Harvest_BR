@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "garlic_chives_stage_1",
+    "normal": "garlic_chives_stage_1_normal",
+    "metalness_emissive_roughness": "garlic_chives_stage_1_mer"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "adzuki_bean_stage_0_grey",
+    "normal": "adzuki_bean_stage_0_grey_normal",
+    "metalness_emissive_roughness": "adzuki_bean_stage_0_grey_mer"
+  }
+}

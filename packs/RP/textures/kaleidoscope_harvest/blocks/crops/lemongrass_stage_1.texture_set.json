@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lemongrass_stage_1",
+    "normal": "lemongrass_stage_1_normal",
+    "metalness_emissive_roughness": "lemongrass_stage_1_mer"
+  }
+}

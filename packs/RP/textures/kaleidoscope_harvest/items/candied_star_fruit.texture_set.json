@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "candied_star_fruit",
+    "normal": "candied_star_fruit_normal",
+    "metalness_emissive_roughness": "candied_star_fruit_mer"
+  }
+}

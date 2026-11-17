@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "ground_sichuan_pepper",
+    "normal": "ground_sichuan_pepper_normal",
+    "metalness_emissive_roughness": "ground_sichuan_pepper_mer"
+  }
+}

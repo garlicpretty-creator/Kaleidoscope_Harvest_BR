@@ -640,6 +640,274 @@
     "onion_seeds": {
       "zh": "洋蔥種子",
       "code": "tools/art/seed_icons.py"
+    },
+    "lotus_root": {
+      "zh": "蓮藕",
+      "prompt": "two segments of lotus root joined end to end lying diagonally, long pale tan sausage shapes with a darker brown joint, one cut end showing white flesh with dark holes"
+    },
+    "lotus_pod": {
+      "zh": "蓮蓬",
+      "prompt": "dried lotus seed pod shaped like a shower head, wide flat top face with round seeds set in holes, narrowing to a stem below, green and brown"
+    },
+    "water_bamboo": {
+      "zh": "茭白筍",
+      "prompt": "two thick water bamboo shoots side by side, plump ivory white corn cob shaped stems with green husk leaves peeled back at the base"
+    },
+    "water_spinach": {
+      "zh": "空心菜",
+      "prompt": "bunch of water spinach, long hollow pale green stems with narrow arrow shaped green leaves"
+    },
+    "bitter_melon": {
+      "zh": "苦瓜",
+      "prompt": "single long bitter melon, light green with bumpy warty ridged skin, tapered ends"
+    },
+    "luffa": {
+      "zh": "絲瓜",
+      "prompt": "single long dark green luffa gourd with faint lengthwise ridges and a small yellow flower at the tip"
+    },
+    "garlic_chives": {
+      "zh": "韭菜",
+      "prompt": "flat bundle of long thin dark green grass like chive leaves lying diagonally, tied in the middle with a red string"
+    },
+    "lemongrass": {
+      "zh": "香茅",
+      "prompt": "three long straight lemongrass stalks lying diagonally, pale yellow white lower stems and green leafy tops"
+    },
+    "corn_leaves": {
+      "zh": "玉米葉",
+      "prompt": "few long pale green corn husk leaves, slightly curled and dry at the tips"
+    },
+    "longan": {
+      "zh": "龍眼",
+      "prompt": "cluster of small round tan brown longans on a twig, one peeled showing white translucent flesh"
+    },
+    "loquat": {
+      "zh": "枇杷",
+      "prompt": "two small oval orange yellow loquats on a short stem with a green leaf"
+    },
+    "star_fruit": {
+      "zh": "楊桃",
+      "prompt": "slice of yellow star fruit seen face on, a bright five pointed star shape with a pale center and small seeds"
+    },
+    "papaya": {
+      "zh": "木瓜",
+      "prompt": "ripe papaya cut in half lengthwise, yellow orange skin, orange flesh with black seeds in the middle"
+    },
+    "sichuan_pepper_seedling": {
+      "zh": "花椒苗",
+      "prompt": "minecraft style sapling: a small young shrub sprout with a thin thorny brown stem and a tuft of pinnate compound leaves of small glossy green leaflets, no fruit, no pot"
+    },
+    "longan_sapling": {
+      "zh": "龍眼樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long elliptic glossy dark green leaves and bronze new leaves, no fruit, no pot"
+    },
+    "loquat_sapling": {
+      "zh": "枇杷樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of large long stiff dark green leaves with serrated edges, no fruit, no pot"
+    },
+    "star_fruit_sapling": {
+      "zh": "楊桃樹苗",
+      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of feathery compound leaves of small pale green oval leaflets, no fruit, no pot"
+    },
+    "papaya_sapling": {
+      "zh": "木瓜樹苗",
+      "prompt": "minecraft style sapling: a small young papaya plant with a thin pale green stem and a few large deeply lobed hand shaped green leaves on long stalks at the top, no fruit, no pot"
+    },
+    "lotus_root_slices": {
+      "zh": "藕片",
+      "prompt": "three round slices of lotus root overlapping, cream white discs each with a ring of dark round holes"
+    },
+    "papaya_shreds": {
+      "zh": "木瓜絲",
+      "prompt": "small tangled heap of thin julienned pale green papaya strips, like shredded noodles"
+    },
+    "red_bean_paste": {
+      "zh": "紅豆餡",
+      "prompt": "small round clay dish of smooth dark maroon sweet red bean paste"
+    },
+    "mung_bean_flour": {
+      "zh": "綠豆粉",
+      "prompt": "small paper packet of pale yellow green mung bean flour, open at the top"
+    },
+    "ground_sichuan_pepper": {
+      "zh": "花椒粉",
+      "prompt": "small round clay dish of reddish brown ground sichuan pepper powder"
+    },
+    "dried_longan": {
+      "zh": "桂圓",
+      "prompt": "small heap of dried longans, round dark brown wrinkled shells, one cracked showing dark brown flesh"
+    },
+    "garlic_eggplant_raw": {
+      "zh": "蒜蓉茄子（生）",
+      "prompt": "raw long purple eggplant split in half lengthwise, the pale cut face topped with white minced garlic"
+    },
+    "fermented_tofu": {
+      "zh": "豆腐乳",
+      "prompt": "small glass jar of reddish orange fermented tofu cubes in red brine with a red lid"
+    },
+    "mung_bean_sprouts": {
+      "zh": "綠豆芽",
+      "prompt": "small heap of white mung bean sprouts with yellow heads and thin tails"
+    },
+    "candied_star_fruit": {
+      "zh": "蜜餞楊桃",
+      "prompt": "small glass jar of golden yellow candied star fruit slices in syrup with a checkered cloth lid"
+    },
+    "stir_fried_lotus_root": {
+      "zh": "炒藕片",
+      "prompt": "bowl of stir fried pale lotus root slices with holes, minced garlic and green scallion"
+    },
+    "water_bamboo_pork": {
+      "zh": "茭白筍炒肉絲",
+      "prompt": "bowl of stir fried white water bamboo strips with brown shredded pork in soy sauce"
+    },
+    "garlic_water_spinach": {
+      "zh": "蒜炒空心菜",
+      "prompt": "bowl of glossy stir fried green water spinach with minced garlic"
+    },
+    "fermented_tofu_water_spinach": {
+      "zh": "腐乳空心菜",
+      "prompt": "bowl of stir fried dark green water spinach in creamy orange fermented tofu sauce"
+    },
+    "bitter_melon_omelette": {
+      "zh": "苦瓜炒蛋",
+      "prompt": "bowl of scrambled yellow eggs with light green bitter melon slices"
+    },
+    "luffa_omelette": {
+      "zh": "絲瓜炒蛋",
+      "prompt": "bowl of soft scrambled yellow egg chunks mixed with pale green luffa pieces"
+    },
+    "stir_fried_bean_sprouts": {
+      "zh": "炒豆芽",
+      "prompt": "bowl of stir fried white bean sprouts with chopped green scallion"
+    },
+    "chive_omelette": {
+      "zh": "韭菜炒蛋",
+      "prompt": "bowl of scrambled yellow eggs with chopped dark green garlic chives"
+    },
+    "lemongrass_chicken": {
+      "zh": "香茅烤雞",
+      "prompt": "bowl of golden brown grilled chicken pieces with green lemongrass stalks"
+    },
+    "mapo_tofu": {
+      "zh": "麻婆豆腐",
+      "prompt": "square dark brown wooden stew pot with two side handles, full of white tofu cubes and minced beef in red chili oil sauce"
+    },
+    "sichuan_pepper_chicken": {
+      "zh": "花椒雞丁",
+      "prompt": "bowl of diced fried chicken with red sichuan peppercorns and green scallion"
+    },
+    "lotus_root_rib_soup": {
+      "zh": "蓮藕排骨湯",
+      "prompt": "square dark brown wooden stew pot with two side handles, full of pale pink lotus root chunks and pork ribs in clear broth"
+    },
+    "luffa_soup": {
+      "zh": "絲瓜湯",
+      "prompt": "square dark brown wooden stew pot with two side handles, full of green luffa slices and yellow egg ribbons in clear broth"
+    },
+    "red_bean_soup": {
+      "zh": "紅豆湯",
+      "prompt": "square dark brown wooden stew pot with two side handles, full of dark red sweet red bean soup"
+    },
+    "mung_bean_soup": {
+      "zh": "綠豆湯",
+      "prompt": "square dark brown wooden stew pot with two side handles, full of green mung bean sweet soup"
+    },
+    "lotus_seed_soup": {
+      "zh": "蓮子湯",
+      "prompt": "small white bowl of clear sweet soup with white lotus seeds"
+    },
+    "loquat_syrup": {
+      "zh": "枇杷膏",
+      "prompt": "small white bowl of thick dark amber honey syrup with a wooden spoon in it"
+    },
+    "mung_bean_cake": {
+      "zh": "綠豆糕",
+      "prompt": "white plate with four small square pale yellow green mung bean cakes with pressed patterns"
+    },
+    "steamed_garlic_eggplant": {
+      "zh": "蒜蓉蒸茄子",
+      "prompt": "bowl of steamed purple eggplant strips topped with minced garlic and chopped scallion"
+    },
+    "red_bean_cake": {
+      "zh": "紅豆餅",
+      "prompt": "white plate with four small round golden wheel cakes, one cut showing dark red bean filling"
+    },
+    "chive_box": {
+      "zh": "韭菜盒子",
+      "prompt": "golden pan fried half moon pastry pocket with a crimped edge, one cut open showing green chive and egg filling"
+    },
+    "bitter_melon_salad": {
+      "zh": "涼拌苦瓜",
+      "prompt": "bowl of cold thin light green bitter melon slices with minced garlic"
+    },
+    "papaya_salad": {
+      "zh": "涼拌木瓜絲",
+      "prompt": "bowl of shredded green papaya salad with red chili, peanuts and a lemon wedge"
+    },
+    "roasted_water_bamboo": {
+      "zh": "烤茭白筍",
+      "prompt": "two roasted water bamboo shoots, charred husks peeled back showing golden white flesh"
+    },
+    "loquat_juice": {
+      "zh": "枇杷汁",
+      "prompt": "square glass bottle with a cork stopper, full of orange yellow loquat juice, a brown kraft paper label band around the middle"
+    },
+    "star_fruit_juice": {
+      "zh": "楊桃汁",
+      "prompt": "square glass bottle with a cork stopper, full of pale yellow star fruit juice, a brown kraft paper label band around the middle"
+    },
+    "papaya_milk": {
+      "zh": "木瓜牛奶",
+      "prompt": "square glass bottle with a cork stopper, full of creamy pale orange papaya milk, a brown kraft paper label band around the middle"
+    },
+    "banana_milk": {
+      "zh": "香蕉牛奶",
+      "prompt": "square glass bottle with a cork stopper, full of creamy pale yellow banana milk, a brown kraft paper label band around the middle"
+    },
+    "lemongrass_tea": {
+      "zh": "香茅茶",
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of pale green yellow lemongrass tea, steam rising"
+    },
+    "longan_tea": {
+      "zh": "桂圓茶",
+      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of dark amber brown longan tea, steam rising"
+    },
+    "longan_wine": {
+      "zh": "龍眼酒",
+      "prompt": "squat square glass bottle sealed with red paper and gold string, pale amber liquor inside, a red diamond paper label on the front"
+    },
+    "water_spinach_seeds": {
+      "zh": "空心菜種子",
+      "prompt": "small pile of tiny round dark brown seeds"
+    },
+    "bitter_melon_seeds": {
+      "zh": "苦瓜種子",
+      "prompt": "small pile of flat pale tan ridged seeds"
+    },
+    "luffa_seeds": {
+      "zh": "絲瓜種子",
+      "prompt": "small pile of flat black oval seeds"
+    },
+    "garlic_chive_seeds": {
+      "zh": "韭菜種子",
+      "prompt": "small pile of tiny black angular seeds"
+    },
+    "adzuki_bean": {
+      "zh": "紅豆",
+      "prompt": "small pile of small glossy dark red beans"
+    },
+    "mung_bean": {
+      "zh": "綠豆",
+      "prompt": "small pile of small glossy green beans"
+    },
+    "sichuan_peppercorns": {
+      "zh": "花椒",
+      "prompt": "small pile of tiny red split peppercorn husks"
+    },
+    "lotus_seeds": {
+      "zh": "蓮子",
+      "prompt": "small pile of pale cream oval lotus seeds"
     }
   }
 }

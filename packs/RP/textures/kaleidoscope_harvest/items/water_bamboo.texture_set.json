@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "water_bamboo",
+    "normal": "water_bamboo_normal",
+    "metalness_emissive_roughness": "water_bamboo_mer"
+  }
+}

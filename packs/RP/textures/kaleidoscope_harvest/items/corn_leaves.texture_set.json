@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "corn_leaves",
+    "normal": "corn_leaves_normal",
+    "metalness_emissive_roughness": "corn_leaves_mer"
+  }
+}
