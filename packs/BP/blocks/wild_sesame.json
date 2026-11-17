@@ -9,10 +9,42 @@
     },
     "components": {
       "minecraft:display_name": "tile.kaleidoscope_harvest:wild_sesame.name",
-      "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
+      "minecraft:geometry": {
+        "identifier": "geometry.kaleidoscope_harvest.sesame_crop",
+        "bone_visibility": {
+          "stage0": false,
+          "stage1": false,
+          "stage2": false,
+          "stage3": true
+        }
+      },
       "minecraft:material_instances": {
         "*": {
-          "texture": "kh_wild_sesame",
+          "texture": "kh_sesame_stage_3",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage0": {
+          "texture": "kh_sesame_stage_0",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage1": {
+          "texture": "kh_sesame_stage_1",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage2": {
+          "texture": "kh_sesame_stage_2",
+          "render_method": "alpha_test",
+          "face_dimming": false,
+          "ambient_occlusion": false
+        },
+        "stage3": {
+          "texture": "kh_sesame_stage_3",
           "render_method": "alpha_test",
           "face_dimming": false,
           "ambient_occlusion": false

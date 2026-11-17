@@ -147,7 +147,7 @@
   "kaleidoscope_harvest:bamboo_trellis": {
     "sound": "bamboo"
   },
-  "kaleidoscope_harvest:fruit_log": {
+  "kaleidoscope_harvest:fruitwood_log": {
     "sound": "wood"
   },
   "kaleidoscope_harvest:banana_trunk": {
@@ -156,67 +156,97 @@
   "kaleidoscope_harvest:mandarin_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:mandarin_fruit_leaves": {
+  "kaleidoscope_harvest:mandarin_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:mandarin_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:sweet_orange_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:sweet_orange_fruit_leaves": {
+  "kaleidoscope_harvest:sweet_orange_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:sweet_orange_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:lemon_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:lemon_fruit_leaves": {
+  "kaleidoscope_harvest:lemon_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:lemon_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:peach_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:peach_fruit_leaves": {
+  "kaleidoscope_harvest:peach_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:peach_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:pear_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:pear_fruit_leaves": {
+  "kaleidoscope_harvest:pear_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:pear_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:persimmon_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:persimmon_fruit_leaves": {
+  "kaleidoscope_harvest:persimmon_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:persimmon_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:lychee_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:lychee_fruit_leaves": {
+  "kaleidoscope_harvest:lychee_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:lychee_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:mango_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:mango_fruit_leaves": {
+  "kaleidoscope_harvest:mango_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:mango_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:banana_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:banana_fruit_leaves": {
+  "kaleidoscope_harvest:banana_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:banana_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:star_anise_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:star_anise_fruit_leaves": {
+  "kaleidoscope_harvest:star_anise_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:star_anise_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:cinnamon_sapling": {
     "sound": "grass"
   },
-  "kaleidoscope_harvest:cinnamon_fruit_leaves": {
+  "kaleidoscope_harvest:cinnamon_leaves": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:juicer": {

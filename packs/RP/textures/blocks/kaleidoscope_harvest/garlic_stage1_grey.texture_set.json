@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "garlic_stage1_grey",
-    "normal": "garlic_stage1_grey_normal",
-    "metalness_emissive_roughness": "garlic_stage1_grey_mer"
-  }
-}

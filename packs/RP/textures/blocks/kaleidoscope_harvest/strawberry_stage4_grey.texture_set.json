@@ -1,8 +1,0 @@
-{
-  "format_version": "1.16.100",
-  "minecraft:texture_set": {
-    "color": "strawberry_stage4_grey",
-    "normal": "strawberry_stage4_grey_normal",
-    "metalness_emissive_roughness": "strawberry_stage4_grey_mer"
-  }
-}

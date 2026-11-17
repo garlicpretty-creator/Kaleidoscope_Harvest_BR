@@ -37,7 +37,7 @@ for (const path of walk(join(root, "packs")).filter((p) => p.endsWith(".json")))
 
 const { NAMESPACE, rid } = await load("ns.js");
 const { CROPS, TRELLIS } = await load("crops.js");
-const { TREES } = await load("trees.js");
+const { TREES, TRUNKS, saplingBlockId, leavesBlockId, fruitBlockId, treeFeatureId } = await load("trees.js");
 const { ITEMS } = await load("items.js");
 const { RECIPES, inputsOf, outputsOf } = await load("dishes.js");
 const { CLIMATES } = await load("climate.js");
@@ -46,7 +46,7 @@ const { HINTS } = await load("zh_cn.js");
 
 const itemIds = new Set(ITEMS.map((i) => i.id));
 const seen = new Set();
-for (const id of [...ITEMS.map((i) => i.id), ...CROPS.map((c) => `${c.id}_crop`), ...TREES.flatMap((t) => [`${t.id}_sapling`, `${t.id}_fruit_leaves`]), TRELLIS.id]) {
+for (const id of [...ITEMS.map((i) => i.id), ...CROPS.map((c) => `${c.id}_crop`), ...TREES.flatMap((t) => [saplingBlockId(t), leavesBlockId(t), ...(t.bark ? [] : [fruitBlockId(t)])]), ...TRUNKS.map((t) => t.id), TRELLIS.id]) {
   if (seen.has(id)) fail(`duplicate id ${id}`);
   seen.add(id);
 }
@@ -69,6 +69,9 @@ for (const crop of CROPS) {
 for (const tree of TREES) {
   if (!CLIMATES.includes(tree.climate)) fail(`tree ${tree.id}: unknown climate ${tree.climate}`);
   if (!itemIds.has(tree.fruit)) fail(`tree ${tree.id}: fruit ${tree.fruit} is not in data/items.js`);
+  // ## Saplings grow by placing this feature (growth/trees.js); fruit blocks use the art's model.
+  if (!existsSync(join(BP, "features", "trees", `${treeFeatureId(tree)}.json`))) fail(`tree ${tree.id}: features/trees/${treeFeatureId(tree)}.json missing (tools/art/tree_shapes.py)`);
+  if (!tree.bark && !existsSync(join(RP, "models", "blocks", `${fruitBlockId(tree)}.geo.json`))) fail(`tree ${tree.id}: models/blocks/${fruitBlockId(tree)}.geo.json missing (tools/art/fruit_models.py)`);
 }
 
 // ## G4 (企劃書 M4 關卡：每種作物至少兩個用途), checked mechanically: every crop and fruit
@@ -141,10 +144,29 @@ if (!existsSync(join(BP, "blocks")) || !existsSync(join(RP, "textures", "terrain
   for (const line of readFileSync(join(RP, "texts", "zh_CN.lang"), "utf8").split("\n")) for (const c of line.slice(line.indexOf("=") + 1)) if (HINTS.has(c)) fail(`RP zh_CN.lang: 「${c}」 not converted in "${line}"`);
 
   const textures = (material) => Object.values(material ?? {}).map((m) => m.texture);
+  // ## Models the blocks name, with their bones and material instances (the art's models in RP/models/blocks).
+  const models = new Map();
+  for (const path of walk(join(RP, "models")).filter((p) => p.endsWith(".json")))
+    for (const geo of readJson(path)["minecraft:geometry"] ?? []) {
+      const bones = geo.bones ?? [];
+      const instances = new Set(bones.flatMap((b) => (b.cubes ?? []).flatMap((c) => Object.values(typeof c.uv === "object" && !Array.isArray(c.uv) ? c.uv : {}).map((f) => f.material_instance).filter(Boolean))));
+      models.set(geo.description.identifier, { bones: new Set(bones.map((b) => b.name)), instances });
+    }
   for (const file of readdirSync(join(BP, "blocks"))) {
     const def = readJson(join(BP, "blocks", file))["minecraft:block"];
     const parts = [def.components, ...(def.permutations ?? []).map((p) => p.components)];
     for (const c of parts) {
+      const geometry = c["minecraft:geometry"];
+      const geoId = typeof geometry === "string" ? geometry : geometry?.identifier;
+      if (geoId && !geoId.startsWith("minecraft:")) {
+        const model = models.get(geoId);
+        if (!model) fail(`${file}: geometry ${geoId} is not in RP/models`);
+        else {
+          for (const bone of Object.keys(geometry.bone_visibility ?? {})) if (!model.bones.has(bone)) fail(`${file}: ${geoId} has no bone ${bone}`);
+          const mats = c["minecraft:material_instances"] ?? def.components["minecraft:material_instances"] ?? {};
+          for (const instance of model.instances) if (!mats[instance]) fail(`${file}: ${geoId} instance ${instance} has no texture`);
+        }
+      }
       for (const t of textures(c["minecraft:material_instances"])) if (!terrain[t]) fail(`${file}: texture ${t} is not in terrain_texture.json`);
       if (c["minecraft:loot"] && !existsSync(join(BP, c["minecraft:loot"]))) fail(`${file}: loot table ${c["minecraft:loot"]} missing`);
     }
@@ -185,8 +207,8 @@ if (existsSync(villageDir)) {
 }
 
 // --- World generation names only blocks that exist ----------------------------------------------------
-// ## A warning, not a failure: features/trees (tools/art/tree_shapes.py) still uses block ids
-// ## from before the M3 code (<tree>_leaves, fruitwood_log); which tree generation to keep is open.
+// ## features/trees and feature_rules/trees come from tools/art/tree_shapes.py; every block id they
+// ## name (<tree>_leaves, fruitwood_log, banana_trunk, <tree>_sapling) must be a block the packs define.
 
 const blockIdsAll = new Set(readdirSync(join(BP, "blocks")).map((f) => readJson(join(BP, "blocks", f))["minecraft:block"].description.identifier));
 const unknownPlaced = new Map();
@@ -200,7 +222,7 @@ for (const dir of ["features", "feature_rules"]) {
     for (const id of unknown) unknownPlaced.set(id, (unknownPlaced.get(id) ?? 0) + 1);
   }
 }
-if (unknownPlaced.size) console.warn(`validate: world generation names ${unknownPlaced.size} block id(s) the packs do not define: ${[...unknownPlaced.keys()].sort().join(", ")}`);
+if (unknownPlaced.size) fail(`world generation names ${unknownPlaced.size} block id(s) the packs do not define: ${[...unknownPlaced.keys()].sort().join(", ")}`);
 
 // --- 4. Manifests ---------------------------------------------------------------------------------
 

@@ -6,7 +6,7 @@
 //
 // Not a Minecraft emulator: no physics, no rendering, no placement rules.
 
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -203,7 +203,10 @@ class Dimension {
     this.items = [];
     this.sounds = [];
     this.particles = [];
+    this.placedFeatures = [];
     this.biome = "minecraft:plains";
+    /** Test hook: placeFeature fails (as when the game finds no room) while this is true. */
+    this.featureFails = false;
   }
   getBlock(location) {
     return new Block(this, { x: Math.floor(location.x), y: Math.floor(location.y), z: Math.floor(location.z) });
@@ -227,6 +230,37 @@ class Dimension {
     for (const drop of lootOf(block.permutation)) this.items.push({ ...drop, location: block.location });
     block.setPermutation(new BlockPermutation("minecraft:air"));
     return { successCount: 1 };
+  }
+  /**
+   * A stand-in for placing a tree_feature (packs/BP/features/trees): not the engine's canopy
+   * algorithms, just the trunk at its shortest height with a 3×3 ring of leaves round the top log
+   * and a 3×3 layer above it. Like the game it checks may_grow_on under the base and
+   * may_replace for every block it would set, and returns false (or throws) when it cannot place.
+   */
+  placeFeature(name, location, shouldThrow = false) {
+    const failed = (why) => {
+      if (shouldThrow) throw new Error(`mock: placeFeature ${name}: ${why}`);
+      return false;
+    };
+    if (this.featureFails) return failed("no room");
+    const file = join(BP, "features", "trees", `${name.split(":")[1]}.json`);
+    if (!existsSync(file)) throw new Error(`mock: unknown feature ${name}`);
+    this.placedFeatures.push({ name, location: { ...location } });
+    const tree = JSON.parse(readFileSync(file, "utf8"))["minecraft:tree_feature"];
+    const trunk = tree[Object.keys(tree).find((k) => k.endsWith("trunk"))];
+    const canopy = tree[Object.keys(tree).find((k) => k.endsWith("canopy"))];
+    const height = trunk.trunk_height.range_min ?? trunk.trunk_height.base;
+    const leaf = canopy.leaf_block ?? canopy.leaf_blocks[0][0];
+    const base = this.getBlock(location);
+    if (!tree.may_grow_on.includes(base.below().typeId)) return failed("ground");
+    const spots = [];
+    for (let y = 0; y < height; y++) spots.push([0, y, 0, trunk.trunk_block]);
+    for (const y of [height - 1, height]) for (let x = -1; x <= 1; x++) for (let z = -1; z <= 1; z++) if (x || z || y === height) spots.push([x, y, z, leaf]);
+    const replace = new Set(["minecraft:air", ...tree.may_replace]);
+    const targets = spots.map(([x, y, z, id]) => [base.offset(x, y, z), id]);
+    if (targets.some(([b]) => !replace.has(b.typeId))) return failed("in the way");
+    for (const [b, id] of targets) b.setPermutation(BlockPermutation.resolve(id));
+    return true;
   }
   /** Test helper: total of one item lying on the ground. */
   dropped(typeId) {
@@ -363,6 +397,8 @@ export function __reset() {
     dimension.sounds = [];
     dimension.particles = [];
     dimension.biome = "minecraft:plains";
+    dimension.featureFails = false;
+    dimension.placedFeatures = [];
   }
   world.messages = [];
   system.sentEvents = [];

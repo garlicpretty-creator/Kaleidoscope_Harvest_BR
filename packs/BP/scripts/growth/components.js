@@ -5,7 +5,7 @@ import { system } from "@minecraft/server";
 import { NAMESPACE } from "../data/ns.js";
 import { cropComponent } from "./crops.js";
 import { trellisComponent } from "./trellis.js";
-import { fruitLeavesComponent, saplingComponent } from "./trees.js";
+import { hangingFruitComponent, leavesComponent, saplingComponent } from "./trees.js";
 import { juicerComponent } from "../stations/juicer.js";
 import { picklingJarComponent } from "../stations/picklingJar.js";
 
@@ -13,7 +13,8 @@ export const COMPONENTS = {
   [`${NAMESPACE}:crop`]: cropComponent,
   [`${NAMESPACE}:trellis`]: trellisComponent,
   [`${NAMESPACE}:sapling`]: saplingComponent,
-  [`${NAMESPACE}:fruit_leaves`]: fruitLeavesComponent,
+  [`${NAMESPACE}:tree_leaves`]: leavesComponent,
+  [`${NAMESPACE}:hanging_fruit`]: hangingFruitComponent,
   [`${NAMESPACE}:juicer`]: juicerComponent,
   [`${NAMESPACE}:pickling_jar`]: picklingJarComponent,
 };

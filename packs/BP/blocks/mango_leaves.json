@@ -1,0 +1,102 @@
+{
+  "format_version": "1.21.90",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:mango_leaves",
+      "menu_category": {
+        "category": "nature",
+        "group": "kaleidoscope_harvest:itemGroup.name.harvest_trees"
+      },
+      "states": {
+        "kaleidoscope_harvest:blossom": [
+          false,
+          true
+        ],
+        "kaleidoscope_harvest:off_climate": [
+          false,
+          true
+        ]
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:mango_leaves.name",
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_mango_leaves_bare",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 0.3,
+        "item_specific_speeds": [
+          {
+            "item": "minecraft:shears",
+            "destroy_speed": 0.05
+          },
+          {
+            "item": {
+              "tags": "q.any_tag('minecraft:is_hoe')"
+            },
+            "destroy_speed": 0.1
+          }
+        ]
+      },
+      "minecraft:flammable": {
+        "catch_chance_modifier": 30,
+        "destroy_chance_modifier": 60
+      },
+      "minecraft:light_dampening": 1,
+      "minecraft:map_color": "#408238",
+      "minecraft:loot": "loot_tables/kaleidoscope_harvest/mango_leaves.json",
+      "tag:leaves": {},
+      "kaleidoscope_harvest:tree_leaves": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:blossom') == false && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_mango_leaves_bare",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:blossom') == false && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_mango_leaves_bare_grey",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:blossom') == true && q.block_state('kaleidoscope_harvest:off_climate') == false",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_mango_leaves_blossom",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:blossom') == true && q.block_state('kaleidoscope_harvest:off_climate') == true",
+        "components": {
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "kh_mango_leaves_blossom_grey",
+              "render_method": "alpha_test"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

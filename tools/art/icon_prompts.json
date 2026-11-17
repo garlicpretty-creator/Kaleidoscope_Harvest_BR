@@ -2,7 +2,7 @@
   "_comment": "RetroDiffusion prompts for every Harvest item icon (tools/art/rd_icons.py). Prompts describe the subject only; the style handles the pixel-art look. `zh` is the Traditional Chinese name for review sheets.",
   "style": "rd_plus__mc_item",
   "size": 16,
-  "candidates": 3,
+  "candidates": 2,
   "seed": 20261117,
   "items": {
     "napa_cabbage": {
@@ -552,6 +552,94 @@
     "pickled_vegetable_noodles": {
       "zh": "酸菜麵",
       "prompt": "bowl of noodle soup with pale pickled cabbage and pork slices"
+    },
+    "braised_pork": {
+      "zh": "紅燒肉",
+      "prompt": "bowl of glossy dark red-brown braised pork belly cubes in thick sauce with star anise"
+    },
+    "chopped_coriander": {
+      "zh": "香菜末",
+      "prompt": "small heap of finely chopped bright green coriander leaves"
+    },
+    "cinnamon_apple": {
+      "zh": "肉桂蘋果",
+      "prompt": "baked red apple dusted with cinnamon with a cinnamon stick standing in it"
+    },
+    "cinnamon_tea": {
+      "zh": "肉桂茶",
+      "prompt": "clay cup of reddish brown cinnamon tea with a cinnamon stick, steam rising"
+    },
+    "cumin_potatoes": {
+      "zh": "孜然馬鈴薯",
+      "prompt": "plate of crispy fried potato cubes dusted with cumin and red chili flakes"
+    },
+    "daikon_slices": {
+      "zh": "白蘿蔔片",
+      "prompt": "few round thin slices of white daikon radish stacked"
+    },
+    "diced_onion": {
+      "zh": "洋蔥丁",
+      "prompt": "small heap of diced pale yellow onion pieces"
+    },
+    "ground_black_pepper": {
+      "zh": "黑胡椒粉",
+      "prompt": "small round clay dish of ground black pepper powder"
+    },
+    "ground_cinnamon": {
+      "zh": "肉桂粉",
+      "prompt": "small round clay dish of reddish brown ground cinnamon powder"
+    },
+    "ground_cumin": {
+      "zh": "孜然粉",
+      "prompt": "small round clay dish of ochre brown ground cumin powder"
+    },
+    "lychee_chicken": {
+      "zh": "荔枝雞",
+      "prompt": "plate of glossy sweet and sour chicken pieces with peeled white lychees"
+    },
+    "mandarin_sweet_soup": {
+      "zh": "橘子甜湯",
+      "prompt": "small white bowl of sweet soup with orange mandarin segments and small white rice balls"
+    },
+    "mixed_juice": {
+      "zh": "綜合果汁",
+      "prompt": "tall glass of layered orange, red and purple fruit juice with a straw"
+    },
+    "passion_fruit_juice": {
+      "zh": "百香果汁",
+      "prompt": "glass of bright yellow passion fruit juice with black seeds and half a purple passion fruit on the rim"
+    },
+    "persimmon_jam": {
+      "zh": "柿子果醬",
+      "prompt": "small glass jar of bright orange persimmon jam with a checkered cloth lid"
+    },
+    "pineapple_sweet_sour_pork": {
+      "zh": "鳳梨咕咾肉",
+      "prompt": "plate of glossy red sweet and sour fried pork with yellow pineapple chunks and green pepper"
+    },
+    "scallion_omelette": {
+      "zh": "蔥花煎蛋",
+      "prompt": "round golden omelette speckled with green chopped scallion on a plate"
+    },
+    "steamed_sweet_potato": {
+      "zh": "蒸地瓜",
+      "prompt": "steamed sweet potato split open showing orange flesh on a small bamboo steamer"
+    },
+    "juicer": {
+      "zh": "榨汁機",
+      "prompt": "wooden base with a clear glass jug of orange juice and a steel citrus reamer on top, small wooden lever"
+    },
+    "pickling_jar": {
+      "zh": "醃漬缸",
+      "prompt": "dark brown glazed chinese pickling crock with a water seal rim and an upturned clay lid"
+    },
+    "bamboo_trellis": {
+      "zh": "竹藤架",
+      "prompt": "small square trellis of green bamboo poles tied in a grid"
+    },
+    "onion_seeds": {
+      "zh": "洋蔥種子",
+      "code": "tools/art/seed_icons.py"
     }
   }
 }

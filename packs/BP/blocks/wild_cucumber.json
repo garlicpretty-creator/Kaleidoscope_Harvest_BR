@@ -12,7 +12,7 @@
       "minecraft:geometry": "geometry.kaleidoscope_harvest.cross",
       "minecraft:material_instances": {
         "*": {
-          "texture": "kh_wild_cucumber",
+          "texture": "kh_cucumber_stage_3",
           "render_method": "alpha_test",
           "face_dimming": false,
           "ambient_occlusion": false

@@ -5,8 +5,8 @@
     "kh_bamboo_trellis": {
       "textures": "textures/kaleidoscope_harvest/items/bamboo_trellis"
     },
-    "kh_fruit_log": {
-      "textures": "textures/kaleidoscope_harvest/items/fruit_log"
+    "kh_fruitwood_log": {
+      "textures": "textures/kaleidoscope_harvest/items/fruitwood_log"
     },
     "kh_banana_trunk": {
       "textures": "textures/kaleidoscope_harvest/items/banana_trunk"
@@ -14,68 +14,68 @@
     "kh_mandarin_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/mandarin_sapling"
     },
-    "kh_mandarin_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/mandarin_fruit_leaves"
+    "kh_mandarin_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/mandarin_leaves"
     },
     "kh_sweet_orange_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/sweet_orange_sapling"
     },
-    "kh_sweet_orange_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/sweet_orange_fruit_leaves"
+    "kh_sweet_orange_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/sweet_orange_leaves"
     },
     "kh_lemon_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/lemon_sapling"
     },
-    "kh_lemon_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/lemon_fruit_leaves"
+    "kh_lemon_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/lemon_leaves"
     },
     "kh_peach_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/peach_sapling"
     },
-    "kh_peach_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/peach_fruit_leaves"
+    "kh_peach_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/peach_leaves"
     },
     "kh_pear_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/pear_sapling"
     },
-    "kh_pear_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/pear_fruit_leaves"
+    "kh_pear_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/pear_leaves"
     },
     "kh_persimmon_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/persimmon_sapling"
     },
-    "kh_persimmon_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/persimmon_fruit_leaves"
+    "kh_persimmon_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/persimmon_leaves"
     },
     "kh_lychee_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/lychee_sapling"
     },
-    "kh_lychee_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/lychee_fruit_leaves"
+    "kh_lychee_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/lychee_leaves"
     },
     "kh_mango_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/mango_sapling"
     },
-    "kh_mango_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/mango_fruit_leaves"
+    "kh_mango_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/mango_leaves"
     },
     "kh_banana_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/banana_sapling"
     },
-    "kh_banana_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/banana_fruit_leaves"
+    "kh_banana_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/banana_leaves"
     },
     "kh_star_anise_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/star_anise_sapling"
     },
-    "kh_star_anise_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/star_anise_fruit_leaves"
+    "kh_star_anise_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/star_anise_leaves"
     },
     "kh_cinnamon_sapling": {
       "textures": "textures/kaleidoscope_harvest/items/cinnamon_sapling"
     },
-    "kh_cinnamon_fruit_leaves": {
-      "textures": "textures/kaleidoscope_harvest/items/cinnamon_fruit_leaves"
+    "kh_cinnamon_leaves": {
+      "textures": "textures/kaleidoscope_harvest/items/cinnamon_leaves"
     },
     "kh_napa_cabbage_seeds": {
       "textures": "textures/kaleidoscope_harvest/items/napa_cabbage_seeds"
