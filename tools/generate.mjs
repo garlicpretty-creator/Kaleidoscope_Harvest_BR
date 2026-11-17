@@ -789,7 +789,7 @@ for (const pack of [BP, RP]) {
   writeJson(join(pack, "texts", "languages.json"), ["en_US", "zh_TW", "zh_CN"]);
 }
 
-// ## pack_icon.png is the art's (orange, grape, napa cabbage, corn); never touch it here.
+// ## pack_icon.png is the art's; never touch it here.
 // Copies of the icons used to live here; the item atlas now points at the drawn icons.
 rmSync(join(RP, "textures", "items", NS), { recursive: true, force: true });
 
