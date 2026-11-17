@@ -88,7 +88,7 @@ export function bright(block, minLightLevel) {
 }
 
 /** Ground a bush or sapling grows in (data/crops.js WILD_SOIL plus farmland). */
-const SOIL = new Set(["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:rooted_dirt", "minecraft:moss_block", "minecraft:mud", "minecraft:farmland"]);
+const SOIL = new Set(["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:dirt_with_roots", "minecraft:moss_block", "minecraft:mud", "minecraft:farmland"]);
 export const isSoil = (block) => Boolean(block && SOIL.has(block.typeId));
 
 /** Farmland, or any block tagged as Cookery farmland (its paddy field). */

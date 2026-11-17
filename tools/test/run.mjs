@@ -138,6 +138,10 @@ test("a ripe crop sometimes gives off a particle; no text ever shows", () => {
   const crop = plant("napa_cabbage_crop", 0, { [S("growth")]: 7 });
   tick(crop, 1);
   assert(overworld.particles.length === 1, "particle on a ripe crop");
+  // ## wax_particle reads variable.color and variable.direction; without them the game logs
+  // ## an error every frame (found in game, 1.0.0).
+  const vars = overworld.particles[0].variables ?? {};
+  assert(vars["variable.color"] && vars["variable.direction"], "ripe particle carries its Molang variables");
   __advance(400);
   equal(world.messages.length, 0, "no chat text");
 });

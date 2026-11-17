@@ -31,7 +31,7 @@ const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js"
 const { toSimplified } = await load("zh_cn.js");
 
 const NS = NAMESPACE;
-const BLOCK_FORMAT = "1.21.90";
+const BLOCK_FORMAT = "1.21.100"; // minecraft:movable needs 1.21.100+
 const ITEM_FORMAT = "1.21.90";
 const GROUP = {
   crops: `${NS}:itemGroup.name.harvest_crops`,
@@ -154,7 +154,7 @@ const CROSS_GEO = `geometry.${NS}.cross`;
 const material = (texture) => ({ "*": { texture: `kh_${texture}`, render_method: "alpha_test", face_dimming: false, ambient_occlusion: false } });
 const intRange = (max) => ({ values: { min: 0, max } });
 const FARMLAND = ["minecraft:farmland", { tags: "q.any_tag('kaleidoscope_cookery:farmland')" }];
-const SOIL = ["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:rooted_dirt", "minecraft:moss_block", "minecraft:mud"];
+const SOIL = ["minecraft:grass_block", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:podzol", "minecraft:dirt_with_roots", "minecraft:moss_block", "minecraft:mud"];
 /** Drawn crop textures have 4 stages; block state 0–7 shows stage floor(state / 2) (docs/art/CROP_TEXTURES.md). */
 const artStage = (s) => Math.floor(s / 2);
 const ART_STAGES = [0, 1, 2, 3];
@@ -789,8 +789,7 @@ for (const pack of [BP, RP]) {
   writeJson(join(pack, "texts", "languages.json"), ["en_US", "zh_TW", "zh_CN"]);
 }
 
-// ## No pack icon until one is drawn (the game shows its default).
-for (const pack of [BP, RP]) rmSync(join(pack, "pack_icon.png"), { force: true });
+// ## pack_icon.png is the art's (orange, grape, napa cabbage, corn); never touch it here.
 // Copies of the icons used to live here; the item atlas now points at the drawn icons.
 rmSync(join(RP, "textures", "items", NS), { recursive: true, force: true });
 
