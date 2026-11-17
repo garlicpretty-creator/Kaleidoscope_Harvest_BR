@@ -463,14 +463,24 @@ test("a banana's leaves fall when its trunk is chopped", () => {
   equal(overworld.getBlock(at(0, 64 + h)).typeId, "minecraft:air", "crown fell");
 });
 
-test("wild fruit trees come from feature_rules/trees, not wild saplings; mandarins come from villages", () => {
+test("wild fruit trees come from feature_rules/trees and wild saplings; mandarins come from villages", () => {
   const rules = readdirSync("packs/BP/feature_rules/trees");
   for (const t of TREES) {
     const file = `${t.id}_tree_feature_rule.json`;
     equal(rules.includes(file), Boolean(t.wild), `${t.id}: wild tree rule`);
     if (rules.includes(file)) equal(JSON.parse(readFileSync(`packs/BP/feature_rules/trees/${file}`, "utf8"))["minecraft:feature_rules"].description.places_feature, r(`${t.id}_tree_feature`), `${t.id}: rule places the tree`);
   }
-  for (const dir of ["packs/BP/features/wild", "packs/BP/feature_rules/wild"]) assert(!readdirSync(dir).some((f) => f.includes("_sapling")), `${dir}: no wild saplings`);
+  const saplingRules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.includes("_sapling_"));
+  for (const t of TREES) {
+    const mine = saplingRules.filter((f) => f.startsWith(`wild_${t.id}_sapling_`));
+    assert(t.wild ? mine.length > 0 : mine.length === 0, `${t.id}: wild sapling rules`);
+    for (const file of mine) {
+      const rule = JSON.parse(readFileSync(`packs/BP/feature_rules/wild/${file}`, "utf8"))["minecraft:feature_rules"];
+      const search = JSON.parse(readFileSync(`packs/BP/features/wild/${rule.description.places_feature.split(":")[1]}.json`, "utf8"))["minecraft:search_feature"];
+      const single = JSON.parse(readFileSync(`packs/BP/features/wild/${search.places_feature.split(":")[1]}.json`, "utf8"))["minecraft:single_block_feature"];
+      equal(single.places_block.name, r(`${t.id}_sapling`), `${file} places the sapling`);
+    }
+  }
   const plains = JSON.parse(readFileSync("packs/BP/loot_tables/chests/village/village_plains_house.json", "utf8")).pools.at(-1);
   assert(plains.entries.some((e) => e.name === r("grape_cutting")), "grape cuttings in plains houses");
   assert(plains.entries.some((e) => e.name === r("mandarin_sapling")), "mandarin saplings in plains houses");
