@@ -167,7 +167,7 @@
     },
     "mandarin_sapling": {
       "zh": "柑橘樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of small glossy dark green oval leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, small round compact bush of glossy dark green leaves with two tiny bright orange mandarins peeking out"
     },
     "sweet_orange": {
       "zh": "柳橙",
@@ -175,7 +175,7 @@
     },
     "sweet_orange_sapling": {
       "zh": "柳橙樹苗",
-      "prompt": "small tree sapling with oval dark green leaves and white blossoms"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, rounded crown of oval dark green leaves with white star shaped orange blossoms and one small orange fruit"
     },
     "lemon": {
       "zh": "檸檬",
@@ -183,7 +183,7 @@
     },
     "lemon_sapling": {
       "zh": "檸檬樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of pointed light green leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, slightly leaning thin stem with pointed light yellow green leaves and one tiny bright yellow lemon hanging"
     },
     "peach": {
       "zh": "桃子",
@@ -191,7 +191,7 @@
     },
     "peach_sapling": {
       "zh": "桃樹苗",
-      "prompt": "small tree sapling with thin brown branches, narrow leaves and pink blossoms"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, thin bare brown twigs covered with pink peach blossoms and a few narrow green leaves"
     },
     "pear": {
       "zh": "梨",
@@ -199,7 +199,7 @@
     },
     "pear_sapling": {
       "zh": "梨樹苗",
-      "prompt": "small tree sapling with round green leaves and white blossoms"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, upright stem with round light green leaves and one tiny pale green pear shaped fruit"
     },
     "persimmon": {
       "zh": "柿子",
@@ -207,7 +207,7 @@
     },
     "persimmon_sapling": {
       "zh": "柿子樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of broad round yellow green leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, broad wide yellow green leaves with one tiny round orange persimmon with a dark green four leaf cap"
     },
     "lychee": {
       "zh": "荔枝",
@@ -215,7 +215,7 @@
     },
     "lychee_sapling": {
       "zh": "荔枝樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long narrow glossy dark green leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, dense dark green crown of long narrow glossy leaves with a small cluster of tiny bright red bumpy lychees"
     },
     "mango": {
       "zh": "芒果",
@@ -223,7 +223,7 @@
     },
     "mango_sapling": {
       "zh": "芒果樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long narrow dark green and reddish new leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, long narrow drooping leaves, dark green below and a tuft of red bronze new leaves on top"
     },
     "banana": {
       "zh": "香蕉",
@@ -231,7 +231,7 @@
     },
     "banana_sapling": {
       "zh": "香蕉樹苗",
-      "prompt": "young banana plant pup with two large wide green leaves"
+      "prompt": "young banana plant pup, a short thick pale green trunk with three huge wide paddle shaped bright green leaves fanning upward, no fruit, no pot"
     },
     "star_anise": {
       "zh": "八角",
@@ -239,7 +239,7 @@
     },
     "star_anise_sapling": {
       "zh": "八角樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of glossy elliptic deep green leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a tiny narrow conical evergreen shaped like a little pagoda, three stacked tiers of dark glossy green leaves on a thin brown stem, one small brown eight pointed star anise pod beside it, no pot"
     },
     "cinnamon_bark": {
       "zh": "肉桂皮",
@@ -247,7 +247,7 @@
     },
     "cinnamon_sapling": {
       "zh": "肉桂樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of reddish young and green veined leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, reddish brown bark stem with bright red young leaves on top and veined green leaves below"
     },
     "chopped_scallion": {
       "zh": "蔥花",
@@ -471,7 +471,7 @@
     },
     "pineapple_fried_rice": {
       "zh": "鳳梨炒飯",
-      "prompt": "fried rice served in a hollowed half pineapple with yellow pineapple chunks"
+      "prompt": "bowl of golden yellow fried rice with bright yellow pineapple chunks, pink shrimp and green peas, in a white bowl"
     },
     "lemon_chicken": {
       "zh": "檸檬雞",
@@ -647,7 +647,7 @@
     },
     "lotus_pod": {
       "zh": "蓮蓬",
-      "prompt": "dried lotus seed pod shaped like a shower head, wide flat top face with round seeds set in holes, narrowing to a stem below, green and brown"
+      "prompt": "side view of a single lotus seed pod, an upside down green cone with a wide flat top dotted with dark round seed holes, on a long thin curved green stem"
     },
     "water_bamboo": {
       "zh": "茭白筍",
@@ -699,19 +699,19 @@
     },
     "longan_sapling": {
       "zh": "龍眼樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of long elliptic glossy dark green leaves and bronze new leaves, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree with a rounded crown of dark green leaves and coppery red brown new leaves on top, a small bunch of tiny round tan longan fruits hanging under the crown, no pot"
     },
     "loquat_sapling": {
       "zh": "枇杷樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of large long stiff dark green leaves with serrated edges, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, few very large stiff long dark green leaves with serrated edges and a small cluster of tiny yellow orange loquats"
     },
     "star_fruit_sapling": {
       "zh": "楊桃樹苗",
-      "prompt": "minecraft style sapling: a small young tree sprout with a thin brown stem and a tuft of feathery compound leaves of small pale green oval leaflets, no fruit, no pot"
+      "prompt": "minecraft style sapling icon, a small young tree on a short stem, no pot, feathery crown of small pale green oval leaflets and one tiny yellow star shaped carambola fruit"
     },
     "papaya_sapling": {
       "zh": "木瓜樹苗",
-      "prompt": "minecraft style sapling: a small young papaya plant with a thin pale green stem and a few large deeply lobed hand shaped green leaves on long stalks at the top, no fruit, no pot"
+      "prompt": "young papaya plant, a single straight pale green trunk with an umbrella of a few big deeply lobed hand shaped leaves on long stalks at the very top, no fruit, no pot"
     },
     "lotus_root_slices": {
       "zh": "藕片",
@@ -719,7 +719,7 @@
     },
     "papaya_shreds": {
       "zh": "木瓜絲",
-      "prompt": "small tangled heap of thin julienned pale green papaya strips, like shredded noodles"
+      "prompt": "small white bowl piled high with long thin pale green papaya shreds like noodles, clearly separate thin strands spilling over the rim"
     },
     "red_bean_paste": {
       "zh": "紅豆餡",
@@ -735,7 +735,7 @@
     },
     "dried_longan": {
       "zh": "桂圓",
-      "prompt": "small heap of dried longans, round dark brown wrinkled shells, one cracked showing dark brown flesh"
+      "prompt": "three small round dried longans touching in a cluster, smooth light tan brown shells, the front one cracked open showing shiny dark brown flesh"
     },
     "garlic_eggplant_raw": {
       "zh": "蒜蓉茄子（生）",
