@@ -1,8 +1,6 @@
 // Climate preference (企劃書「氣候偏好」). Bedrock has no seasons, so every
 // biome is sorted into one of four climates and every crop names the climate
 // it likes. Plain data: no @minecraft imports.
-
-import { BOP_CLIMATE } from "./bop.js";
 //
 //   same climate        ×1
 //   one step away       ×0.5
@@ -74,8 +72,6 @@ const EXACT = {
 export function climateOfBiome(biomeId) {
   if (!biomeId) return "temperate";
   if (EXACT[biomeId]) return EXACT[biomeId];
-  // ## Biomes O' Plenty ids by table (data/bop.js), before the substring rules.
-  if (BOP_CLIMATE[biomeId]) return BOP_CLIMATE[biomeId];
   const name = biomeId.replace(/^minecraft:/, "");
   for (const [needle, climate] of BIOME_RULES) if (name.includes(needle)) return climate;
   return "temperate";

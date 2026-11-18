@@ -40,7 +40,6 @@ const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
 const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
 const { ITEMS } = await import("../../packs/BP/scripts/data/items.js");
 const { climateMultiplier, climateOfBiome, CLIMATES } = await import("../../packs/BP/scripts/data/climate.js");
-const { BOP_CLIMATE } = await import("../../packs/BP/scripts/data/bop.js");
 const { guideEntries, guidebookPayload } = await import("../../packs/BP/scripts/data/guidebook.js");
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
@@ -90,39 +89,6 @@ test("climate: same ×1, one step ×0.5, two steps 0", () => {
   equal(climateOfBiome("minecraft:cherry_grove"), "temperate", "cherry grove");
   equal(climateOfBiome("minecraft:snowy_slopes"), "cold", "snowy slopes");
   equal(climateOfBiome("someaddon:unknown"), "temperate", "unknown biome");
-});
-
-// --- Biomes O' Plenty compatibility (data/bop.js) -------------------------------------------
-
-test("BOP biomes: climate by table, not by name", () => {
-  equal(Object.keys(BOP_CLIMATE).length, 64, "every handshake biome");
-  for (const [id, climate] of Object.entries(BOP_CLIMATE)) assert(CLIMATES.includes(climate), `${id}: ${climate}`);
-  equal(climateOfBiome("bop:cold_desert"), "cold", "cold desert");
-  equal(climateOfBiome("bop:lush_desert"), "hot", "lush desert");
-  equal(climateOfBiome("bop:volcanic_plains"), "hot", "volcanic plains is not a plains");
-  equal(climateOfBiome("bop:rainforest"), "hot", "rainforest is a jungle");
-  equal(climateOfBiome("bop:bog"), "cold", "bog is no mangrove swamp");
-  equal(climateOfBiome("bop:snowblossom_grove"), "cold", "snowblossom grove");
-});
-
-test("BOP biomes: every world-generation tag filter also accepts bop_like_<tag>", () => {
-  const tests = (node, out = []) => {
-    if (Array.isArray(node)) node.forEach((n) => tests(n, out));
-    else if (node && typeof node === "object") {
-      if (node.test === "has_biome_tag") out.push(node);
-      else Object.values(node).forEach((n) => tests(n, out));
-    }
-    return out;
-  };
-  for (const dir of ["wild", "trees"]) {
-    for (const file of readdirSync(`packs/BP/feature_rules/${dir}`)) {
-      const all = tests(JSON.parse(readFileSync(`packs/BP/feature_rules/${dir}/${file}`, "utf8"))["minecraft:feature_rules"].conditions["minecraft:biome_filter"]);
-      for (const t of all) {
-        if (t.value.startsWith("bop_like_") || t.value === `${NS}_never`) continue;
-        assert(all.some((u) => u.value === `bop_like_${t.value}` && u.operator === t.operator), `${dir}/${file}: ${t.operator} ${t.value} has no bop_like_ twin`);
-      }
-    }
-  }
 });
 
 // --- Once crops ------------------------------------------------------------------------------

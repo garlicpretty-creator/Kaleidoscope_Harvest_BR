@@ -13,11 +13,6 @@
             "test": "has_biome_tag",
             "operator": "==",
             "value": "swamp"
-          },
-          {
-            "test": "has_biome_tag",
-            "operator": "==",
-            "value": "bop_like_swamp"
           }
         ]
       }

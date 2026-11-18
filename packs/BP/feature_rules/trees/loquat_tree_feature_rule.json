@@ -9,18 +9,9 @@
       "placement_pass": "surface_pass",
       "minecraft:biome_filter": [
         {
-          "any_of": [
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "flower_forest"
-            },
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "bop_like_flower_forest"
-            }
-          ]
+          "test": "has_biome_tag",
+          "operator": "==",
+          "value": "flower_forest"
         }
       ]
     },

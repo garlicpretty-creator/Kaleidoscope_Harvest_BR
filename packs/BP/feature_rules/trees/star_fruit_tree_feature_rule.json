@@ -9,37 +9,14 @@
       "placement_pass": "surface_pass",
       "minecraft:biome_filter": [
         {
-          "any_of": [
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "jungle"
-            },
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "bop_like_jungle"
-            }
-          ]
+          "test": "has_biome_tag",
+          "operator": "==",
+          "value": "jungle"
         },
         {
-          "any_of": [
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "edge"
-            },
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "bop_like_edge"
-            },
-            {
-              "test": "has_biome_tag",
-              "operator": "==",
-              "value": "bop_like_jungle_edge"
-            }
-          ]
+          "test": "has_biome_tag",
+          "operator": "==",
+          "value": "edge"
         }
       ]
     },

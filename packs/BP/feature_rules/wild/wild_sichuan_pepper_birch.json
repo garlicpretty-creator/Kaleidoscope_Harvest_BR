@@ -13,11 +13,6 @@
             "test": "has_biome_tag",
             "operator": "==",
             "value": "birch"
-          },
-          {
-            "test": "has_biome_tag",
-            "operator": "==",
-            "value": "bop_like_birch"
           }
         ]
       }
