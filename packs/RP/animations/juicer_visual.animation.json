@@ -36,6 +36,13 @@
             "math.max(v.shown / 2, 0.0)",
             1
           ]
+        },
+        "juice_milk": {
+          "scale": [
+            1,
+            "math.max(v.shown / 2, 0.0)",
+            1
+          ]
         }
       }
     }

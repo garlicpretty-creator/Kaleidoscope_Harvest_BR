@@ -1,6 +1,6 @@
 # 果樹樹形
 
-11 種果樹的樹形全部寫在 `tools/art/tree_shapes.py` 的 `TREES` 表裡（樹幹種類與高度範圍、樹冠種類與大小、傾斜與分枝）。重跑即覆寫，結果固定不變。
+15 種果樹（1.0 的 11 種加 1.1 的龍眼、枇杷、楊桃、木瓜）的樹形全部寫在 `tools/art/tree_shapes.py` 的 `TREES` 表裡（樹幹種類與高度範圍、樹冠種類與大小、傾斜與分枝）。重跑即覆寫，結果固定不變。
 
 ```bash
 python tools/art/tree_shapes.py
@@ -10,9 +10,9 @@ python tools/art/tree_shapes.py
 
 | 檔案 | 內容 |
 | --- | --- |
-| `packs/BP/features/trees/<果樹>_tree_feature.json` | `minecraft:tree_feature`，id `kaleidoscope_harvest:<果樹>_tree_feature`，11 個 |
-| `packs/BP/feature_rules/trees/<果樹>_tree_feature_rule.json` | 野生生成規則，11 個。柑橘只從村莊樹苗取得，它的規則指向一個沒有生物群系帶有的標籤，永遠不會生成；但沒有規則參照的地物，遊戲根本不會註冊，柑橘樹苗就長不大 |
-| `art/previews/tree_shapes.png` | 等角體素預覽，無花果葉加上垂在葉下的果實，取各範圍中位數、固定種子 |
+| `packs/BP/features/trees/<果樹>_tree_feature.json` | `minecraft:tree_feature`，id `kaleidoscope_harvest:<果樹>_tree_feature`，15 個 |
+| `packs/BP/feature_rules/trees/<果樹>_tree_feature_rule.json` | 野生生成規則，15 個。柑橘只從村莊樹苗取得，它的規則指向一個沒有生物群系帶有的標籤，永遠不會生成；但沒有規則參照的地物，遊戲根本不會註冊，柑橘樹苗就長不大 |
+| `art/previews/tree_shapes.png` | 等角體素預覽，無花果葉加上垂在葉下的果實，取各範圍中位數、固定種子。還沒畫果葉貼圖的樹暫用相近果樹的葉子，卡片上會註明 |
 
 樹幹用 `kaleidoscope_harvest:fruitwood_log`（香蕉用 `kaleidoscope_harvest:banana_trunk`），樹葉用 `kaleidoscope_harvest:<果樹>_leaves`。
 
@@ -31,6 +31,10 @@ python tools/art/tree_shapes.py
 | 香蕉 banana | `acacia_trunk` 3–4，不傾斜（香蕉莖） | `acacia_canopy` 1 | 頂端一片平展扇葉 | 5 | `jungle` | 1/3 |
 | 八角 star_anise | `trunk` 7–8 | `spruce_canopy` 下 2–3、上 0–1、最大半徑 2 | 直立分層尖塔 | 8 | `bamboo`，或 `jungle`＋`hills` | 1/3 |
 | 肉桂 cinnamon | `trunk` 6–7 | `pine_canopy` 高 5–6、基半徑 1 | 直立窄柱、尖頂 | 7 | `jungle`＋`edge` | 1/3 |
+| 龍眼 longan（1.1） | `acacia_trunk` 5–6，不傾斜 | `roofed_canopy` 高 3、外 3、內 4 | 比荔枝高、9 寬的大圓頂 | 7 | `jungle`，排除 `edge`、`bamboo` | 1/4 |
+| 枇杷 loquat（1.1） | `trunk` 4–5 | `canopy` 偏移 −3..0，角落較少挖空（1/3） | 中等濃密圓冠（常綠） | 5 | `flower_forest` | 1/4 |
+| 楊桃 star_fruit（1.1） | `acacia_trunk` 3–4，不傾斜，1/2 機率長分枝（長 2） | `acacia_canopy` 2（分枝 1） | 矮幹、低垂的灌木狀冠 | 5 | `jungle`＋`edge` | 1/3 |
+| 木瓜 papaya（1.1） | `acacia_trunk` 5–7，不傾斜 | `acacia_canopy` 1 | 細高單幹、頂端一小叢葉，果實掛在葉叢下、貼著樹幹 | 7 | `savanna` | 1/4 |
 
 提案「第一份來源」對應的生物群系：平原 → `plains`；熱帶草原 → `savanna`；繁花森林 → `flower_forest`；森林 → `forest`；針葉林邊緣 → 非寒冷、非巨木的 `taiga`；叢林 → `jungle`；叢林邊緣 → `jungle`＋`edge`（稀疏叢林）。「繁茂山丘」原版沒有對應生物群系，取最接近的竹林（`bamboo`）與叢林丘陵（`jungle`＋`hills`）。叢林丘陵類生物群系在 1.18 之後的新地形裡已不生成，所以實際上八角只會出現在竹林。若要改成山地，可換成 `cherry_grove` 或 `meadow`。
 
@@ -39,7 +43,7 @@ python tools/art/tree_shapes.py
 共用設定：
 
 - `may_grow_on`：`grass_block`、`dirt`、`coarse_dirt`、`podzol`、`dirt_with_roots`、`moss_block`，不含耕地。
-- `may_replace`：空氣、11 種果葉、11 種樹苗、原版各種樹葉、草、蕨、花、藤蔓、雪層。
+- `may_replace`：空氣、15 種果葉、15 種樹苗、原版各種樹葉、草、蕨、花、藤蔓、雪層。
 - `may_grow_through`：草、蕨、雪層。
 
 ## 樹苗長成
@@ -61,7 +65,8 @@ python tools/art/tree_shapes.py
 7. **`acacia_trunk` 分枝**：遊戲內分枝方向隨機，預覽固定畫在傾斜的反方向。`branch_position` 當成從樹頂往下算。
 8. **`fancy_trunk`**：預覽用大橡樹演算法的簡化版，節點數與分枝角度只是近似。
 9. **方塊名稱**：用的是攤平後的新名稱（`grass_block`、`coarse_dirt`、`short_grass`、`oak_leaves` 等），需要 1.21 系列的新版本。舊版本可能回報未知方塊。
-10. **叢林**：地表高度圖常落在原版大樹的樹冠上，那裡不在 `may_grow_on` 裡，所以叢林果樹的實際成功率會比 1/3 低。
+10. **1.1 的四種樹**：樹冠種類都是實機確認過的（沒有 `random_spread_canopy`；枇杷的 `canopy` 照偏移 −3..0、樹幹至少 4 格），但這幾組數值本身還沒進遊戲看過。龍眼的 `roofed_canopy` 外 3、內 4 比荔枝（外 2、內 3）大，最外圈離樹幹 4 格，剛好在果葉找樹幹的範圍（`LEAF_LOG_RANGE` 4）之內；楊桃的分枝在只有 3 格的矮幹上，`branch_position` 不論從上或從下算都落在樹幹中段；木瓜的 `acacia_canopy` 1 和香蕉一樣是頂端一小叢。叢林裡已有荔枝、芒果、香蕉各 1/3，龍眼用 1/4；繁花森林的枇杷、熱帶草原的木瓜也用 1/4，免得和桃、檸檬搶地方。
+11. **叢林**：地表高度圖常落在原版大樹的樹冠上，那裡不在 `may_grow_on` 裡，所以叢林果樹的實際成功率會比 1/3 低。
 
 ## 參考資料
 

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "luffa_seeds",
+    "normal": "luffa_seeds_normal",
+    "metalness_emissive_roughness": "luffa_seeds_mer"
+  }
+}

@@ -2,23 +2,30 @@
 // (data/menu.js, station "juicer" / "pickling_jar"); this file holds how the
 // blocks look and behave. Plain data: no @minecraft imports.
 
-/** Juicer: two fruits, then a glass bottle takes the juice. */
+/** Juicer: two fruits (or, 1.1, a fruit and a milk bucket), then a glass bottle takes the juice. */
 export const JUICER = {
   id: "juicer", zh: "榨汁機", en: "Juicer", look: ["bottle", [240, 150, 40]],
   capacity: 2,
   bottle: "minecraft:glass_bottle",
+  // ## 1.1: a milk bucket goes in as the second "fruit" for the milk drinks (data/menu.js `milk`);
+  // ## the empty bucket comes straight back, and taking the contents out returns the milk.
+  milk: "minecraft:milk_bucket",
+  bucket: "minecraft:bucket",
   // ## The jug shows the colour of what is in it; the art has three juice colours
   // ## (tools/art/station_models.py). Fruits not listed show orange.
-  colours: ["empty", "orange", "grape", "mango"],
+  colours: ["empty", "orange", "grape", "mango", "milk"],
   colourOf: {
     mandarin: "orange", sweet_orange: "orange", lemon: "mango", peach: "orange", persimmon: "orange",
     grape: "grape", blueberry: "grape", lychee: "grape", passion_fruit: "mango",
     mango: "mango", pineapple: "mango", banana: "mango", strawberry: "grape", pear: "mango",
+    loquat: "orange", star_fruit: "mango", papaya: "orange", longan: "grape",
   },
+  /** With milk in it the jug is creamy whatever the fruit. */
+  milkColour: "milk",
   /** Made from two different fruits. */
   mixed: "mixed_juice",
   // ## Splash drops, RGB 0..1, the mid tone of each juice texture (tools/art/station_models.py).
-  splash: { orange: [0.94, 0.57, 0.16], grape: [0.41, 0.14, 0.36], mango: [0.96, 0.72, 0.16] },
+  splash: { orange: [0.94, 0.57, 0.16], grape: [0.41, 0.14, 0.36], mango: [0.96, 0.72, 0.16], milk: [0.98, 0.9, 0.78] },
   /** The display entity holding the moving parts: the reamer and the juice (設計：station-animations). */
   visual: "juicer_visual",
 };

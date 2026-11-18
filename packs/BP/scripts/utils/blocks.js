@@ -63,6 +63,22 @@ export function consumeMainhand(player, n = 1) {
   }
 }
 
+/** Uses up one of the held stack and gives `typeId` in its place (a milk bucket → an empty bucket). */
+export function replaceMainhand(player, typeId) {
+  if (isCreative(player)) return;
+  const equippable = player.getComponent("minecraft:equippable");
+  const stack = equippable?.getEquipment(EquipmentSlot.Mainhand);
+  if (!stack) return;
+  if (stack.amount > 1) {
+    stack.amount -= 1;
+    equippable.setEquipment(EquipmentSlot.Mainhand, stack);
+    const left = player.getComponent("minecraft:inventory")?.container?.addItem(new ItemStack(typeId, 1));
+    if (left) player.dimension.spawnItem(left, player.location);
+  } else {
+    equippable.setEquipment(EquipmentSlot.Mainhand, new ItemStack(typeId, 1));
+  }
+}
+
 // --- Drops and feedback --------------------------------------------------------------------
 
 const centre = ({ x, y, z }) => ({ x: x + 0.5, y: y + 0.5, z: z + 0.5 });

@@ -34,7 +34,9 @@ export const VANILLA = {
   "minecraft:porkchop": [8, 0.8], "minecraft:beef": [8, 0.8], "minecraft:chicken": [6, 0.6], "minecraft:mutton": [6, 0.8],
   "minecraft:egg": [4, 0.5], "minecraft:potato": [5, 0.6], "minecraft:apple": [4, 0.3], "minecraft:wheat": [5 / 3, 0.6],
   "minecraft:honey_bottle": [6, 0.1], "minecraft:sugar": null, "minecraft:snowball": null, "minecraft:bowl": null,
-  "minecraft:stick": null, "minecraft:glass_bottle": null,
+  "minecraft:stick": null, "minecraft:glass_bottle": null, "minecraft:milk_bucket": null,
+  // ## 1.1: Cookery's rice, counted as a bowl of its cooked rice either way; its chili as a crop.
+  "kaleidoscope_cookery:rice": [4, 0.6], "kaleidoscope_cookery:cooked_rice": [4, 0.6], "kaleidoscope_cookery:red_chili": [2, 0.3],
 };
 /** 材料值 of a Harvest crop that cannot be eaten raw. */
 const INEDIBLE_CROP = 2;
@@ -48,7 +50,7 @@ const bare = (id) => (id.startsWith(`${NAMESPACE}:`) ? id.slice(NAMESPACE.length
 
 /** The items one craft takes (the juicer takes two of its fruit; "*" is two fruits of any kind). */
 export function inputList(row) {
-  if (row.station === "juicer") return row.input === "*" ? [] : [row.input, row.input];
+  if (row.station === "juicer") return row.input === "*" ? [] : row.milk ? [row.input, "minecraft:milk_bucket"] : [row.input, row.input];
   if (row.input) return [row.input];
   if (row.inputs) return [...row.inputs];
   return row.slots.map((slot) => slot[0]);

@@ -20,6 +20,9 @@
         },
         {
           "juice_mango": "v.colour == 3 && v.shown > 0.02"
+        },
+        {
+          "juice_milk": "v.colour == 4 && v.shown > 0.02"
         }
       ]
     }

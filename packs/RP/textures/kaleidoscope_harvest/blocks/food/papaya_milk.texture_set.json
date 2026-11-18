@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "papaya_milk",
+    "normal": "papaya_milk_normal",
+    "metalness_emissive_roughness": "papaya_milk_mer"
+  }
+}

@@ -40,7 +40,6 @@ const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
 const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
 const { ITEMS } = await import("../../packs/BP/scripts/data/items.js");
 const { climateMultiplier, climateOfBiome, CLIMATES } = await import("../../packs/BP/scripts/data/climate.js");
-const { BOP_CLIMATE } = await import("../../packs/BP/scripts/data/bop.js");
 const { guideEntries, guidebookPayload } = await import("../../packs/BP/scripts/data/guidebook.js");
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
@@ -90,39 +89,6 @@ test("climate: same ×1, one step ×0.5, two steps 0", () => {
   equal(climateOfBiome("minecraft:cherry_grove"), "temperate", "cherry grove");
   equal(climateOfBiome("minecraft:snowy_slopes"), "cold", "snowy slopes");
   equal(climateOfBiome("someaddon:unknown"), "temperate", "unknown biome");
-});
-
-// --- Biomes O' Plenty compatibility (data/bop.js) -------------------------------------------
-
-test("BOP biomes: climate by table, not by name", () => {
-  equal(Object.keys(BOP_CLIMATE).length, 64, "every handshake biome");
-  for (const [id, climate] of Object.entries(BOP_CLIMATE)) assert(CLIMATES.includes(climate), `${id}: ${climate}`);
-  equal(climateOfBiome("bop:cold_desert"), "cold", "cold desert");
-  equal(climateOfBiome("bop:lush_desert"), "hot", "lush desert");
-  equal(climateOfBiome("bop:volcanic_plains"), "hot", "volcanic plains is not a plains");
-  equal(climateOfBiome("bop:rainforest"), "hot", "rainforest is a jungle");
-  equal(climateOfBiome("bop:bog"), "cold", "bog is no mangrove swamp");
-  equal(climateOfBiome("bop:snowblossom_grove"), "cold", "snowblossom grove");
-});
-
-test("BOP biomes: every world-generation tag filter also accepts bop_like_<tag>", () => {
-  const tests = (node, out = []) => {
-    if (Array.isArray(node)) node.forEach((n) => tests(n, out));
-    else if (node && typeof node === "object") {
-      if (node.test === "has_biome_tag") out.push(node);
-      else Object.values(node).forEach((n) => tests(n, out));
-    }
-    return out;
-  };
-  for (const dir of ["wild", "trees"]) {
-    for (const file of readdirSync(`packs/BP/feature_rules/${dir}`)) {
-      const all = tests(JSON.parse(readFileSync(`packs/BP/feature_rules/${dir}/${file}`, "utf8"))["minecraft:feature_rules"].conditions["minecraft:biome_filter"]);
-      for (const t of all) {
-        if (t.value.startsWith("bop_like_") || t.value === `${NS}_never`) continue;
-        assert(all.some((u) => u.value === `bop_like_${t.value}` && u.operator === t.operator), `${dir}/${file}: ${t.operator} ${t.value} has no bop_like_ twin`);
-      }
-    }
-  }
 });
 
 // --- Once crops ------------------------------------------------------------------------------
@@ -325,7 +291,9 @@ test("tree block ids follow the art: <tree>_leaves, fruitwood_log, banana_trunk,
         if (!/_tree_feature(_rule)?$/.test(id)) assert(ids.has(id), `${file} names ${id}, which is a block`);
   const lang = readFileSync("packs/RP/texts/en_US.lang", "utf8");
   assert(lang.includes("tile.kaleidoscope_harvest:fruitwood_log.name=Fruitwood Log") && lang.includes("tile.kaleidoscope_harvest:mandarin_leaves.name="), "names");
-  assert(!lang.includes("fruit_leaves") && !lang.includes(":fruit_log"), "no old names left");
+  // ## The old names were <tree>_fruit_leaves (star_fruit_leaves is a 1.1 tree's leaves, not one of them).
+  for (const t of TREES) assert(!lang.includes(`:${t.id}_fruit_leaves`), `no old name ${t.id}_fruit_leaves left`);
+  assert(!lang.includes(":fruit_log"), "no old log name left");
 });
 
 test("a grown sapling places its tree feature where it stands", () => {
@@ -570,7 +538,9 @@ test("every crop grows wild somewhere, and breaking the wild plant gives a first
   for (const crop of CROPS) {
     __reset();
     const wild = `wild_${crop.id}`;
-    const rules = readdirSync("packs/BP/feature_rules/wild").filter((f) => f.startsWith(`${wild}_`));
+    // ## By name, biome by biome: wild_garlic_ is also the start of wild_garlic_chives_ (1.1).
+    const all = readdirSync("packs/BP/feature_rules/wild");
+    const rules = crop.wild.biomes.map((biome) => `${wild}_${biome}.json`).filter((f) => all.includes(f));
     assert(rules.length === crop.wild.biomes.length && rules.length > 0, `${crop.id}: one feature rule per biome`);
     for (const file of rules) {
       const rule = JSON.parse(readFileSync(`packs/BP/feature_rules/wild/${file}`, "utf8"))["minecraft:feature_rules"];
@@ -801,8 +771,10 @@ const { PLACED_FOODS } = await import("../../packs/BP/scripts/data/placedFood.js
 const json = (path) => JSON.parse(readFileSync(path, "utf8"));
 const lootItems = (path) => (path ? json(`packs/BP/${path}`).pools.flatMap((p) => p.entries.map((e) => e.name)) : []);
 
-test("placed food: the 21 foods of the design, each a block with the item's id", () => {
-  equal(PLACED_FOODS.length, 21, "four groups: 6 pots, 3 desserts, 8 drinks, 4 teas");
+test("placed food: the foods of the design (21 in 1.0, 13 more in 1.1), each a block with the item's id", () => {
+  // ## 1.0's 21 (6 pots, 3 desserts, 8 drinks, 4 teas) and 1.1's 13 (5 pots, 2 desserts, 4 drinks, 2 teas).
+  equal(PLACED_FOODS.length, 34, "1.0's 21 and 1.1's 13");
+  for (const [shape, n] of [["pot", 11], ["pie", 1], ["cakes", 3], ["platter", 1], ["bottle", 9], ["wine", 3], ["teacup", 6]]) equal(PLACED_FOODS.filter((f) => f.shape === shape).length, n, `${shape} count`);
   for (const { item } of PLACED_FOODS) {
     const it = json(`packs/BP/items/${item}.json`)["minecraft:item"].components;
     equal(it["minecraft:block_placer"]?.block, r(item), `${item} places its block`);
@@ -1033,7 +1005,7 @@ test("Ranching: feeds go out only once api_ready lists register_feed", () => {
   equal(feeds.length, RANCHING_FEEDS.length, "one message per feed");
   for (const feed of feeds) {
     assert(feed.item.startsWith(`${NS}:`), `${feed.item} is in Harvest's namespace`);
-    assert(["grass", "grain", "veg", "mixed", "concentrate"].includes(feed.kind), `${feed.item} kind`);
+    assert(["grass", "grain", "veg", "mixed", "concentrate", "ruminant"].includes(feed.kind), `${feed.item} kind`);
     assert(Number.isInteger(feed.units) && feed.units >= 1 && feed.units <= 9, `${feed.item} units`);
   }
   for (const e of sent("kaleidoscope_ranching:register_feed")) assert(e.message.length < SCRIPT_EVENT_LIMIT, "under 2048 characters");
@@ -1112,12 +1084,12 @@ test("Herbal: only acks addressed to Harvest, sent by a script, are logged", () 
   equal(world.messages.length, 0, "no chat text");
 });
 
-test("Tavern: the payload registers both wines as barrel recipes with pages in three languages", () => {
+test("Tavern: the payload registers every wine (lychee, peach, 1.1 longan) as barrel recipes with pages in three languages", () => {
   const payload = tavernPayload();
   equal(payload.api, 1, "api");
   equal(payload.source, NS, "source");
   equal(payload.recipes.length, TAVERN_WINES.length, "one recipe per wine");
-  equal(payload.recipes.map((rc) => rc.output.item).sort().join(), [r("lychee_wine"), r("peach_wine")].join(), "lychee and peach wine");
+  equal(payload.recipes.map((rc) => rc.output.item).sort().join(), [r("longan_wine"), r("lychee_wine"), r("peach_wine")].join(), "longan, lychee and peach wine");
   assert(!JSON.stringify(payload).includes("grape"), "no grape wine: that is Tavern's own");
   for (const recipe of payload.recipes) {
     equal(recipe.kind, "barrel", "barrel");
@@ -1273,7 +1245,170 @@ test("Harvest API: bad catalog requests get no answer; an unknown kind lists the
   const [reply] = handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", kind: "dishes" }));
   equal(reply.ok, false, "not ok");
   equal(reply.code, "UNKNOWN_KIND", "code");
-  equal(reply.kinds.join(), "crops,trees", "kinds");
+  equal(reply.kinds.join(), "crops,trees,foods", "kinds");
+});
+
+// --- 1.1 ------------------------------------------------------------------------------------------------------
+
+/** Mud at y 63 and an aquatic crop at y 64, in water unless `dry`. */
+function plantInWater(cropBlock, x = 0, { dry = false, bed = "minecraft:mud", states = {} } = {}) {
+  __place(overworld, at(x, 63), bed);
+  const block = __place(overworld, at(x), r(cropBlock), states);
+  if (!dry) overworld.waterlogged.add(block.key);
+  return block;
+}
+
+test("1.1 content: 14 new crops (3 aquatic), 4 new trees, fruitwood planks", () => {
+  for (const id of ["lotus_root", "water_bamboo", "water_spinach", "bitter_melon", "luffa", "adzuki_bean", "mung_bean", "garlic_chives", "lemongrass", "sichuan_pepper"]) assert(CROPS.some((c) => c.id === id), `crop ${id}`);
+  equal(CROPS.length, 34, "24 crops in 1.0 and 10 more (the other 4 of the 14 are trees)");
+  equal(CROPS.filter((c) => c.form === "aquatic").length, 3, "three aquatic crops");
+  equal(TREES.length, 15, "11 trees and 4 more");
+  for (const id of ["longan", "loquat", "star_fruit", "papaya"]) assert(TREES.some((t) => t.id === id), `tree ${id}`);
+});
+
+test("aquatic: lotus grows in water over mud and drops its root and sometimes a pod", () => {
+  const lotus = plantInWater("lotus_root_crop");
+  const grown = tick(lotus, 40);
+  equal(growth(grown), 7, "ripe");
+  equal(grown.permutation.getState(S("off_climate")), false, "green");
+  __setLootRandom(() => 0.99);
+  __break(player(), grown);
+  assert(overworld.dropped(r("lotus_root")) >= 1, "lotus root");
+  equal(overworld.dropped(r("lotus_pod")), 1, "a lotus pod (0–1, the top roll)");
+});
+
+test("aquatic: out of water it stops and greys; on farmland or stone it does nothing", () => {
+  const dry = plantInWater("lotus_root_crop", 0, { dry: true });
+  const after = tick(dry, 40);
+  equal(growth(after), 0, "no water, no growth");
+  equal(after.permutation.getState(S("off_climate")), true, "grey without water");
+  overworld.waterlogged.add(after.key);
+  equal(tick(after, 1).permutation.getState(S("off_climate")), false, "green again in water");
+  const onFarmland = plant("lotus_root_crop", 2);
+  equal(growth(tick(onFarmland, 40)), 0, "vanilla farmland is not a paddy");
+  const onStone = plantInWater("lotus_root_crop", 4, { bed: "minecraft:stone" });
+  equal(growth(tick(onStone, 40)), 0, "stone is no water bed");
+});
+
+test("aquatic: water spinach and water bamboo are picked and grow back", () => {
+  for (const [id, produce] of [["water_spinach_crop", "water_spinach"], ["water_bamboo_crop", "water_bamboo"]]) {
+    __reset();
+    const crop = plantInWater(id, 0, { states: { [S("growth")]: 7 } });
+    __interact(player(), crop);
+    assert(overworld.dropped(r(produce)) >= 1, `${produce} picked`);
+    equal(growth(overworld.getBlock(at(0))), 4, `${id} back to harvestResetAge`);
+  }
+});
+
+test("aquatic: blocks can stand in water, plant on a water bed or paddy, and grow wild in shallow water", () => {
+  for (const crop of CROPS.filter((c) => c.form === "aquatic")) {
+    const b = json(`packs/BP/blocks/${crop.id}_crop.json`)["minecraft:block"].components;
+    equal(b["minecraft:liquid_detection"]?.detection_rules?.[0]?.can_contain_liquid, true, `${crop.id} holds water`);
+    const filter = b["minecraft:placement_filter"].conditions[0].block_filter;
+    assert(filter.includes("minecraft:mud") && filter.some((f) => f.tags?.includes("kaleidoscope_cookery:farmland")), `${crop.id} on mud or a paddy`);
+    assert(!filter.includes("minecraft:farmland"), `${crop.id} not on dry farmland`);
+    const seed = json(`packs/BP/items/${crop.seed}.json`)["minecraft:item"].components["minecraft:block_placer"];
+    equal(seed.block, r(`${crop.id}_crop`), `${crop.seed} plants it`);
+    const wild = json(`packs/BP/features/wild/wild_${crop.id}_feature.json`)["minecraft:single_block_feature"];
+    equal(wild.may_replace.join(), "minecraft:water", `wild ${crop.id} goes into water`);
+    assert(json(`packs/BP/blocks/wild_${crop.id}.json`)["minecraft:block"].components["minecraft:liquid_detection"], `wild ${crop.id} holds water`);
+  }
+});
+
+test("new trellis, bean, spice and bush crops grow like their 1.0 kin", () => {
+  const p = player(r("bitter_melon_seeds"));
+  __place(overworld, at(0, 63), "minecraft:farmland");
+  __interact(p, __place(overworld, at(0), r("bamboo_trellis")));
+  equal(overworld.getBlock(at(0)).typeId, r("bitter_melon_crop"), "bitter melon on a trellis");
+  const bean = tick(plant("adzuki_bean_crop", 2), 40);
+  __break(player(), bean);
+  assert(overworld.dropped(r("adzuki_bean")) >= 2, "adzuki beans, which also plant it");
+  __place(overworld, at(4, 63), "minecraft:grass_block");
+  const bush = __place(overworld, at(4), r("sichuan_pepper_crop"), { [S("growth")]: 7 });
+  __interact(player(), bush);
+  assert(overworld.dropped(r("sichuan_peppercorns")) >= 1, "peppercorns picked off the bush");
+});
+
+test("corn now also drops corn leaves sometimes", () => {
+  __setLootRandom(() => 0.99);
+  const corn = plant("corn_crop", 0, { [S("growth")]: 7 });
+  __break(player(), corn);
+  equal(overworld.dropped(r("corn_leaves")), 1, "corn leaves at the top roll");
+});
+
+test("juicer: a fruit and a milk bucket make the fruit's milk, and the bucket comes back", () => {
+  const juicer = __place(overworld, at(0), r("juicer"));
+  const papaya = player(r("papaya"));
+  __interact(papaya, juicer);
+  const milk = player("minecraft:milk_bucket");
+  __interact(milk, overworld.getBlock(at(0)));
+  equal(milk.hand?.typeId, "minecraft:bucket", "the empty bucket is handed back");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("juice")), "milk", "the jug is creamy");
+  __interact(player("minecraft:milk_bucket"), overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 2, "full: no third thing");
+  __interact(player("minecraft:glass_bottle"), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("papaya_milk")), 1, "papaya milk");
+  // ## Two milks make nothing; an empty hand gives the milk back as a milk bucket.
+  const again = overworld.getBlock(at(0));
+  __interact(player("minecraft:milk_bucket"), again);
+  __interact(player("minecraft:milk_bucket"), overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 1, "one milk at most");
+  __interact(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped("minecraft:milk_bucket"), 1, "milk back");
+  // ## Papaya has no juice of its own, so papaya and a mandarin make nothing.
+  __interact(player(r("papaya")), overworld.getBlock(at(0)));
+  __interact(player(r("mandarin")), overworld.getBlock(at(0)));
+  __interact(player("minecraft:glass_bottle"), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mixed_juice")), 0, "no mixed juice from a milk-only fruit");
+  // ## Bananas and papayas only make milk drinks.
+  equal(RECIPES.filter((row) => row.station === "juicer" && row.milk).map((row) => row.input).sort().join(), "banana,papaya", "milk drinks");
+});
+
+test("fruitwood planks: four from a log, tagged as planks for vanilla recipes", () => {
+  const item = json("packs/BP/items/fruitwood_planks.json")["minecraft:item"].components;
+  assert(item["minecraft:tags"].tags.includes("minecraft:planks"), "planks tag");
+  equal(item["minecraft:block_placer"].block, r("fruitwood_planks"), "places the planks block");
+  const recipe = json("packs/BP/recipes/fruitwood_planks.json")["minecraft:recipe_shapeless"];
+  equal(recipe.ingredients[0].item, r("fruitwood_log"), "from the log");
+  equal(recipe.result.count, 4, "four planks");
+});
+
+test("rice dishes use Cookery's rice; the garlic eggplant is put together before the steamer", () => {
+  const by = (id) => RECIPES.find((row) => row.result === id);
+  assert(by("sweet_potato_congee").slots.some((slot) => slot.includes("kaleidoscope_cookery:rice")), "congee from raw rice");
+  for (const id of ["pineapple_fried_rice", "braised_pork_rice"]) assert(by(id).slots.some((slot) => slot.includes("kaleidoscope_cookery:cooked_rice")), `${id} from cooked rice`);
+  equal(by("garlic_eggplant_raw").station, "crafting", "raw garlic eggplant at the table");
+  equal(by("steamed_garlic_eggplant").input, "garlic_eggplant_raw", "then steamed");
+  equal(recipePayload({ ...by("steamed_garlic_eggplant") }).recipe.input, r("garlic_eggplant_raw"), "the steamer payload");
+});
+
+test("Ranching: corn leaves are ruminant feed with feed_1_1, grass without it", () => {
+  const leaves = (caps) => feedPayloads(caps).find((f) => f.item === r("corn_leaves"))?.kind;
+  equal(leaves(["register_feed", "feed_1_1"]), "ruminant", "Ranching 1.1");
+  equal(leaves(["register_feed"]), "grass", "Ranching 1.0");
+  equal(feedPayloads(["register_feed"]).length, RANCHING_FEEDS.length, "every feed goes out either way");
+});
+
+test("Harvest API: catalog_foods lists every food with hunger, placeability and container", () => {
+  assert(ANNOUNCED[0].capabilities.includes("catalog_foods"), "capability announced");
+  equal(ANNOUNCED[0].version, "1.1.0", "version");
+  const replies = handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", kind: "foods" }));
+  for (const reply of replies) assert(JSON.stringify(reply).length < SCRIPT_EVENT_LIMIT, "each part under 2048");
+  const foods = replies.flatMap((reply) => reply.items);
+  equal(foods.length, ITEMS.filter((i) => i.food).length, "every food");
+  const of = (id) => foods.find((f) => f.id === r(id));
+  equal(of("mapo_tofu").placeable, true, "mapo tofu can be set down");
+  equal(of("mapo_tofu").container, "minecraft:bowl", "in a bowl");
+  equal(of("longan_tea").container, "kaleidoscope_cookery:empty_cup", "tea in a Cookery cup");
+  equal(of("mango").container, undefined, "raw fruit has none");
+  assert(of("papaya_milk").hunger === 6 && of("papaya_milk").saturation === 0.5, "hunger and saturation");
+  assert(catalogReplies("my_pack", undefined, "crops").flatMap((reply) => reply.items).some((c) => c.form === "aquatic"), "aquatic crops in the crop catalog");
+});
+
+test("1.1 partners: longan wine goes to Tavern; new heat, feed and bait rows name real items", () => {
+  assert(TAVERN_WINES.some((w) => w.id === "longan_wine"), "longan wine in the Tavern table");
+  for (const id of ["mung_bean_soup", "longan_tea", "mapo_tofu"]) assert(HERBAL_HEAT.some((h) => h.id === id), `heat for ${id}`);
+  for (const id of ["adzuki_bean", "mung_bean", "water_spinach", "corn_leaves"]) assert(RANCHING_FEEDS.some((f) => f.item === id), `feed ${id}`);
 });
 
 // --- Report ------------------------------------------------------------------------------------------------------

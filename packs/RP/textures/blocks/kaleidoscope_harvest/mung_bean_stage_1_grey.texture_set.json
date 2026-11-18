@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "mung_bean_stage_1_grey",
+    "normal": "mung_bean_stage_1_grey_normal",
+    "metalness_emissive_roughness": "mung_bean_stage_1_grey_mer"
+  }
+}

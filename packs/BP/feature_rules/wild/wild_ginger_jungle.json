@@ -13,11 +13,6 @@
             "test": "has_biome_tag",
             "operator": "==",
             "value": "jungle"
-          },
-          {
-            "test": "has_biome_tag",
-            "operator": "==",
-            "value": "bop_like_jungle"
           }
         ]
       }

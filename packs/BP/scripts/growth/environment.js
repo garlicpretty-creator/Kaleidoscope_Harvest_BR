@@ -101,3 +101,38 @@ export function isFarmland(block) {
     return false;
   }
 }
+
+// --- Water (1.1: aquatic crops) ----------------------------------------------------------------
+//
+// ## An aquatic crop grows on Cookery's paddy field (a block with Cookery's farmland tag that is not
+// ## vanilla farmland), or waterlogged in plain water over mud, clay, dirt, grass or sand.
+
+const WATER_SOIL = new Set(["minecraft:mud", "minecraft:clay", "minecraft:dirt", "minecraft:grass_block", "minecraft:sand"]);
+
+/** Cookery's paddy field: tagged as Cookery farmland, but not vanilla farmland. */
+export function isPaddy(block) {
+  if (!block || block.typeId === "minecraft:farmland") return false;
+  try {
+    return block.hasTag("kaleidoscope_cookery:farmland");
+  } catch {
+    return false;
+  }
+}
+
+/** Ground an aquatic crop may stand on: a paddy field or the bed of shallow water. */
+export const isWaterBed = (block) => Boolean(block && (isPaddy(block) || WATER_SOIL.has(block.typeId)));
+
+function waterlogged(block) {
+  try {
+    return block.isWaterlogged === true;
+  } catch {
+    return false;
+  }
+}
+
+/** True when an aquatic crop at `block` has its water: a paddy below, or water around it. */
+export function hasWater(block) {
+  const below = block.below();
+  if (isPaddy(below)) return true;
+  return Boolean(below && WATER_SOIL.has(below.typeId) && waterlogged(block));
+}

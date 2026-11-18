@@ -14,7 +14,7 @@ import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
 import { VILLAGE_HOUSES, villageItems } from "./village.js";
-import { BANANA_TRUNK, FRUITWOOD_LOG, TREES, saplingBlockId } from "./trees.js";
+import { BANANA_TRUNK, FRUITWOOD_LOG, FRUITWOOD_PLANKS, TREES, saplingBlockId } from "./trees.js";
 import { VERSION } from "./version.js";
 import { toSimplified } from "./zh_cn.js";
 
@@ -72,6 +72,12 @@ const FORM_LINE = {
   tall: ["種在耕地上，長到一半會長出第二格。打掉上下任一格，整株一起收成。", "Plant it on farmland. Halfway through it grows a second block; break either block to harvest the whole plant."],
   bush: ["灌木，種在草地或泥土上（不用耕地）。熟了點它採收，會再結果，不用重種。", "A shrub: plant it on grass or dirt, no farmland needed. Use it when ripe to pick; it fruits again, no replanting."],
   trellis: ["先在耕地上放竹藤架，再拿種子點竹藤架種下。熟了點它採收，會再結果；打掉時竹藤架會還給你。", "Place a Bamboo Trellis on farmland, then use the seeds on it. Use the ripe vine to pick; it fruits again. Breaking it gives the trellis back."],
+  aquatic: ["水生作物：種在廚房的水田上，或一格深、底下是泥巴、黏土或泥土的水裡。沒有水就不長、葉子發灰。", "A water crop: plant it on Cookery's paddy field, or in water one block deep over mud, clay or dirt. Out of water it stops growing and its leaves turn grey."],
+};
+/** The second line of an aquatic crop: broken once ripe, or picked and growing back. */
+const AQUATIC_HARVEST = {
+  once: ["長滿 8 個階段後打下收成。", "After 8 stages, break it to harvest."],
+  picked: ["熟了點它採收，它會退回幾個階段繼續長，不用重種。", "Once ripe, use it to pick; it drops back a few stages and grows again."],
 };
 
 const BIOME_NAME = {
@@ -86,6 +92,11 @@ const BIOME_NAME = {
   roofed: ["黑森林", "dark forests"],
   bamboo: ["竹林", "bamboo jungles"],
   jungle_edge: ["叢林邊緣", "sparse jungles"],
+  // --- 1.1 ---
+  river: ["河邊", "rivers"],
+  mangrove_swamp: ["紅樹林沼澤", "mangrove swamps"],
+  meadow: ["草甸", "meadows"],
+  birch: ["樺木森林", "birch forests"],
 };
 
 const HOUSE_NAME = {
@@ -110,7 +121,8 @@ export function wildTreeLine(biomes) {
 
 export function wildLine(wild) {
   const names = wild.biomes.map((b) => BIOME_NAME[b]);
-  return [`野外：${names.map((n) => n[0]).join("、")}偶爾長著野生的，打下來就有第一份。`, `In the wild: it grows now and then in ${names.map((n) => n[1]).join(" and ")}; break one for your first harvest.`];
+  const where = wild.water ? ["的淺水裡", "the shallows of "] : ["", ""];
+  return [`野外：${names.map((n) => n[0]).join("、")}${where[0]}偶爾長著野生的，打下來就有第一份。`, `In the wild: it grows now and then in ${where[1]}${names.map((n) => n[1]).join(" and ")}; break one for your first harvest.`];
 }
 
 const BONE_MEAL_LINE = ["骨粉一次推進兩個階段。", "Bone meal moves it on two stages."];
@@ -169,8 +181,14 @@ function entry(id, category, lines, extra = {}) {
 export function guideEntries() {
   const rows = [];
   for (const crop of CROPS) {
-    const lines = [FORM_LINE[crop.form], climateLine(crop.climate), BONE_MEAL_LINE, wildLine(crop.wild), ...villageLine(crop.seed), ...usesOf(crop.produce)];
+    const harvest = crop.form === "aquatic" ? [AQUATIC_HARVEST[crop.pick ? "picked" : "once"]] : [];
+    const lines = [FORM_LINE[crop.form], ...harvest, climateLine(crop.climate), BONE_MEAL_LINE, wildLine(crop.wild), ...villageLine(crop.seed), ...usesOf(crop.produce)];
     rows.push(entry(crop.produce, "crops", lines));
+    // ## 1.1: what else comes off a ripe plant (a lotus pod, corn leaves) gets its own entry.
+    for (const extra of crop.extra ?? []) {
+      const item = ITEM_BY_ID.get(extra.item);
+      rows.push(entry(extra.item, "crops", [[`收成成熟的${crop.zh}時，有時會一起掉落${item.zh}。`, `Ripe ${crop.en} sometimes drops ${item.en} as well.`], ...usesOf(extra.item)]));
+    }
     if (crop.seed !== crop.produce) rows.push(entry(crop.seed, "crops", [[`種下長成${ITEM_BY_ID.get(crop.produce).zh}。`, `Grows into ${ITEM_BY_ID.get(crop.produce).en}.`], FORM_LINE[crop.form]]));
   }
   rows.push(entry(TRELLIS.id, "crops", [FORM_LINE.trellis, ["用竹子與線在工作台合成。", "Crafted from bamboo and string."]], { block: true }));
@@ -197,12 +215,14 @@ export function guideEntries() {
     );
   }
   rows.push(entry(FRUITWOOD_LOG.id, "trees", [["果樹的樹幹。用斧頭砍下可得果木原木，但沒了樹幹，葉子會掉光，果樹就沒了。", "The trunk of a fruit tree. An axe takes it, but without its trunk the leaves fall and the tree is gone."]], { block: true }));
+  rows.push(entry(FRUITWOOD_PLANKS.id, "trees", [["一根果木原木在工作台鋸成四塊果木木板，原版需要木板的配方（木棍、工作台、箱子……）都能用。", "A Fruitwood Log makes four Fruitwood Planks at the crafting table; any vanilla recipe that takes planks (sticks, crafting tables, chests…) takes them."]], { block: true }));
   rows.push(entry(BANANA_TRUNK.id, "trees", [["香蕉的假莖。砍下可得香蕉假莖，但沒了假莖，香蕉的葉子會掉光。", "The trunk of a banana plant. It can be chopped, but without it the banana's leaves fall."]], { block: true }));
 
   rows.push(
     entry(JUICER.id, "stations", [
       ["拿水果點榨汁機放進去，最多兩顆；裝滿後拿空玻璃瓶點它，就得到一瓶果汁。", "Use fruit on the juicer to put it in, two at most; when it is full, use an empty glass bottle on it for a bottle of juice."],
       ["兩顆同樣的水果榨出那種果汁，兩顆不同的水果榨出綜合果汁。空手點它把水果拿回來。", "Two of the same fruit give that fruit's juice; two different fruits give mixed juice. An empty hand takes the fruit back."],
+      ["木瓜或香蕉配一桶牛奶，榨出木瓜牛奶、香蕉牛奶；放牛奶時會還你空桶。", "Papaya or banana with a milk bucket makes papaya or banana milk; the empty bucket comes straight back."],
       ["用木板、玻璃與鐵錠在工作台合成。", "Crafted from planks, glass and an iron ingot."],
     ], { block: true })
   );
@@ -233,7 +253,8 @@ function inputNames(row) {
   if (row.input === "*") return [["任兩種不同的水果", "any two different fruits"]];
   const ids = row.input ? [rid(row.input)] : row.inputs ? row.inputs.map(rid) : row.slots.map((slot) => slot[0]);
   const names = ids.map(nameOf);
-  return row.station === "juicer" ? [names[0], names[0]] : names;
+  if (row.station === "juicer") return row.milk ? [names[0], nameOf("minecraft:milk_bucket")] : [names[0], names[0]];
+  return names;
 }
 
 function madeLine(row, id) {
@@ -258,6 +279,12 @@ const VANILLA_NAMES = {
   "minecraft:sugar": ["糖", "Sugar"],
   "minecraft:bowl": ["碗", "Bowl"],
   "minecraft:beef": ["生牛肉", "Raw Beef"],
+  "minecraft:chicken": ["生雞肉", "Raw Chicken"],
+  "minecraft:milk_bucket": ["牛奶桶", "Milk Bucket"],
+  "minecraft:honey_bottle": ["蜂蜜瓶", "Honey Bottle"],
+  "kaleidoscope_cookery:rice": ["米", "Rice"],
+  "kaleidoscope_cookery:cooked_rice": ["白飯", "Cooked Rice"],
+  "kaleidoscope_cookery:red_chili": ["紅辣椒", "Red Chili"],
 };
 
 /** [zh, en] name of any id the chapter mentions. */
@@ -269,6 +296,7 @@ export function nameOf(id) {
   if (bare === TRELLIS.id) return [TRELLIS.zh, TRELLIS.en];
   if (bare === FRUITWOOD_LOG.id) return [FRUITWOOD_LOG.zh, FRUITWOOD_LOG.en];
   if (bare === BANANA_TRUNK.id) return [BANANA_TRUNK.zh, BANANA_TRUNK.en];
+  if (bare === FRUITWOOD_PLANKS.id) return [FRUITWOOD_PLANKS.zh, FRUITWOOD_PLANKS.en];
   for (const station of [JUICER, PICKLING_JAR]) if (bare === station.id) return [station.zh, station.en];
   const tree = TREES.find((t) => saplingBlockId(t) === bare);
   if (tree) return [`${tree.zh}樹苗`, `${tree.en} Sapling`];

@@ -186,6 +186,10 @@ export class Block {
   get isAir() {
     return this.typeId === "minecraft:air";
   }
+  /** Water in the block's space (tests set dimension.waterlogged). */
+  get isWaterlogged() {
+    return this.dimension.waterlogged?.has(this.key) ?? false;
+  }
   setPermutation(permutation) {
     if (permutation.type.id === "minecraft:air") this.dimension.blocks.delete(this.key);
     else this.dimension.blocks.set(this.key, permutation);
@@ -468,6 +472,7 @@ export function __reset() {
     dimension.biome = "minecraft:plains";
     dimension.featureFails = false;
     dimension.placedFeatures = [];
+    dimension.waterlogged = new Set();
   }
   world.messages = [];
   system.sentEvents = [];

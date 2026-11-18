@@ -1,4 +1,4 @@
-"""Item icons for placeable blocks (leaves and logs), drawn as a small isometric cube like a vanilla block item.
+"""Item icons for placeable blocks (leaves, logs and planks), drawn as a small isometric cube like a vanilla block item.
 
 Usage: python tools/art/block_icons.py
 
@@ -16,10 +16,21 @@ BLOCKS = os.path.join(ROOT, "packs", "RP", "textures", "kaleidoscope_harvest", "
 ITEMS = os.path.join(ROOT, "packs", "RP", "textures", "kaleidoscope_harvest", "items")
 ART = os.path.join(ROOT, "art", "icons")
 
-TREES = ["mandarin", "sweet_orange", "lemon", "peach", "pear", "persimmon", "lychee", "mango", "banana", "star_anise", "cinnamon"]
+TREES = ["mandarin", "sweet_orange", "lemon", "peach", "pear", "persimmon", "lychee", "mango", "banana", "star_anise", "cinnamon",
+         "longan", "loquat", "star_fruit", "papaya"]
 ICONS = {f"{t}_leaves": (f"{t}_leaves_bare", f"{t}_leaves_bare") for t in TREES}
 ICONS["fruitwood_log"] = ("fruitwood_log_top", "fruitwood_log")
 ICONS["banana_trunk"] = ("banana_trunk", "banana_trunk")
+ICONS["fruitwood_planks"] = ("fruitwood_planks", "fruitwood_planks")
+
+
+def write_png(img, path):
+    """Save unless the file already holds these pixels, so a rerun leaves committed files byte-identical."""
+    if os.path.exists(path):
+        with Image.open(path) as old:
+            if old.size == img.size and old.convert("RGBA").tobytes() == img.convert("RGBA").tobytes():
+                return
+    img.save(path)
 
 
 def shade(c, f):
@@ -60,8 +71,8 @@ def main():
         t = Image.open(os.path.join(BLOCKS, top + ".png")).convert("RGBA")
         s = Image.open(os.path.join(BLOCKS, side + ".png")).convert("RGBA")
         icon = cube(t, s)
-        icon.save(os.path.join(ART, item_id + ".png"))
-        icon.save(os.path.join(ITEMS, item_id + ".png"))
+        write_png(icon, os.path.join(ART, item_id + ".png"))
+        write_png(icon, os.path.join(ITEMS, item_id + ".png"))
         picks[item_id] = "code"
     with open(picks_path, "w", encoding="utf8") as f:
         json.dump(dict(sorted(picks.items())), f, indent=1)
@@ -70,7 +81,7 @@ def main():
     for i, item_id in enumerate(ICONS):
         big = Image.open(os.path.join(ITEMS, item_id + ".png")).resize((64, 64), Image.NEAREST)
         sheet.paste(big, (i * 72 + 4, 4), big)
-    sheet.save(os.path.join(ROOT, "art", "previews", "block_icons.png"))
+    write_png(sheet, os.path.join(ROOT, "art", "previews", "block_icons.png"))
     print("wrote", len(ICONS), "block icons")
 
 

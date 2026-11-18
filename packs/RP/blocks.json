@@ -144,6 +144,66 @@
   "kaleidoscope_harvest:wild_pineapple": {
     "sound": "grass"
   },
+  "kaleidoscope_harvest:lotus_root_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_lotus_root": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:water_bamboo_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_water_bamboo": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:water_spinach_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_water_spinach": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:bitter_melon_crop": {
+    "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:wild_bitter_melon": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:luffa_crop": {
+    "sound": "bamboo"
+  },
+  "kaleidoscope_harvest:wild_luffa": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:adzuki_bean_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_adzuki_bean": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:mung_bean_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_mung_bean": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:garlic_chives_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_garlic_chives": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:lemongrass_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_lemongrass": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:sichuan_pepper_crop": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:wild_sichuan_pepper": {
+    "sound": "grass"
+  },
   "kaleidoscope_harvest:bamboo_trellis": {
     "sound": "bamboo"
   },
@@ -152,6 +212,9 @@
   },
   "kaleidoscope_harvest:banana_trunk": {
     "sound": "grass"
+  },
+  "kaleidoscope_harvest:fruitwood_planks": {
+    "sound": "wood"
   },
   "kaleidoscope_harvest:mandarin_sapling": {
     "sound": "grass"
@@ -247,6 +310,42 @@
     "sound": "grass"
   },
   "kaleidoscope_harvest:cinnamon_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:longan_sapling": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:longan_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:longan_fruit": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:loquat_sapling": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:loquat_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:loquat_fruit": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:star_fruit_sapling": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:star_fruit_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:star_fruit_fruit": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:papaya_sapling": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:papaya_leaves": {
+    "sound": "grass"
+  },
+  "kaleidoscope_harvest:papaya_fruit": {
     "sound": "grass"
   },
   "kaleidoscope_harvest:juicer": {

@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "lemongrass_chicken",
+    "normal": "lemongrass_chicken_normal",
+    "metalness_emissive_roughness": "lemongrass_chicken_mer"
+  }
+}

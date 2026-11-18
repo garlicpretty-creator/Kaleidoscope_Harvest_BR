@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "loquat_fruit",
+    "normal": "loquat_fruit_normal",
+    "metalness_emissive_roughness": "loquat_fruit_mer"
+  }
+}

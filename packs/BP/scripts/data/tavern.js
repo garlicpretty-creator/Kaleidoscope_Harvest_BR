@@ -1,4 +1,4 @@
-// The payload Harvest sends 森羅物語：酒館 (api/tavern.js): the lychee and peach wines as barrel
+// The payload Harvest sends 森羅物語：酒館 (api/tavern.js): the lychee, peach and (1.1) longan wines as barrel
 // recipes, with guide pages in three languages. Same fields as Herbal 1.1's data/tavernRecipes.js.
 // Plain data: no @minecraft imports.
 

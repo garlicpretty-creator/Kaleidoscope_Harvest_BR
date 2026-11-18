@@ -19,6 +19,12 @@ export const RANCHING_FEEDS = [
   { item: "spinach", kind: "veg", units: 1, why: "葉菜" },
   { item: "daikon", kind: "veg", units: 2, why: "根莖類，份量大" },
   { item: "sweet_potato", kind: "veg", units: 2, why: "根莖類，份量大" },
+  // --- 1.1 ---
+  { item: "adzuki_bean", kind: "grain", units: 1, why: "豆類穀物飼料" },
+  { item: "mung_bean", kind: "grain", units: 1, why: "豆類穀物飼料" },
+  { item: "water_spinach", kind: "veg", units: 1, why: "葉菜，鄉下常拿來餵豬" },
+  // ## Corn leaves are roughage for cattle and sheep: Ranching 1.1's ruminant feed, plain grass before it.
+  { item: "corn_leaves", kind: "ruminant", fallback: "grass", units: 1, why: "玉米葉是牛羊的粗飼料（樂牧 1.1 的反芻飼料）" },
 ];
 
 // --- 草本 Herbal: 寒熱 of Harvest foods (kaleidoscope_herbal:heat_register) -----------------
@@ -46,6 +52,19 @@ export const HERBAL_HEAT = [
   { id: "five_spice_tea_egg", heat: 10, why: "八角、五香滷的蛋，偏溫" },
   { id: "cumin_lamb_skewers", heat: 20, why: "羊肉性溫，孜然、胡椒辛熱" },
   { id: "black_pepper_steak", heat: 15, why: "黑胡椒辛熱" },
+  // --- 1.1 ---
+  { id: "mung_bean_soup", heat: -25, why: "綠豆甘寒，綠豆湯是消暑的涼品" },
+  { id: "bitter_melon_salad", heat: -15, why: "苦瓜苦寒，涼拌生吃更涼" },
+  { id: "bitter_melon_omelette", heat: -10, why: "苦瓜苦寒，炒過略減" },
+  { id: "lotus_root_rib_soup", heat: -5, why: "蓮藕甘寒，燉排骨後只略涼" },
+  { id: "loquat_syrup", heat: -10, why: "枇杷潤肺止咳，性涼" },
+  { id: "star_fruit_juice", heat: -10, why: "楊桃酸甘性寒，生津止渴" },
+  { id: "red_bean_soup", heat: 5, why: "紅豆性平偏溫，加糖煮成甜湯" },
+  { id: "longan_tea", heat: 20, why: "桂圓甘溫，補氣血" },
+  { id: "longan_wine", heat: 20, why: "龍眼性溫，泡成酒更熱" },
+  { id: "lemongrass_tea", heat: 10, why: "香茅辛溫，暖胃" },
+  { id: "mapo_tofu", heat: 20, why: "花椒、辣椒辛熱" },
+  { id: "sichuan_pepper_chicken", heat: 15, why: "花椒辛溫" },
 ];
 
 // --- 草本 Herbal: adjuvants for the clay pot (kaleidoscope_herbal:adjuvant_register) --------
@@ -77,6 +96,13 @@ export const TAVERN_WINES = [
     ingredients: ["peach", "minecraft:sugar", "minecraft:wheat"],
     title: { zh_TW: "桃子酒", zh_CN: "桃子酒", en_US: "Peach Wine" },
   },
+  // --- 1.1 ---
+  {
+    id: "longan_wine",
+    fruit: "longan",
+    ingredients: ["longan", "minecraft:sugar", "minecraft:wheat"],
+    title: { zh_TW: "龍眼酒", zh_CN: "龙眼酒", en_US: "Longan Wine" },
+  },
 ];
 export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, carrier: "minecraft:glass_bottle", unitTime: 4800 };
 
@@ -88,6 +114,7 @@ export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, 
 export const FISHING_BAITS = [
   { id: "corn_seeds", biteFactor: 0.7, why: "玉米粒是釣鯉魚的老餌" },
   { id: "soybean", biteFactor: 0.8, why: "泡過的黃豆也是常見的底餌" },
+  { id: "mung_bean", biteFactor: 0.7, why: "1.1：綠豆煮過是鯽魚的好餌" },
 ];
 
 // --- 漁歌 Fishing Voyage: fish-pond feed (kaleidoscope_fishing:register_pond_feed) ------------
@@ -97,4 +124,5 @@ export const FISHING_POND_FEEDS = [
   // ## Okara's only other use is Ranching's trough; fish farms feed it too.
   { id: "okara", meals: 2, why: "豆渣是魚塭常用的飼料，蛋白質高" },
   { id: "corn_seeds", meals: 1, why: "玉米粒，一把一餐" },
+  { id: "red_bean_paste", meals: 1, why: "1.1：豆餡揉成餌團，一團一餐" },
 ];

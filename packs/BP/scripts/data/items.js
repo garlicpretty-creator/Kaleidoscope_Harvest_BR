@@ -78,6 +78,32 @@ const BASE_ITEMS = [
   { id: "banana", kind: "produce", zh: "香蕉", en: "Banana", food: [4, 0.4], look: ["long", [246, 220, 80]] },
   { id: "star_anise", kind: "produce", zh: "八角", en: "Star Anise", look: ["pod", [140, 70, 40]] },
   { id: "cinnamon_bark", kind: "produce", zh: "肉桂皮", en: "Cinnamon Bark", look: ["long", [150, 80, 50]] },
+  // --- 1.1: crops -------------------------------------------------------------------------------
+  seed("water_spinach_seeds", "空心菜種子", "Water Spinach Seeds", [90, 70, 50]),
+  seed("bitter_melon_seeds", "苦瓜種子", "Bitter Melon Seeds", [200, 180, 140]),
+  seed("luffa_seeds", "絲瓜種子", "Luffa Seeds", [40, 36, 34]),
+  seed("garlic_chive_seeds", "韭菜種子", "Garlic Chive Seeds", [30, 28, 26]),
+  { id: "sichuan_pepper_seedling", kind: "seed", zh: "花椒苗", en: "Sichuan Pepper Seedling", look: ["leafy", [70, 130, 60]] },
+  // ## Lotus root, water bamboo, the two beans and lemongrass are also what plant them.
+  { id: "lotus_root", kind: "produce", zh: "蓮藕", en: "Lotus Root", look: ["root", [236, 214, 190]] },
+  { id: "lotus_pod", kind: "produce", zh: "蓮蓬", en: "Lotus Pod", look: ["head", [120, 160, 90]] },
+  { id: "water_bamboo", kind: "produce", zh: "茭白筍", en: "Water Bamboo", look: ["long", [236, 234, 210]] },
+  { id: "water_spinach", kind: "produce", zh: "空心菜", en: "Water Spinach", look: ["leafy", [60, 140, 56]] },
+  { id: "bitter_melon", kind: "produce", zh: "苦瓜", en: "Bitter Melon", look: ["long", [130, 190, 90]] },
+  { id: "luffa", kind: "produce", zh: "絲瓜", en: "Luffa", look: ["long", [90, 140, 70]] },
+  { id: "adzuki_bean", kind: "produce", zh: "紅豆", en: "Adzuki Beans", look: ["seeds", [150, 40, 50]] },
+  { id: "mung_bean", kind: "produce", zh: "綠豆", en: "Mung Beans", look: ["seeds", [80, 130, 60]] },
+  { id: "garlic_chives", kind: "produce", zh: "韭菜", en: "Garlic Chives", look: ["stalk", [70, 150, 60]] },
+  { id: "lemongrass", kind: "produce", zh: "香茅", en: "Lemongrass", look: ["stalk", [180, 200, 110]] },
+  { id: "sichuan_peppercorns", kind: "produce", zh: "花椒", en: "Sichuan Peppercorns", look: ["seeds", [180, 50, 40]] },
+  // ## Corn leaves come off with the cob; with Ranching they are fodder (data/integrations.js).
+  { id: "corn_leaves", kind: "produce", zh: "玉米葉", en: "Corn Leaves", look: ["leafy", [150, 180, 90]] },
+
+  // --- 1.1: fruit trees ---------------------------------------------------------------------------
+  { id: "longan", kind: "produce", zh: "龍眼", en: "Longan", food: [2, 0.4], look: ["pod", [190, 150, 90]] },
+  { id: "loquat", kind: "produce", zh: "枇杷", en: "Loquat", food: [3, 0.4], look: ["round", [246, 170, 50]] },
+  { id: "star_fruit", kind: "produce", zh: "楊桃", en: "Star Fruit", food: [3, 0.4], look: ["round", [240, 210, 70]] },
+  { id: "papaya", kind: "produce", zh: "木瓜", en: "Papaya", food: [4, 0.4], look: ["long", [246, 160, 60]] },
 ];
 
 /** The menu rows (data/menu.js) whose Harvest inputs all exist. */

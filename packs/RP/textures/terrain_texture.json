@@ -595,6 +595,246 @@
     "kh_pineapple_stage_3_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/pineapple_stage_3_grey"
     },
+    "kh_lotus_root_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lotus_root_stage_0"
+    },
+    "kh_lotus_root_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lotus_root_stage_0_grey"
+    },
+    "kh_lotus_root_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lotus_root_stage_1"
+    },
+    "kh_lotus_root_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lotus_root_stage_1_grey"
+    },
+    "kh_lotus_root_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lotus_root_stage_2"
+    },
+    "kh_lotus_root_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lotus_root_stage_2_grey"
+    },
+    "kh_lotus_root_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lotus_root_stage_3"
+    },
+    "kh_lotus_root_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lotus_root_stage_3_grey"
+    },
+    "kh_water_bamboo_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_bamboo_stage_0"
+    },
+    "kh_water_bamboo_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_bamboo_stage_0_grey"
+    },
+    "kh_water_bamboo_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_bamboo_stage_1"
+    },
+    "kh_water_bamboo_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_bamboo_stage_1_grey"
+    },
+    "kh_water_bamboo_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_bamboo_stage_2"
+    },
+    "kh_water_bamboo_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_bamboo_stage_2_grey"
+    },
+    "kh_water_bamboo_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_bamboo_stage_3"
+    },
+    "kh_water_bamboo_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_bamboo_stage_3_grey"
+    },
+    "kh_water_spinach_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_spinach_stage_0"
+    },
+    "kh_water_spinach_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_spinach_stage_0_grey"
+    },
+    "kh_water_spinach_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_spinach_stage_1"
+    },
+    "kh_water_spinach_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_spinach_stage_1_grey"
+    },
+    "kh_water_spinach_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_spinach_stage_2"
+    },
+    "kh_water_spinach_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_spinach_stage_2_grey"
+    },
+    "kh_water_spinach_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/water_spinach_stage_3"
+    },
+    "kh_water_spinach_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/water_spinach_stage_3_grey"
+    },
+    "kh_bitter_melon_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bitter_melon_stage_0"
+    },
+    "kh_bitter_melon_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/bitter_melon_stage_0_grey"
+    },
+    "kh_bitter_melon_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bitter_melon_stage_1"
+    },
+    "kh_bitter_melon_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/bitter_melon_stage_1_grey"
+    },
+    "kh_bitter_melon_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bitter_melon_stage_2"
+    },
+    "kh_bitter_melon_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/bitter_melon_stage_2_grey"
+    },
+    "kh_bitter_melon_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/bitter_melon_stage_3"
+    },
+    "kh_bitter_melon_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/bitter_melon_stage_3_grey"
+    },
+    "kh_luffa_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/luffa_stage_0"
+    },
+    "kh_luffa_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/luffa_stage_0_grey"
+    },
+    "kh_luffa_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/luffa_stage_1"
+    },
+    "kh_luffa_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/luffa_stage_1_grey"
+    },
+    "kh_luffa_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/luffa_stage_2"
+    },
+    "kh_luffa_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/luffa_stage_2_grey"
+    },
+    "kh_luffa_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/luffa_stage_3"
+    },
+    "kh_luffa_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/luffa_stage_3_grey"
+    },
+    "kh_adzuki_bean_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/adzuki_bean_stage_0"
+    },
+    "kh_adzuki_bean_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/adzuki_bean_stage_0_grey"
+    },
+    "kh_adzuki_bean_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/adzuki_bean_stage_1"
+    },
+    "kh_adzuki_bean_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/adzuki_bean_stage_1_grey"
+    },
+    "kh_adzuki_bean_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/adzuki_bean_stage_2"
+    },
+    "kh_adzuki_bean_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/adzuki_bean_stage_2_grey"
+    },
+    "kh_adzuki_bean_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/adzuki_bean_stage_3"
+    },
+    "kh_adzuki_bean_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/adzuki_bean_stage_3_grey"
+    },
+    "kh_mung_bean_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/mung_bean_stage_0"
+    },
+    "kh_mung_bean_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mung_bean_stage_0_grey"
+    },
+    "kh_mung_bean_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/mung_bean_stage_1"
+    },
+    "kh_mung_bean_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mung_bean_stage_1_grey"
+    },
+    "kh_mung_bean_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/mung_bean_stage_2"
+    },
+    "kh_mung_bean_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mung_bean_stage_2_grey"
+    },
+    "kh_mung_bean_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/mung_bean_stage_3"
+    },
+    "kh_mung_bean_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/mung_bean_stage_3_grey"
+    },
+    "kh_garlic_chives_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_chives_stage_0"
+    },
+    "kh_garlic_chives_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/garlic_chives_stage_0_grey"
+    },
+    "kh_garlic_chives_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_chives_stage_1"
+    },
+    "kh_garlic_chives_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/garlic_chives_stage_1_grey"
+    },
+    "kh_garlic_chives_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_chives_stage_2"
+    },
+    "kh_garlic_chives_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/garlic_chives_stage_2_grey"
+    },
+    "kh_garlic_chives_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/garlic_chives_stage_3"
+    },
+    "kh_garlic_chives_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/garlic_chives_stage_3_grey"
+    },
+    "kh_lemongrass_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lemongrass_stage_0"
+    },
+    "kh_lemongrass_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemongrass_stage_0_grey"
+    },
+    "kh_lemongrass_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lemongrass_stage_1"
+    },
+    "kh_lemongrass_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemongrass_stage_1_grey"
+    },
+    "kh_lemongrass_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lemongrass_stage_2"
+    },
+    "kh_lemongrass_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemongrass_stage_2_grey"
+    },
+    "kh_lemongrass_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/lemongrass_stage_3"
+    },
+    "kh_lemongrass_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/lemongrass_stage_3_grey"
+    },
+    "kh_sichuan_pepper_stage_0": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sichuan_pepper_stage_0"
+    },
+    "kh_sichuan_pepper_stage_0_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sichuan_pepper_stage_0_grey"
+    },
+    "kh_sichuan_pepper_stage_1": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sichuan_pepper_stage_1"
+    },
+    "kh_sichuan_pepper_stage_1_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sichuan_pepper_stage_1_grey"
+    },
+    "kh_sichuan_pepper_stage_2": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sichuan_pepper_stage_2"
+    },
+    "kh_sichuan_pepper_stage_2_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sichuan_pepper_stage_2_grey"
+    },
+    "kh_sichuan_pepper_stage_3": {
+      "textures": "textures/kaleidoscope_harvest/blocks/crops/sichuan_pepper_stage_3"
+    },
+    "kh_sichuan_pepper_stage_3_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/sichuan_pepper_stage_3_grey"
+    },
     "kh_fruitwood_log_side": {
       "textures": "textures/kaleidoscope_harvest/blocks/trees/fruitwood_log"
     },
@@ -606,6 +846,9 @@
     },
     "kh_banana_trunk_top": {
       "textures": "textures/kaleidoscope_harvest/blocks/trees/banana_trunk"
+    },
+    "kh_fruitwood_planks": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/fruitwood_planks"
     },
     "kh_mandarin_sapling": {
       "textures": "textures/kaleidoscope_harvest/blocks/saplings/mandarin_sapling"
@@ -802,6 +1045,78 @@
     "kh_cinnamon_leaves_blossom_grey": {
       "textures": "textures/blocks/kaleidoscope_harvest/cinnamon_leaves_blossom_grey"
     },
+    "kh_longan_sapling": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/longan_sapling"
+    },
+    "kh_longan_leaves_bare": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/longan_leaves_bare"
+    },
+    "kh_longan_leaves_bare_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/longan_leaves_bare_grey"
+    },
+    "kh_longan_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/longan_leaves_blossom"
+    },
+    "kh_longan_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/longan_leaves_blossom_grey"
+    },
+    "kh_longan_fruit": {
+      "textures": "textures/kaleidoscope_harvest/blocks/fruit/longan_fruit"
+    },
+    "kh_loquat_sapling": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/loquat_sapling"
+    },
+    "kh_loquat_leaves_bare": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/loquat_leaves_bare"
+    },
+    "kh_loquat_leaves_bare_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/loquat_leaves_bare_grey"
+    },
+    "kh_loquat_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/loquat_leaves_blossom"
+    },
+    "kh_loquat_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/loquat_leaves_blossom_grey"
+    },
+    "kh_loquat_fruit": {
+      "textures": "textures/kaleidoscope_harvest/blocks/fruit/loquat_fruit"
+    },
+    "kh_star_fruit_sapling": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/star_fruit_sapling"
+    },
+    "kh_star_fruit_leaves_bare": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_fruit_leaves_bare"
+    },
+    "kh_star_fruit_leaves_bare_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_fruit_leaves_bare_grey"
+    },
+    "kh_star_fruit_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/star_fruit_leaves_blossom"
+    },
+    "kh_star_fruit_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/star_fruit_leaves_blossom_grey"
+    },
+    "kh_star_fruit_fruit": {
+      "textures": "textures/kaleidoscope_harvest/blocks/fruit/star_fruit_fruit"
+    },
+    "kh_papaya_sapling": {
+      "textures": "textures/kaleidoscope_harvest/blocks/saplings/papaya_sapling"
+    },
+    "kh_papaya_leaves_bare": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/papaya_leaves_bare"
+    },
+    "kh_papaya_leaves_bare_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/papaya_leaves_bare_grey"
+    },
+    "kh_papaya_leaves_blossom": {
+      "textures": "textures/kaleidoscope_harvest/blocks/trees/papaya_leaves_blossom"
+    },
+    "kh_papaya_leaves_blossom_grey": {
+      "textures": "textures/blocks/kaleidoscope_harvest/papaya_leaves_blossom_grey"
+    },
+    "kh_papaya_fruit": {
+      "textures": "textures/kaleidoscope_harvest/blocks/fruit/papaya_fruit"
+    },
     "kh_station_juicer": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/juicer"
     },
@@ -882,6 +1197,45 @@
     },
     "kh_food_passion_fruit_tea": {
       "textures": "textures/kaleidoscope_harvest/blocks/food/passion_fruit_tea"
+    },
+    "kh_food_lotus_root_rib_soup": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/lotus_root_rib_soup"
+    },
+    "kh_food_luffa_soup": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/luffa_soup"
+    },
+    "kh_food_red_bean_soup": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/red_bean_soup"
+    },
+    "kh_food_mung_bean_soup": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mung_bean_soup"
+    },
+    "kh_food_mapo_tofu": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mapo_tofu"
+    },
+    "kh_food_red_bean_cake": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/red_bean_cake"
+    },
+    "kh_food_mung_bean_cake": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/mung_bean_cake"
+    },
+    "kh_food_loquat_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/loquat_juice"
+    },
+    "kh_food_star_fruit_juice": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/star_fruit_juice"
+    },
+    "kh_food_papaya_milk": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/papaya_milk"
+    },
+    "kh_food_longan_wine": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/longan_wine"
+    },
+    "kh_food_lemongrass_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/lemongrass_tea"
+    },
+    "kh_food_longan_tea": {
+      "textures": "textures/kaleidoscope_harvest/blocks/food/longan_tea"
     }
   }
 }

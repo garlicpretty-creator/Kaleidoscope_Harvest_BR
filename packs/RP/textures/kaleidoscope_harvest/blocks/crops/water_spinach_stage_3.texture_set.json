@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "water_spinach_stage_3",
+    "normal": "water_spinach_stage_3_normal",
+    "metalness_emissive_roughness": "water_spinach_stage_3_mer"
+  }
+}

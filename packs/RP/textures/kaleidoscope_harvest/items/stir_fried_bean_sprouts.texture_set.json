@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "stir_fried_bean_sprouts",
+    "normal": "stir_fried_bean_sprouts_normal",
+    "metalness_emissive_roughness": "stir_fried_bean_sprouts_mer"
+  }
+}

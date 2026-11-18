@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "bitter_melon_seeds",
+    "normal": "bitter_melon_seeds_normal",
+    "metalness_emissive_roughness": "bitter_melon_seeds_mer"
+  }
+}

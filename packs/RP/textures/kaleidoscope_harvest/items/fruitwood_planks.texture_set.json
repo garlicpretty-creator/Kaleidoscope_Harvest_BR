@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "fruitwood_planks",
+    "normal": "fruitwood_planks_normal",
+    "metalness_emissive_roughness": "fruitwood_planks_mer"
+  }
+}

@@ -55,7 +55,9 @@ STEEL = R((176, 182, 188), 0.7, 1.2)
 GLAZE = R((92, 58, 40))
 CLAY_RAW = R((184, 146, 106))
 WATER = R((116, 150, 160), 0.8, 1.25)
-JUICE = {"orange": (240, 146, 40), "grape": (104, 36, 92), "mango": (244, 184, 40)}  # = JUICER.colours[1:]
+# = JUICER.colours[1:]; milk (1.1: the milk drinks, papaya milk and the like) is a creamy off-white
+JUICE = {"orange": (240, 146, 40), "grape": (104, 36, 92), "mango": (244, 184, 40), "milk": (250, 244, 224)}
+JUICE_RAMP = {"milk": (0.9, 1.04)}  # milk keeps its cream colour all the way down instead of darkening to grey
 
 
 # ============================================================================================ juicer
@@ -134,8 +136,8 @@ def juice_boxes():
     return [Box(-3.5, 3.5, -3.5, 3.5, 10, 3.5, f"juice_{c}", bone=f"juice_{c}") for c in JUICE]
 
 
-def juice(c):
-    r = R(c, 0.72, 1.2)
+def juice(c, lo=0.72, hi=1.2):
+    r = R(c, lo, hi)
 
     @painter
     def p(t):
@@ -284,7 +286,7 @@ def main():
     problems += build("juicer", juicer_boxes(), {"plank_side": plank_side, "plank_top": plank_top, "post": post,
                                                  "glass": glass, "glass_top": glass_top}, BLOCK_GEO, BLOCK_TEX)
     problems += build("juicer_visual", reamer_boxes() + juice_boxes(),
-                      {"steel": steel, "steel_tip": steel_tip, **{f"juice_{c}": juice(v) for c, v in JUICE.items()}},
+                      {"steel": steel, "steel_tip": steel_tip, **{f"juice_{c}": juice(v, *JUICE_RAMP.get(c, ())) for c, v in JUICE.items()}},
                       ENTITY_GEO, ENTITY_TEX, pivots={"reamer": (0, 11, 0), **{f"juice_{c}": (0, 3.5, 0) for c in JUICE}},
                       audit_sets=[reamer_boxes() + [j] for j in juice_boxes()])
     problems += build("pickling_jar", jar_boxes(), {"foot": foot, "belly": belly, "shoulder": shoulder, "moat": moat,
