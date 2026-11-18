@@ -44,7 +44,7 @@ const { guideEntries, guidebookPayload } = await import("../../packs/BP/scripts/
 const { RECIPES } = await import("../../packs/BP/scripts/data/dishes.js");
 const { guidebookMessages } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 const { brokeCrop } = await import("../../packs/BP/scripts/growth/crops.js");
-const { recipePayload, oilContainers } = await import("../../packs/BP/scripts/api/cookeryContent.js");
+const { recipePayload, oilContainers, partnerRows } = await import("../../packs/BP/scripts/api/cookeryContent.js");
 const { MENU, activeMenu } = await import("../../packs/BP/scripts/data/menu.js");
 
 const NS = "kaleidoscope_harvest";
@@ -664,6 +664,20 @@ test("juicer: two mandarins and a glass bottle make mandarin juice", () => {
   equal(overworld.getBlock(at(0)).permutation.getState(S("juice")), "empty", "jug empty");
 });
 
+test("juicer: Tavern's grape counts as a grape (1.2) and comes back out as Tavern's", () => {
+  const T = "kaleidoscope_tavern:grape";
+  __place(overworld, at(0), r("juicer"));
+  __interact(player(T), overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).permutation.getState(S("juice")), "grape", "jug shows grape");
+  __interact(player(r("grape")), overworld.getBlock(at(0)));
+  __interact(player("minecraft:glass_bottle"), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("grape_juice")), 1, "a Tavern and a Harvest grape make grape juice");
+  __interact(player(T), overworld.getBlock(at(0)));
+  __interact(player(r("mandarin")), overworld.getBlock(at(0)));
+  __interact(player(null), overworld.getBlock(at(0)));
+  equal(overworld.dropped(T), 1, "an empty hand gives Tavern's grape back as it was");
+});
+
 test("juicer: an empty hand or breaking it gives the fruit back", () => {
   const juicer = __place(overworld, at(0), r("juicer"));
   __interact(player(r("mandarin")), juicer);
@@ -937,6 +951,18 @@ test("recipes go to Cookery once it reports its capabilities; unknown kinds are 
   assert(Array.isArray(wok.recipe.ingredients[0]), "wok slots are lists");
 });
 
+test("Cookery: Tavern's grape dries into raisins too, sent only when Tavern is installed (1.2)", () => {
+  equal(partnerRows().length, 0, "no Tavern: nothing extra");
+  mc.__addItemType("kaleidoscope_tavern:grape");
+  const rows = partnerRows();
+  assert(rows.length >= 1, "a row for each grape recipe");
+  const tray = recipePayload(rows.find((row) => row.station === "bamboo_tray"));
+  equal(tray.recipe.input, "kaleidoscope_tavern:grape", "Tavern's grape");
+  equal(tray.recipe.result, r("raisins"), "raisins");
+  equal(tray.recipe.id, `${NS}:bamboo_tray/raisins_from_tavern_grape`, "its own id, apart from Harvest's grape");
+  mc.__reset();
+});
+
 test("the guidebook chapter goes out as begin / chunks / end and reads back as JSON", () => {
   const messages = guidebookMessages();
   equal(messages[0][0], "kaleidoscope_cookery:guidebook_begin", "begin");
@@ -1088,16 +1114,26 @@ test("Tavern: the payload registers every wine (lychee, peach, 1.1 longan) as ba
   const payload = tavernPayload();
   equal(payload.api, 1, "api");
   equal(payload.source, NS, "source");
-  equal(payload.recipes.length, TAVERN_WINES.length, "one recipe per wine");
-  equal(payload.recipes.map((rc) => rc.output.item).sort().join(), [r("longan_wine"), r("lychee_wine"), r("peach_wine")].join(), "longan, lychee and peach wine");
-  assert(!JSON.stringify(payload).includes("grape"), "no grape wine: that is Tavern's own");
-  for (const recipe of payload.recipes) {
+  const barrels = payload.recipes.filter((rc) => rc.kind === "barrel");
+  equal(barrels.length, TAVERN_WINES.length, "one barrel recipe per wine");
+  equal(barrels.map((rc) => rc.output.item).sort().join(), [r("longan_wine"), r("lychee_wine"), r("peach_wine")].join(), "longan, lychee and peach wine");
+  assert(!JSON.stringify(payload.recipes.map((rc) => rc.output ?? null)).includes("grape"), "no grape wine: that is Tavern's own");
+  for (const recipe of barrels) {
     equal(recipe.kind, "barrel", "barrel");
     assert(recipe.id.startsWith(`${NS}:barrel/`), "own recipe id");
     for (const [id] of recipe.ingredients) assert(id.startsWith("minecraft:") || ITEMS.some((i) => r(i.id) === id), `${id} exists`);
     assert(ITEMS.some((i) => r(i.id) === recipe.output.item), "output exists");
   }
   for (const page of payload.pages) for (const locale of ["zh_TW", "zh_CN", "en_US"]) assert(page.title[locale] && page.body[locale], `${page.id} ${locale}`);
+  // ## 1.2: Harvest's grape presses into Tavern's own grape juice, at Tavern's own 125 mB.
+  const press = payload.recipes.filter((rc) => rc.kind === "pressing");
+  equal(press.length, 1, "one pressing recipe");
+  equal(press[0].id, r("pressing/grape"), "own id");
+  equal(press[0].input.join(), r("grape"), "Harvest's grape");
+  equal(press[0].fluid, "kaleidoscope_tavern:grape_juice", "Tavern's grape juice");
+  equal(1000 % press[0].amount, 0, "a whole number of grapes fills a bucket");
+  assert(payload.requires.includes("pressing_recipes"), "needs the pressing capability");
+  assert(payload.pages.some((pg) => pg.item === r("grape") && pg.recipeIds.includes(r("pressing/grape"))), "grape page");
   // ## The pickling jar keeps making them too.
   for (const wine of TAVERN_WINES) assert(RECIPES.some((row) => row.result === wine.id && row.station === "pickling_jar"), `${wine.id} jar recipe`);
 });
@@ -1142,10 +1178,10 @@ test("Tavern: the SDK waits for the required capabilities, then sends the payloa
     system.sendScriptEvent("kaleidoscope_tavern:api_ready", JSON.stringify({ api: 1, capabilities: ["barrel_recipes"] }));
     __advance(20);
   });
-  equal(sent("kaleidoscope_tavern:extension_begin").length, 0, "nothing without guide_product_pages, chunk_transport, acknowledgements");
+  equal(sent("kaleidoscope_tavern:extension_begin").length, 0, "nothing without pressing_recipes, guide_product_pages, chunk_transport, acknowledgements");
   assert(lines.some((l) => l.includes("lacks required capabilities")), "logged to the console");
   system.sentEvents = [];
-  system.sendScriptEvent("kaleidoscope_tavern:api_ready", JSON.stringify({ api: 1, capabilities: ["barrel_recipes", "guide_product_pages", "chunk_transport", "acknowledgements"] }));
+  system.sendScriptEvent("kaleidoscope_tavern:api_ready", JSON.stringify({ api: 1, capabilities: ["barrel_recipes", "pressing_recipes", "guide_product_pages", "chunk_transport", "acknowledgements"] }));
   __advance(40);
   const ids = system.sentEvents.map((e) => e.id).filter((id) => id.startsWith("kaleidoscope_tavern:extension_"));
   equal(ids[0], "kaleidoscope_tavern:extension_begin", "begin first");

@@ -1,11 +1,11 @@
 // The payload Harvest sends 森羅物語：酒館 (api/tavern.js): the lychee, peach and (1.1) longan wines as barrel
-// recipes, with guide pages in three languages. Same fields as Herbal 1.1's data/tavernRecipes.js.
+// recipes, (1.2) Harvest's grape as a pressing-tub input, with guide pages in three languages. Same fields as Herbal 1.1's data/tavernRecipes.js.
 // Plain data: no @minecraft imports.
 
 import { ITEM_BY_ID } from "./items.js";
 import { MENU } from "./menu.js";
 import { NAMESPACE, rid } from "./ns.js";
-import { TAVERN_BATCH, TAVERN_WINES } from "./integrations.js";
+import { TAVERN_BATCH, TAVERN_GRAPE, TAVERN_WINES } from "./integrations.js";
 import { VERSION } from "./version.js";
 import { toSimplified } from "./zh_cn.js";
 
@@ -52,6 +52,13 @@ function fruitBody(wine, locale) {
   return locale === "zh_CN" ? toSimplified(zh) : zh;
 }
 
+function grapeBody(locale) {
+  if (locale === "en_US")
+    return "Harvest's grape, grown on a bamboo trellis. It presses just like Tavern's grape: put it in the pressing tub for grape juice, then brew Tavern's grape wine. Tavern's grape also works in Harvest's juicer and on Cookery's bamboo tray for raisins.";
+  const zh = "豐收的葡萄，種在竹藤架上。和酒館的葡萄一樣能放進壓榨桶壓成葡萄汁，再釀酒館的葡萄酒；酒館的葡萄也能放進豐收的榨汁機，或放在廚房的竹篩上曬成葡萄乾。";
+  return locale === "zh_CN" ? toSimplified(zh) : zh;
+}
+
 const localized = (fn) => Object.fromEntries(LOCALES.map((locale) => [locale, fn(locale)]));
 const icon = (id) => `textures/${NAMESPACE}/items/${id}`;
 
@@ -62,8 +69,9 @@ export function tavernPayload() {
     source: NAMESPACE,
     version: VERSION,
     title: { zh_TW: "森羅物語：豐收", zh_CN: toSimplified("森羅物語：豐收"), en_US: "Kaleidoscope Harvest" },
-    requires: ["barrel_recipes", "guide_product_pages", "chunk_transport", "acknowledgements"],
-    recipes: TAVERN_WINES.map((wine) => ({
+    requires: ["barrel_recipes", "pressing_recipes", "guide_product_pages", "chunk_transport", "acknowledgements"],
+    recipes: [
+      ...TAVERN_WINES.map((wine) => ({
       id: rid(`barrel/${wine.id}`),
       kind: "barrel",
       title: wine.title,
@@ -72,7 +80,17 @@ export function tavernPayload() {
       carrier: TAVERN_BATCH.carrier,
       unitTime: TAVERN_BATCH.unitTime,
       output: { item: rid(wine.id) },
-    })),
+      })),
+      // ## 1.2: Harvest's grape in Tavern's pressing tub gives Tavern's own grape juice.
+      {
+        id: rid("pressing/grape"),
+        kind: "pressing",
+        title: TAVERN_GRAPE.title,
+        input: [rid(TAVERN_GRAPE.harvest)],
+        fluid: TAVERN_GRAPE.juice,
+        amount: TAVERN_GRAPE.amount,
+      },
+    ],
     pages: [
       ...TAVERN_WINES.map((wine) => ({
         id: rid(`guide/${wine.id}`),
@@ -92,6 +110,15 @@ export function tavernPayload() {
         icon: icon(wine.fruit),
         body: localized((locale) => fruitBody(wine, locale)),
       })),
+      {
+        id: rid("guide/ingredient_grape"),
+        item: rid(TAVERN_GRAPE.harvest),
+        category: "ingredients",
+        title: TAVERN_GRAPE.title,
+        icon: icon(TAVERN_GRAPE.harvest),
+        recipeIds: [rid("pressing/grape")],
+        body: localized(grapeBody),
+      },
     ],
   };
 }

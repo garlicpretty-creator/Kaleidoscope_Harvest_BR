@@ -59,6 +59,14 @@ export class MolangVariableMap {
     this.values[name] = { ...vector };
   }
 }
+/** Items the world knows: vanilla, Harvest's, and any a test adds with __addItemType (another pack's). */
+const extraItemTypes = new Set();
+export const ItemTypes = {
+  get: (id) => (id.startsWith("minecraft:") || id.startsWith("kaleidoscope_harvest:") || extraItemTypes.has(id) ? { id } : undefined),
+};
+export function __addItemType(id) {
+  extraItemTypes.add(id);
+}
 export const GameMode = { Survival: "Survival", Creative: "Creative" };
 
 // --- Items ------------------------------------------------------------------------------
@@ -477,4 +485,5 @@ export function __reset() {
   world.messages = [];
   system.sentEvents = [];
   dynamicProperties.clear();
+  extraItemTypes.clear();
 }

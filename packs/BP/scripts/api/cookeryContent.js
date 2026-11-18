@@ -9,8 +9,9 @@
 // ## an older Cookery skips what it lacks (企劃書 risk: 廚房更新改動內部結構).
 // ## Payload fields follow what Ranching 1.1 and Herbal 1.2 send to Cookery 1.6.6.
 
-import { system } from "@minecraft/server";
+import { ItemTypes, system } from "@minecraft/server";
 import { COOKERY_STATIONS, RECIPES } from "../data/dishes.js";
+import { TAVERN_GRAPE } from "../data/integrations.js";
 import { ITEMS } from "../data/items.js";
 import { guidebookPayload } from "../data/guidebook.js";
 import { NAMESPACE, rid } from "../data/ns.js";
@@ -26,7 +27,7 @@ const KIND = {
 export function recipePayload(row) {
   const kind = KIND[row.station];
   if (!kind) throw new Error(`unknown station ${row.station}`);
-  const id = `${NAMESPACE}:${row.station}/${row.result}`;
+  const id = `${NAMESPACE}:${row.station}/${row.result}${row.idSuffix ?? ""}`;
   const result = rid(row.result);
   let recipe;
   switch (row.station) {
@@ -61,10 +62,32 @@ export function recipePayload(row) {
   return { api: 1, kind, source: SOURCE, recipe };
 }
 
+const itemExists = (id) => {
+  try {
+    return !!ItemTypes.get(id);
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * 1.2: the same Cookery recipes for another pack's fruit that counts as Harvest's (Tavern's
+ * grape dries into raisins too). Only sent when that pack is installed, so Cookery never
+ * sees an unknown item.
+ */
+export function partnerRows() {
+  if (!itemExists(TAVERN_GRAPE.tavern)) return [];
+  return RECIPES.filter((row) => COOKERY_STATIONS.includes(row.station) && row.input === TAVERN_GRAPE.harvest).map((row) => ({
+    ...row,
+    input: TAVERN_GRAPE.tavern,
+    idSuffix: "_from_tavern_grape",
+  }));
+}
+
 /** Sends every recipe Cookery can take; returns how many went out. */
 export function registerRecipes() {
   let sent = 0;
-  for (const row of RECIPES.filter((r) => COOKERY_STATIONS.includes(r.station))) {
+  for (const row of [...RECIPES.filter((r) => COOKERY_STATIONS.includes(r.station)), ...partnerRows()]) {
     const payload = recipePayload(row);
     if (cookeryHas(payload.kind) && send("kaleidoscope_cookery:register_recipe", payload)) sent++;
   }
