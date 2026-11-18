@@ -44,9 +44,6 @@ export function registerFeeds() {
   return sent;
 }
 
-/** Ranching listed the capability in its last api_ready. */
-export const ranchingHas = (capability) => capabilities?.includes(capability) ?? false;
-
 /** A refusal for one of Harvest's own ids, worth a line in the content log (never on screen). */
 export function ownFailure(result) {
   return Boolean(result && result.ok === false && typeof result.id === "string" && result.id.startsWith(`${NAMESPACE}:`));

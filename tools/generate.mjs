@@ -190,8 +190,6 @@ function stagedMaterials(name, stages, shown, grey, extra = {}) {
 }
 /** The bounding box of a drawn model's bone, in block units, for selection boxes. */
 function boneBounds(geoFile, bone) {
-  // ## A model not drawn yet: a small box under the leaf until it is.
-  if (!existsSync(join(RP, "models", "blocks", geoFile))) return { origin: [-4, 8, -4], size: [8, 8, 8] };
   const geo = JSON.parse(readFileSync(join(RP, "models", "blocks", geoFile), "utf8"))["minecraft:geometry"][0];
   const min = [Infinity, Infinity, Infinity];
   const max = [-Infinity, -Infinity, -Infinity];
@@ -718,7 +716,7 @@ for (const row of RECIPES) {
   }
 }
 
-// --- Juicer and pickling jar (models and textures from tools/art/station_models.py) -----------------------
+// --- Juicer and pickling jar (models and textures from tools/art/stations.py) -------------------------------
 
 const stationTex = (name) => `textures/${NS}/blocks/stations/${name}`;
 // ## juice_empty is the jar's empty mouth; the juice itself is on the juicer's display entity.
@@ -879,7 +877,7 @@ for (const row of PLACED_FOODS) {
 // --- Station display entities: the moving parts (docs/superpowers/specs/2026-11-17-station-animations-design.md) ---
 //
 // BP entities/, RP entity/, animations/, render_controllers/, particles/ hold only these, so they are rewritten
-// each run. Models: RP/models/entity from tools/art/station_models.py. The scripts only set the properties;
+// each run. Models: RP/models/entity from tools/art/stations.py. The scripts only set the properties;
 // every motion is eased on the client from them. Eased values start at the property in `initialize` (as
 // Cookery's millstone does), so walking up to a full juicer does not replay the fill. ## q.life_time stays 0
 // on these entities (found in game), so timed motions run on their own clock, v.clock.

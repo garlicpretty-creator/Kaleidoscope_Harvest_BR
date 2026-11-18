@@ -17,10 +17,8 @@ import { rid, state } from "../data/ns.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
 import { bright, growthMultiplier, hasWater, isFarmland, isSoil, isWaterBed } from "./environment.js";
 
-/** Forms that are picked by using them and grow back. */
-export const PICKED_FORMS = ["repeatable", "trellis", "bush"];
-/** A crop that is picked (and grows back) rather than broken: those forms, and aquatic crops with `pick`. */
-export const isPicked = (crop) => PICKED_FORMS.includes(crop.form) || (crop.form === "aquatic" && Boolean(crop.pick));
+/** A crop that is picked (and grows back) rather than broken: repeatable, trellis and bush crops, and aquatic crops with `pick`. */
+export const isPicked = (crop) => ["repeatable", "trellis", "bush"].includes(crop.form) || (crop.form === "aquatic" && Boolean(crop.pick));
 
 /** The ground a crop needs under it. */
 function onGround(block, crop) {

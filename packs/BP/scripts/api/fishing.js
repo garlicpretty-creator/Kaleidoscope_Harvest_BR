@@ -54,9 +54,6 @@ export function connectToFishing() {
   system.run(() => send(FISHING_PING, NAMESPACE));
 }
 
-/** Fishing answered with API 1. */
-export const fishingReady = () => ready !== null;
-
 /** Test hook: forget the handshake. */
 export function __resetFishing() {
   ready = null;

@@ -92,9 +92,6 @@ export function connectToHerbal() {
   system.run(() => send(HERBAL_PING, NAMESPACE));
 }
 
-/** Herbal answered with API 1. */
-export const herbalReady = () => ready !== null;
-
 /** Test hook: forget the handshake. */
 export function __resetHerbal() {
   ready = null;
