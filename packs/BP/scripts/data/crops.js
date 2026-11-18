@@ -273,7 +273,6 @@ export const CROPS = [
   },
 ];
 
-export const CROP_BY_ID = new Map(CROPS.map((crop) => [crop.id, crop]));
 
 /** The block id of a crop (the lower block for tall crops). */
 export const cropBlockId = (crop) => `${crop.id}_crop`;

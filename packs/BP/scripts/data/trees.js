@@ -63,9 +63,6 @@ export const TREES = [
   tree("papaya", "木瓜", "Papaya", "hot", "papaya", leaf([246, 160, 60], [250, 250, 230]), { wild: ["savanna"] }),
 ];
 
-export const TREE_BY_ID = new Map(TREES.map((t) => [t.id, t]));
-/** Trees that set hanging fruit blocks (every tree but cinnamon). */
-export const FRUITING_TREES = TREES.filter((t) => !t.bark);
 
 export const saplingBlockId = (t) => `${t.id}_sapling`;
 export const wildSaplingFeature = (t) => `wild_${t.id}_sapling`;

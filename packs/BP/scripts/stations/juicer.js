@@ -25,8 +25,6 @@ const TAKES = new Set([...JUICE_OF.keys(), ...MILK_OF.keys()]);
 const MIXED = RECIPES.some((r) => r.station === "juicer" && r.input === "*") ? JUICER.mixed : null;
 const bare = (id) => id.slice(NAMESPACE.length + 1);
 
-export const juicerFruits = () => [...TAKES];
-
 /** The juice two fruits (or a fruit and milk) make, or null. */
 export function juiceFor([a, b]) {
   if (!a || !b) return null;
