@@ -106,6 +106,21 @@ export const TAVERN_WINES = [
 ];
 export const TAVERN_BATCH = { waterBuckets: 4, fluidAmount: 4000, maxBatch: 16, carrier: "minecraft:glass_bottle", unitTime: 4800 };
 
+// --- 酒館 Tavern: grapes (1.2) ---------------------------------------------------------------
+//
+// ## Harvest and Tavern both grow a purple grape; with both packs either one works anywhere a
+// ## grape does. Harvest's grape goes in Tavern's pressing tub (into Tavern's own grape juice, so
+// ## Tavern's grape wine stays Tavern's); Tavern's grape goes in Harvest's juicer and in Cookery's
+// ## bamboo tray for raisins. Harvest registers no grape wine of its own.
+export const TAVERN_GRAPE = {
+  harvest: "grape",
+  tavern: "kaleidoscope_tavern:grape",
+  juice: "kaleidoscope_tavern:grape_juice",
+  // ## Tavern's own grape presses 125 mB: eight fill a bucket. Harvest's presses the same.
+  amount: 125,
+  title: { zh_TW: "葡萄（豐收）", zh_CN: "葡萄（丰收）", en_US: "Grape (Harvest)" },
+};
+
 // --- 漁歌 Fishing Voyage: baits (kaleidoscope_fishing:register_bait) -------------------------
 //
 // biteFactor: the wait for a bite is multiplied by it, 0.5–1 (Fishing docs/API.md); Fishing's

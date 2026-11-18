@@ -9,7 +9,7 @@
 import { CLIMATES } from "./climate.js";
 import { CROPS, TRELLIS } from "./crops.js";
 import { RECIPES, inputsOf, outputsOf, recipeMaking } from "./dishes.js";
-import { FISHING_BAITS, FISHING_POND_FEEDS, HERBAL_ADJUVANTS, HERBAL_HEAT, RANCHING_FEEDS, TAVERN_WINES } from "./integrations.js";
+import { FISHING_BAITS, FISHING_POND_FEEDS, HERBAL_ADJUVANTS, HERBAL_HEAT, RANCHING_FEEDS, TAVERN_GRAPE, TAVERN_WINES } from "./integrations.js";
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
@@ -165,6 +165,8 @@ export function partnerLines(id) {
   if (FISHING_BAITS.some((b) => b.id === id)) lines.push(["裝了《漁歌》時，可以掛在釣竿上當魚餌，魚比較快上鉤。", "With Kaleidoscope Fishing Voyage, it works as bait on a rod: fish bite sooner."]);
   const pond = FISHING_POND_FEEDS.find((f) => f.id === id);
   if (pond) lines.push([`裝了《漁歌》時，可放進魚池的餵食台，一個算 ${pond.meals} 餐。`, `With Kaleidoscope Fishing Voyage, it goes in a fish pond feeder, ${pond.meals} meal${pond.meals > 1 ? "s" : ""} each.`]);
+  if (id === TAVERN_GRAPE.harvest)
+    lines.push(["裝了《酒館》時，和酒館的葡萄互通：可放進酒館的壓榨桶壓成葡萄汁、釀酒館的葡萄酒；酒館的葡萄也能放進榨汁機，或在竹篩上曬成葡萄乾。", "With Kaleidoscope Tavern, it works like Tavern's grape: press it in Tavern's pressing tub for grape juice and Tavern's grape wine. Tavern's grape also goes in the juicer, or on the bamboo tray for raisins."]);
   const wine = TAVERN_WINES.find((w) => w.id === id);
   if (wine) {
     const names = wine.ingredients.map((i) => nameOf(rid(i)));

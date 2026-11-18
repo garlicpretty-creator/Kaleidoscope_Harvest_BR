@@ -63,9 +63,9 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 | 森羅物語：樂牧 `kaleidoscope_ranching` | `register_feed`（需要 `register_feed`；玉米葉在有 `feed_1_1` 時是 `ruminant`，否則 `grass`） | 玉米、大豆、紅豆、綠豆、豆渣、大白菜、空心菜、白蘿蔔、地瓜、玉米葉等 13 種進飼槽 |
 | 森羅物語：草本 `kaleidoscope_herbal` | `heat_register`（`external_heat`）、`adjuvant_register`（`external_adjuvants`） | 32 樣食物有寒熱值；陳皮、肉桂皮可當砂鍋佐使 |
 | 森羅物語：漁歌 `kaleidoscope_fishing` | `register_bait`（`bait`）、`register_pond_feed`（`pond_feed`，1.5.0） | 玉米種子（0.7）、綠豆（0.7）、大豆（0.8）當魚餌；豆渣（2 餐）、玉米種子與紅豆餡（1 餐）當魚池飼料 |
-| 森羅物語：酒館 `kaleidoscope_tavern` | 酒館 SDK | 荔枝酒、桃子酒、龍眼酒可以用酒桶釀 |
+| 森羅物語：酒館 `kaleidoscope_tavern` | 酒館 SDK（`barrel_recipes`、`pressing_recipes`） | 荔枝酒、桃子酒、龍眼酒可以用酒桶釀；豐收的葡萄可放進壓榨桶，壓出酒館的葡萄汁（每顆 125 mB），再釀酒館的葡萄酒 |
 
-反過來，漁歌裝了豐收時多 7 道用豐收作物的料理，樂牧裝了豐收時可以把玉米放進青貯桶做青貯料。
+反過來，酒館的葡萄 `kaleidoscope_tavern:grape` 在豐收的榨汁機算作葡萄（取回時還是酒館的葡萄），裝了酒館時也會多登記一道廚房竹篩配方，把它曬成葡萄乾。漁歌裝了豐收時多 7 道用豐收作物的料理，樂牧裝了豐收時可以把玉米放進青貯桶做青貯料。
 
 ## 最小範例
 

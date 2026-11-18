@@ -3,13 +3,15 @@
 // fruit give that fruit's juice, two different fruits give mixed juice. 1.1: a fruit
 // and a milk bucket give that fruit's milk (papaya, banana); the bucket comes back
 // empty at once. An empty hand takes the contents back out (the milk as a milk
-// bucket); breaking it drops what is inside.
+// bucket); breaking it drops what is inside. 1.2: with 酒館 Tavern, Tavern's grape
+// counts as a grape (data/integrations.js TAVERN_GRAPE).
 //
 // State kaleidoscope_harvest:fruit 0–2 (how full), kaleidoscope_harvest:juice (jug colour).
 // The fruits themselves are kept in utils/blockStore.js.
 
 import { RECIPES } from "../data/dishes.js";
 import { SOUND } from "../data/feedback.js";
+import { TAVERN_GRAPE } from "../data/integrations.js";
 import { NAMESPACE, rid } from "../data/ns.js";
 import { JUICER, SPLASH_PARTICLE } from "../data/stations.js";
 import { clearBlockData, getBlockData, setBlockData } from "../utils/blockStore.js";
@@ -20,13 +22,17 @@ import { removeVisual, syncVisual } from "./visuals.js";
 const JUICE_OF = new Map(RECIPES.filter((r) => r.station === "juicer" && r.input !== "*" && !r.milk).map((r) => [rid(r.input), r.result]));
 /** fruit id → milk drink id (1.1). */
 const MILK_OF = new Map(RECIPES.filter((r) => r.station === "juicer" && r.milk).map((r) => [rid(r.input), r.result]));
+/** Other packs' fruit that counts as a Harvest fruit (the id stays as it is, so it comes back out the same). */
+const SAME_AS = new Map([[TAVERN_GRAPE.tavern, rid(TAVERN_GRAPE.harvest)]]);
+const own = (id) => SAME_AS.get(id) ?? id;
 /** Fruits the juicer takes: those with a juice, and those with only a milk drink. */
-const TAKES = new Set([...JUICE_OF.keys(), ...MILK_OF.keys()]);
+const TAKES = new Set([...JUICE_OF.keys(), ...MILK_OF.keys(), ...SAME_AS.keys()]);
 const MIXED = RECIPES.some((r) => r.station === "juicer" && r.input === "*") ? JUICER.mixed : null;
 const bare = (id) => id.slice(NAMESPACE.length + 1);
 
 /** The juice two fruits (or a fruit and milk) make, or null. */
-export function juiceFor([a, b]) {
+export function juiceFor(fruits) {
+  const [a, b] = fruits.map(own);
   if (!a || !b) return null;
   if (a === JUICER.milk || b === JUICER.milk) {
     const fruit = a === JUICER.milk ? b : a;
@@ -45,7 +51,7 @@ export function syncJuicer(block) {
 }
 
 function show(block, fruits) {
-  const fruit = fruits.find((id) => id !== JUICER.milk);
+  const fruit = own(fruits.find((id) => id !== JUICER.milk) ?? "");
   const colour = !fruits.length ? "empty" : fruits.includes(JUICER.milk) ? JUICER.milkColour : JUICER.colourOf[bare(fruit)] ?? "orange";
   setStates(block, { fruit: fruits.length, juice: colour });
   syncJuicer(block);
