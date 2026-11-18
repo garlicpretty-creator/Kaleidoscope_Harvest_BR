@@ -1427,7 +1427,7 @@ test("Ranching: corn leaves are ruminant feed with feed_1_1, grass without it", 
 
 test("Harvest API: catalog_foods lists every food with hunger, placeability and container", () => {
   assert(ANNOUNCED[0].capabilities.includes("catalog_foods"), "capability announced");
-  equal(ANNOUNCED[0].version, "1.1.0", "version");
+  equal(ANNOUNCED[0].version, VERSION, "version from data/version.js");
   const replies = handleHarvestEvent(HARVEST_EVENTS.catalogRequest, JSON.stringify({ api: 1, source: "my_pack", kind: "foods" }));
   for (const reply of replies) assert(JSON.stringify(reply).length < SCRIPT_EVENT_LIMIT, "each part under 2048");
   const foods = replies.flatMap((reply) => reply.items);
