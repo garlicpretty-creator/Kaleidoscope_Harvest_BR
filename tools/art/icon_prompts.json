@@ -263,7 +263,7 @@
     },
     "sesame_powder": {
       "zh": "芝麻粉",
-      "prompt": "small paper packet of ground black sesame powder, open at the top"
+      "prompt": "small white ceramic bowl full of dark grey-black sesame powder"
     },
     "sesame_oil": {
       "zh": "芝麻油",
@@ -275,7 +275,7 @@
     },
     "five_spice_powder": {
       "zh": "五香粉",
-      "prompt": "small round clay dish of reddish brown spice powder with a star anise on top"
+      "prompt": "small glass jar of dark brown spice powder with a star anise on the cork lid"
     },
     "soy_milk": {
       "zh": "豆漿",
@@ -283,7 +283,7 @@
     },
     "tofu": {
       "zh": "豆腐",
-      "prompt": "white block of tofu on a small wooden board"
+      "prompt": "soft white tofu block with rounded edges sitting on a green bamboo leaf"
     },
     "okara": {
       "zh": "豆渣",
@@ -387,19 +387,19 @@
     },
     "onion_omelette": {
       "zh": "洋蔥炒蛋",
-      "prompt": "plate of scrambled yellow eggs with sliced onions"
+      "prompt": "yellow half-moon folded omelette on a white plate with purple onion rings on top"
     },
     "daikon_beef_brisket": {
       "zh": "蘿蔔燉牛腩",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of brown beef brisket and white daikon stew"
+      "prompt": "black clay pot with white daikon cubes and brown beef chunks in clear golden broth"
     },
     "yuxiang_eggplant": {
       "zh": "魚香茄子",
-      "prompt": "plate of braised purple eggplant strips in glossy red brown garlic sauce"
+      "prompt": "blue patterned bowl of purple eggplant strips in bright orange red garlic sauce"
     },
     "braised_eggplant": {
       "zh": "紅燒茄子",
-      "prompt": "plate of soft braised eggplant pieces in dark soy sauce with green onion"
+      "prompt": "long oval white plate with glossy dark purple eggplant strips in brown sauce"
     },
     "smashed_cucumber": {
       "zh": "拍黃瓜",
@@ -415,7 +415,7 @@
     },
     "kung_pao_chicken": {
       "zh": "宮保雞丁",
-      "prompt": "plate of diced chicken with peanuts, red dried chilies and scallion in glossy sauce"
+      "prompt": "white plate of diced chicken covered in many bright red dried chilies and tan peanuts"
     },
     "roasted_sweet_potato": {
       "zh": "烤地瓜",
@@ -503,7 +503,7 @@
     },
     "homestyle_tofu": {
       "zh": "家常豆腐",
-      "prompt": "plate of golden fried tofu slices with green peppers in brown sauce"
+      "prompt": "white plate of golden fried tofu triangles with green pepper and red chili slices"
     },
     "spinach_dumplings": {
       "zh": "菠菜餃子",
@@ -511,7 +511,7 @@
     },
     "braised_pork_rice": {
       "zh": "滷肉飯",
-      "prompt": "bowl of white rice topped with dark braised minced pork and a halved braised egg"
+      "prompt": "white bowl of mostly white rice with a small spoonful of dark brown minced pork on top and half a yellow egg"
     },
     "five_spice_tea_egg": {
       "zh": "五香茶葉蛋",
@@ -535,7 +535,7 @@
     },
     "lychee_jelly": {
       "zh": "荔枝凍",
-      "prompt": "small glass cup of clear jelly with white lychees inside"
+      "prompt": "clear glass cup of translucent pink jelly with a white peeled lychee inside, bright highlights"
     },
     "banana_pancake": {
       "zh": "香蕉煎餅",
@@ -555,7 +555,7 @@
     },
     "braised_pork": {
       "zh": "紅燒肉",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of red braised pork cubes in dark sauce"
+      "prompt": "three big glossy mahogany pork belly cubes with white fat stripes on a small white plate"
     },
     "chopped_coriander": {
       "zh": "香菜末",
@@ -583,15 +583,15 @@
     },
     "ground_black_pepper": {
       "zh": "黑胡椒粉",
-      "prompt": "small round clay dish of ground black pepper powder"
+      "prompt": "small glass pepper shaker with silver cap filled with dark grey black pepper"
     },
     "ground_cinnamon": {
       "zh": "肉桂粉",
-      "prompt": "small round clay dish of reddish brown ground cinnamon powder"
+      "prompt": "small pile of reddish brown cinnamon powder with a rolled cinnamon stick beside it"
     },
     "ground_cumin": {
       "zh": "孜然粉",
-      "prompt": "small round clay dish of ochre brown ground cumin powder"
+      "prompt": "small wooden scoop holding bright ochre yellow cumin powder"
     },
     "lychee_chicken": {
       "zh": "荔枝雞",
@@ -619,7 +619,7 @@
     },
     "scallion_omelette": {
       "zh": "蔥花煎蛋",
-      "prompt": "round golden omelette speckled with green chopped scallion on a plate"
+      "prompt": "thick yellow egg pancake cut into wedges with bright green scallion rings, on a small wooden board"
     },
     "steamed_sweet_potato": {
       "zh": "蒸地瓜",
@@ -727,11 +727,11 @@
     },
     "mung_bean_flour": {
       "zh": "綠豆粉",
-      "prompt": "small paper packet of pale yellow green mung bean flour, open at the top"
+      "prompt": "small open paper sack of pale green flour"
     },
     "ground_sichuan_pepper": {
       "zh": "花椒粉",
-      "prompt": "small round clay dish of reddish brown ground sichuan pepper powder"
+      "prompt": "small white dish of dark red-brown powder with a few whole red sichuan peppercorns on top"
     },
     "dried_longan": {
       "zh": "桂圓",
@@ -755,11 +755,11 @@
     },
     "stir_fried_lotus_root": {
       "zh": "炒藕片",
-      "prompt": "bowl of stir fried pale lotus root slices with holes, minced garlic and green scallion"
+      "prompt": "white plate of round cream lotus root slices with visible holes, with red chili and green pepper bits"
     },
     "water_bamboo_pork": {
       "zh": "茭白筍炒肉絲",
-      "prompt": "bowl of stir fried white water bamboo strips with brown shredded pork in soy sauce"
+      "prompt": "white plate of long pale ivory water bamboo shoot strips with thin pink pork slices and green scallion"
     },
     "garlic_water_spinach": {
       "zh": "蒜炒空心菜",
@@ -771,19 +771,19 @@
     },
     "bitter_melon_omelette": {
       "zh": "苦瓜炒蛋",
-      "prompt": "bowl of scrambled yellow eggs with light green bitter melon slices"
+      "prompt": "white plate of mostly pale green ridged bitter melon crescent slices mixed with a few small yellow egg pieces"
     },
     "luffa_omelette": {
       "zh": "絲瓜炒蛋",
-      "prompt": "bowl of soft scrambled yellow egg chunks mixed with pale green luffa pieces"
+      "prompt": "blue-rimmed bowl of soft yellow scrambled egg with round pale green luffa slices showing white centers"
     },
     "stir_fried_bean_sprouts": {
       "zh": "炒豆芽",
-      "prompt": "bowl of stir fried white bean sprouts with chopped green scallion"
+      "prompt": "white plate piled high with thin pale white-yellow bean sprouts and a few red pepper strips"
     },
     "chive_omelette": {
       "zh": "韭菜炒蛋",
-      "prompt": "bowl of scrambled yellow eggs with chopped dark green garlic chives"
+      "prompt": "round flat yellow omelette on a white plate, heavily speckled with dark green chopped chives"
     },
     "lemongrass_chicken": {
       "zh": "香茅烤雞",
@@ -795,7 +795,7 @@
     },
     "sichuan_pepper_chicken": {
       "zh": "花椒雞丁",
-      "prompt": "bowl of diced fried chicken with red sichuan peppercorns and green scallion"
+      "prompt": "white plate of chicken pieces in red chili oil with green chili rings and dark red peppercorns"
     },
     "lotus_root_rib_soup": {
       "zh": "蓮藕排骨湯",
