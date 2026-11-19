@@ -71,7 +71,7 @@
     },
     "peanut": {
       "zh": "花生",
-      "prompt": "two peanuts in beige wrinkled shells, one cracked open showing red skinned nuts"
+      "prompt": "two beige peanut shells in pods with a waist, and two red skinned peanuts"
     },
     "sweet_potato": {
       "zh": "地瓜",
@@ -79,7 +79,7 @@
     },
     "taro": {
       "zh": "芋頭",
-      "prompt": "single round taro root, brown hairy ringed skin, cut end showing white flesh with purple specks"
+      "prompt": "round brown hairy taro corm with ring lines, cut half showing white flesh with purple specks"
     },
     "scallion": {
       "zh": "蔥",
@@ -95,7 +95,7 @@
     },
     "ginger": {
       "zh": "薑",
-      "prompt": "knobbly ginger root, light tan skin, branching"
+      "prompt": "knobby pale tan ginger root with several bumps"
     },
     "coriander": {
       "zh": "香菜",
@@ -111,7 +111,7 @@
     },
     "black_peppercorns": {
       "zh": "黑胡椒",
-      "prompt": "small pile of round wrinkled black peppercorns"
+      "prompt": "small pile of many tiny round wrinkled black peppercorns"
     },
     "black_pepper_seedling": {
       "zh": "黑胡椒藤苗",
@@ -147,7 +147,7 @@
     },
     "passion_fruit": {
       "zh": "百香果",
-      "prompt": "round dark purple passion fruit cut in half showing yellow pulp with black seeds"
+      "prompt": "round wrinkled dark purple passion fruit with a cut half showing yellow pulp and black seeds"
     },
     "passion_fruit_seeds": {
       "zh": "百香果種子",
@@ -211,7 +211,7 @@
     },
     "lychee": {
       "zh": "荔枝",
-      "prompt": "cluster of three red bumpy lychees, one peeled showing white translucent flesh"
+      "prompt": "two bumpy red lychees with one peeled showing white translucent flesh"
     },
     "lychee_sapling": {
       "zh": "荔枝樹苗",
@@ -259,7 +259,7 @@
     },
     "shredded_ginger": {
       "zh": "薑絲",
-      "prompt": "small heap of thin pale yellow julienned ginger strips"
+      "prompt": "small pile of thin pale yellow ginger shreds"
     },
     "sesame_powder": {
       "zh": "芝麻粉",
@@ -311,7 +311,7 @@
     },
     "pickled_napa_cabbage": {
       "zh": "醃白菜",
-      "prompt": "small clay bowl of sour pickled napa cabbage, pale yellow shredded leaves"
+      "prompt": "small plate of pale yellow green sour napa cabbage shreds"
     },
     "kimchi": {
       "zh": "泡菜",
@@ -319,7 +319,7 @@
     },
     "pickled_daikon": {
       "zh": "醃蘿蔔",
-      "prompt": "small dish of bright yellow pickled radish slices"
+      "prompt": "small plate of bright yellow pickled daikon slices"
     },
     "pickled_cucumber": {
       "zh": "醃黃瓜",
@@ -339,11 +339,11 @@
     },
     "mandarin_juice": {
       "zh": "橘子汁",
-      "prompt": "square glass bottle with a cork stopper, full of deep orange tangerine juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of bright orange juice with a mandarin wedge on the rim"
     },
     "orange_juice": {
       "zh": "柳橙汁",
-      "prompt": "square glass bottle with a cork stopper, full of bright orange juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of orange juice with a round orange slice"
     },
     "grape_juice": {
       "zh": "葡萄汁",
@@ -351,7 +351,7 @@
     },
     "mango_juice": {
       "zh": "芒果汁",
-      "prompt": "square glass bottle with a cork stopper, full of thick golden yellow mango juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of thick golden yellow juice with a mango cube on top"
     },
     "lemon_tea": {
       "zh": "檸檬茶",
@@ -375,7 +375,7 @@
     },
     "cabbage_pork_stew": {
       "zh": "白菜燉肉",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of pale cabbage and pork stew"
+      "prompt": "clay pot of light broth with pale napa cabbage leaves and thin pork slices"
     },
     "garlic_bok_choy": {
       "zh": "蒜炒青菜",
@@ -383,7 +383,7 @@
     },
     "spinach_salad": {
       "zh": "涼拌菠菜",
-      "prompt": "small plate of cold blanched spinach topped with sesame seeds"
+      "prompt": "white plate of dark green blanched spinach topped with white sesame seeds"
     },
     "onion_omelette": {
       "zh": "洋蔥炒蛋",
@@ -407,11 +407,11 @@
     },
     "steamed_corn": {
       "zh": "蒸玉米",
-      "prompt": "two steamed yellow corn cobs on a small bamboo plate, steam rising"
+      "prompt": "steamed yellow corn cob in a round bamboo steamer basket"
     },
     "corn_chowder": {
       "zh": "玉米濃湯",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of creamy yellow corn chowder"
+      "prompt": "white bowl of creamy pale yellow soup with yellow corn kernels"
     },
     "kung_pao_chicken": {
       "zh": "宮保雞丁",
@@ -419,15 +419,15 @@
     },
     "roasted_sweet_potato": {
       "zh": "烤地瓜",
-      "prompt": "roasted sweet potato broken open showing steaming orange flesh, charred skin"
+      "prompt": "roasted sweet potato with charred purple skin split open showing bright orange flesh"
     },
     "sweet_potato_congee": {
       "zh": "地瓜粥",
-      "prompt": "bowl of white rice porridge with orange sweet potato chunks"
+      "prompt": "white bowl of white rice porridge with orange sweet potato chunks"
     },
     "taro_spare_ribs": {
       "zh": "芋頭蒸排骨",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of purple taro and pork ribs in pale broth"
+      "prompt": "white plate of steamed pork ribs with purple white taro cubes"
     },
     "taro_paste": {
       "zh": "芋泥",
@@ -447,11 +447,11 @@
     },
     "black_pepper_steak": {
       "zh": "黑胡椒牛排",
-      "prompt": "grilled beef steak with black pepper sauce on a cast iron plate"
+      "prompt": "brown grilled beef steak on a white plate covered with dark black pepper sauce"
     },
     "pepper_bun": {
       "zh": "胡椒餅",
-      "prompt": "round golden baked bun with sesame seeds on top, torn open showing meat filling"
+      "prompt": "round baked bun with charred golden crust covered in white sesame seeds"
     },
     "sesame_tangyuan": {
       "zh": "芝麻湯圓",
@@ -467,7 +467,7 @@
     },
     "pineapple_cake": {
       "zh": "鳳梨酥",
-      "prompt": "white plate with four small square golden pineapple cakes"
+      "prompt": "two small golden rectangular pastry cakes, one cut showing yellow pineapple filling"
     },
     "pineapple_fried_rice": {
       "zh": "鳳梨炒飯",
@@ -475,11 +475,11 @@
     },
     "lemon_chicken": {
       "zh": "檸檬雞",
-      "prompt": "plate of crispy fried chicken pieces in yellow lemon sauce with lemon slices"
+      "prompt": "crispy golden fried chicken cutlet slices with bright yellow lemon slices on a white plate"
     },
     "peach_jelly": {
       "zh": "蜜桃凍",
-      "prompt": "small glass cup of translucent pink peach jelly with peach pieces inside"
+      "prompt": "glass cup of pink peach jelly with a peach slice on top"
     },
     "rock_sugar_pear": {
       "zh": "冰糖燉梨",
@@ -495,7 +495,7 @@
     },
     "candied_banana": {
       "zh": "拔絲香蕉",
-      "prompt": "plate of fried banana pieces coated in shiny amber caramel with thin sugar threads"
+      "prompt": "banana chunks coated in glossy amber caramel with white sesame seeds on a white plate"
     },
     "orange_spare_ribs": {
       "zh": "橙香排骨",
@@ -507,7 +507,7 @@
     },
     "spinach_dumplings": {
       "zh": "菠菜餃子",
-      "prompt": "plate of green tinted boiled dumplings"
+      "prompt": "three green skinned dumplings on a white plate"
     },
     "braised_pork_rice": {
       "zh": "滷肉飯",
@@ -519,15 +519,15 @@
     },
     "tofu_vegetable_soup": {
       "zh": "豆腐蔬菜湯",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of white tofu and green vegetable soup"
+      "prompt": "white bowl of clear broth with white tofu cubes and green leaves"
     },
     "soy_milk_pudding": {
       "zh": "豆花",
-      "prompt": "bowl of silky white tofu pudding in brown ginger syrup with peanuts"
+      "prompt": "bowl of smooth white tofu pudding with brown syrup and peanuts"
     },
     "eggplant_with_garlic": {
       "zh": "蒜蓉蒸茄子",
-      "prompt": "steamed eggplant halves topped with minced garlic and chopped scallion"
+      "prompt": "soft steamed purple eggplant strips in dark soy sauce topped with minced garlic and green scallion"
     },
     "pear_honey_drink": {
       "zh": "雪梨蜜",
@@ -539,11 +539,11 @@
     },
     "banana_pancake": {
       "zh": "香蕉煎餅",
-      "prompt": "stack of small pancakes topped with banana slices and honey"
+      "prompt": "thin golden pancake folded in half on a white plate with round banana slices on top"
     },
     "grape_raisin_bread": {
       "zh": "葡萄乾麵包",
-      "prompt": "small round loaf of bread studded with dark raisins, one slice cut"
+      "prompt": "loaf of brown bread with a slice cut showing dark raisins inside"
     },
     "fruit_platter": {
       "zh": "水果拼盤",
@@ -551,7 +551,7 @@
     },
     "pickled_vegetable_noodles": {
       "zh": "酸菜麵",
-      "prompt": "bowl of noodle soup with pale pickled cabbage and pork slices"
+      "prompt": "bowl of noodles in broth with dark green pickled mustard greens and pork shreds"
     },
     "braised_pork": {
       "zh": "紅燒肉",
@@ -559,27 +559,27 @@
     },
     "chopped_coriander": {
       "zh": "香菜末",
-      "prompt": "small heap of finely chopped bright green coriander leaves"
+      "prompt": "small pile of finely chopped bright green coriander leaves"
     },
     "cinnamon_apple": {
       "zh": "肉桂蘋果",
-      "prompt": "baked red apple dusted with cinnamon with a cinnamon stick standing in it"
+      "prompt": "baked red apple halves dusted with brown cinnamon powder on a small white plate"
     },
     "cinnamon_tea": {
       "zh": "肉桂茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of reddish brown cinnamon tea, steam rising"
+      "prompt": "white cup of red brown tea with a cinnamon stick in it"
     },
     "cumin_potatoes": {
       "zh": "孜然馬鈴薯",
-      "prompt": "plate of crispy fried potato cubes dusted with cumin and red chili flakes"
+      "prompt": "white plate of golden fried potato cubes dusted with red chili flakes and cumin"
     },
     "daikon_slices": {
       "zh": "白蘿蔔片",
-      "prompt": "few round thin slices of white daikon radish stacked"
+      "prompt": "stack of thin round white daikon radish slices"
     },
     "diced_onion": {
       "zh": "洋蔥丁",
-      "prompt": "small heap of diced pale yellow onion pieces"
+      "prompt": "small pile of white and light purple onion cubes"
     },
     "ground_black_pepper": {
       "zh": "黑胡椒粉",
@@ -595,11 +595,11 @@
     },
     "lychee_chicken": {
       "zh": "荔枝雞",
-      "prompt": "plate of glossy sweet and sour chicken pieces with peeled white lychees"
+      "prompt": "chicken pieces with white peeled lychees in glossy red orange sweet sour sauce in a white bowl"
     },
     "mandarin_sweet_soup": {
       "zh": "橘子甜湯",
-      "prompt": "small white bowl of sweet soup with orange mandarin segments and small white rice balls"
+      "prompt": "white bowl of clear sweet soup with orange mandarin segments and small white rice balls"
     },
     "mixed_juice": {
       "zh": "綜合果汁",
@@ -623,7 +623,7 @@
     },
     "steamed_sweet_potato": {
       "zh": "蒸地瓜",
-      "prompt": "steamed sweet potato split open showing orange flesh on a small bamboo steamer"
+      "prompt": "halved steamed sweet potato with purple skin and orange flesh in a bamboo steamer"
     },
     "juicer": {
       "zh": "榨汁機",
@@ -679,7 +679,7 @@
     },
     "longan": {
       "zh": "龍眼",
-      "prompt": "cluster of small round tan brown longans on a twig, one peeled showing white translucent flesh"
+      "prompt": "cluster of small round tan brown longan fruits on a short twig, one peeled showing white flesh"
     },
     "loquat": {
       "zh": "枇杷",
@@ -723,7 +723,7 @@
     },
     "red_bean_paste": {
       "zh": "紅豆餡",
-      "prompt": "small round clay dish of smooth dark maroon sweet red bean paste"
+      "prompt": "small bowl of thick smooth dark red bean paste with a wooden spoon"
     },
     "mung_bean_flour": {
       "zh": "綠豆粉",
@@ -739,7 +739,7 @@
     },
     "garlic_eggplant_raw": {
       "zh": "蒜蓉茄子（生）",
-      "prompt": "raw long purple eggplant split in half lengthwise, the pale cut face topped with white minced garlic"
+      "prompt": "raw purple eggplant split lengthwise showing pale flesh, topped with white minced garlic, on a plate"
     },
     "fermented_tofu": {
       "zh": "豆腐乳",
@@ -767,7 +767,7 @@
     },
     "fermented_tofu_water_spinach": {
       "zh": "腐乳空心菜",
-      "prompt": "bowl of stir fried dark green water spinach in creamy orange fermented tofu sauce"
+      "prompt": "white plate of bright green stir fried water spinach stems with small red sauce bits"
     },
     "bitter_melon_omelette": {
       "zh": "苦瓜炒蛋",
@@ -787,11 +787,11 @@
     },
     "lemongrass_chicken": {
       "zh": "香茅烤雞",
-      "prompt": "bowl of golden brown grilled chicken pieces with green lemongrass stalks"
+      "prompt": "grilled golden chicken thigh with long pale green lemongrass stalks on a plate"
     },
     "mapo_tofu": {
       "zh": "麻婆豆腐",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of white tofu cubes and minced beef in red chili oil sauce"
+      "prompt": "dark bowl of white tofu cubes in bright red chili oil sauce with green scallion"
     },
     "sichuan_pepper_chicken": {
       "zh": "花椒雞丁",
@@ -803,7 +803,7 @@
     },
     "luffa_soup": {
       "zh": "絲瓜湯",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of green luffa slices and yellow egg ribbons in clear broth"
+      "prompt": "white bowl of clear soup with round green luffa slices and white egg ribbons"
     },
     "red_bean_soup": {
       "zh": "紅豆湯",
@@ -819,11 +819,11 @@
     },
     "loquat_syrup": {
       "zh": "枇杷膏",
-      "prompt": "small white bowl of thick dark amber honey syrup with a wooden spoon in it"
+      "prompt": "small amber glass bottle of thick golden syrup with a green loquat leaf"
     },
     "mung_bean_cake": {
       "zh": "綠豆糕",
-      "prompt": "white plate with four small square pale yellow green mung bean cakes with pressed patterns"
+      "prompt": "three small square pale green pastry cakes with a printed pattern on top"
     },
     "steamed_garlic_eggplant": {
       "zh": "蒜蓉蒸茄子",
@@ -831,7 +831,7 @@
     },
     "red_bean_cake": {
       "zh": "紅豆餅",
-      "prompt": "white plate with four small round golden wheel cakes, one cut showing dark red bean filling"
+      "prompt": "round golden wheel cake cut in half showing dark red bean filling"
     },
     "chive_box": {
       "zh": "韭菜盒子",
@@ -851,15 +851,15 @@
     },
     "loquat_juice": {
       "zh": "枇杷汁",
-      "prompt": "square glass bottle with a cork stopper, full of orange yellow loquat juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of pale apricot colored juice with a small loquat fruit beside it"
     },
     "star_fruit_juice": {
       "zh": "楊桃汁",
-      "prompt": "square glass bottle with a cork stopper, full of pale yellow star fruit juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of pale yellow green juice with a star shaped star fruit slice"
     },
     "papaya_milk": {
       "zh": "木瓜牛奶",
-      "prompt": "square glass bottle with a cork stopper, full of creamy pale orange papaya milk, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of creamy pale peach colored milk with a papaya slice"
     },
     "banana_milk": {
       "zh": "香蕉牛奶",
@@ -871,7 +871,7 @@
     },
     "longan_tea": {
       "zh": "桂圓茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of dark amber brown longan tea, steam rising"
+      "prompt": "glass cup of dark amber tea with dried longans floating"
     },
     "longan_wine": {
       "zh": "龍眼酒",
@@ -907,7 +907,7 @@
     },
     "lotus_seeds": {
       "zh": "蓮子",
-      "prompt": "small pile of pale cream oval lotus seeds"
+      "prompt": "small pile of round cream white lotus seeds"
     }
   }
 }
