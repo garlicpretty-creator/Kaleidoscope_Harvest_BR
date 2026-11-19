@@ -51,7 +51,7 @@
     },
     "cucumber": {
       "zh": "小黃瓜",
-      "prompt": "single long bumpy green cucumber with a small yellow flower at the tip"
+      "prompt": "long dark green cucumber with small bumps and a dried yellow flower at the tip"
     },
     "cucumber_seeds": {
       "zh": "小黃瓜種子",
@@ -67,7 +67,7 @@
     },
     "soybean": {
       "zh": "大豆",
-      "prompt": "small pile of round pale yellow soybeans"
+      "prompt": "six separate round pale yellow soybeans spaced apart"
     },
     "peanut": {
       "zh": "花生",
@@ -111,7 +111,7 @@
     },
     "black_peppercorns": {
       "zh": "黑胡椒",
-      "prompt": "small pile of many tiny round wrinkled black peppercorns"
+      "prompt": "seven separate tiny round black peppercorns spaced apart"
     },
     "black_pepper_seedling": {
       "zh": "黑胡椒藤苗",
@@ -159,7 +159,7 @@
     },
     "pineapple_crown": {
       "zh": "鳳梨冠芽",
-      "prompt": "leafy green crown cut from the top of a pineapple, spiky leaves fanning upward, small brown cut base, no fruit"
+      "prompt": "leafy green spiky pineapple top crown with a short cut yellow stub"
     },
     "mandarin": {
       "zh": "柑橘",
@@ -219,7 +219,7 @@
     },
     "mango": {
       "zh": "芒果",
-      "prompt": "single ripe mango, kidney shaped, yellow orange with a red blush"
+      "prompt": "oval kidney shaped mango, green at the top blending to red and yellow"
     },
     "mango_sapling": {
       "zh": "芒果樹苗",
@@ -255,11 +255,11 @@
     },
     "minced_garlic": {
       "zh": "蒜末",
-      "prompt": "small pile of finely minced white garlic"
+      "prompt": "small white dish of finely minced white garlic"
     },
     "shredded_ginger": {
       "zh": "薑絲",
-      "prompt": "small pile of thin pale yellow ginger shreds"
+      "prompt": "small white dish of thin pale yellow ginger shreds"
     },
     "sesame_powder": {
       "zh": "芝麻粉",
@@ -299,7 +299,7 @@
     },
     "dried_persimmon": {
       "zh": "柿餅",
-      "prompt": "flattened dried persimmon, orange brown with white sugar bloom and a green calyx"
+      "prompt": "flattened dried persimmon, dark orange with white sugar bloom, hanging on a string"
     },
     "raisins": {
       "zh": "葡萄乾",
@@ -307,7 +307,7 @@
     },
     "dried_tangerine_peel": {
       "zh": "陳皮",
-      "prompt": "few curled pieces of dried dark orange tangerine peel"
+      "prompt": "three curled pieces of dried dark orange brown tangerine peel"
     },
     "pickled_napa_cabbage": {
       "zh": "醃白菜",
@@ -347,7 +347,7 @@
     },
     "grape_juice": {
       "zh": "葡萄汁",
-      "prompt": "square glass bottle with a cork stopper, full of dark purple grape juice, a brown kraft paper label band around the middle"
+      "prompt": "glass bottle of deep purple grape juice with a small bunch of grapes beside it"
     },
     "mango_juice": {
       "zh": "芒果汁",
@@ -355,15 +355,15 @@
     },
     "lemon_tea": {
       "zh": "檸檬茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of pale yellow lemon tea, steam rising"
+      "prompt": "tall glass of iced orange brown tea with a yellow lemon slice on the rim"
     },
     "passion_fruit_tea": {
       "zh": "百香果茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of orange gold passion fruit tea, steam rising"
+      "prompt": "tall glass of golden yellow tea with black passion fruit seeds and a purple passion fruit half"
     },
     "ginger_tea": {
       "zh": "薑母茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of golden brown ginger tea, steam rising"
+      "prompt": "glass mug of amber brown tea with pale ginger slices floating"
     },
     "lychee_wine": {
       "zh": "荔枝酒",
@@ -443,7 +443,7 @@
     },
     "cumin_lamb_skewers": {
       "zh": "孜然羊肉串",
-      "prompt": "two metal skewers with chunks of grilled brown lamb meat dusted with red chili and cumin"
+      "prompt": "two wooden skewers of grilled brown lamb cubes dusted with red chili and cumin"
     },
     "black_pepper_steak": {
       "zh": "黑胡椒牛排",
@@ -487,7 +487,7 @@
     },
     "mango_shaved_ice": {
       "zh": "芒果冰",
-      "prompt": "bowl of shaved ice piled with orange mango cubes and syrup"
+      "prompt": "tall glass bowl of white shaved ice topped with yellow mango cubes and white condensed milk"
     },
     "mango_sticky_rice": {
       "zh": "芒果糯米飯",
@@ -499,7 +499,7 @@
     },
     "orange_spare_ribs": {
       "zh": "橙香排骨",
-      "prompt": "plate of glossy orange glazed pork ribs with orange slices"
+      "prompt": "glossy orange glazed pork ribs with orange slices on a white plate"
     },
     "homestyle_tofu": {
       "zh": "家常豆腐",
@@ -579,7 +579,7 @@
     },
     "diced_onion": {
       "zh": "洋蔥丁",
-      "prompt": "small pile of white and light purple onion cubes"
+      "prompt": "small white dish of diced white onion cubes"
     },
     "ground_black_pepper": {
       "zh": "黑胡椒粉",
@@ -691,7 +691,7 @@
     },
     "papaya": {
       "zh": "木瓜",
-      "prompt": "ripe papaya cut in half lengthwise, yellow orange skin, orange flesh with black seeds in the middle"
+      "prompt": "long papaya cut in half lengthwise showing orange flesh and black seeds, green yellow skin"
     },
     "sichuan_pepper_seedling": {
       "zh": "花椒苗",
@@ -715,7 +715,7 @@
     },
     "lotus_root_slices": {
       "zh": "藕片",
-      "prompt": "three round slices of lotus root overlapping, cream white discs each with a ring of dark round holes"
+      "prompt": "three round cream lotus root slices with many round holes"
     },
     "papaya_shreds": {
       "zh": "木瓜絲",
@@ -807,7 +807,7 @@
     },
     "red_bean_soup": {
       "zh": "紅豆湯",
-      "prompt": "square dark brown wooden stew pot with two side handles, full of dark red sweet red bean soup"
+      "prompt": "white bowl of dark red bean soup with whole red beans"
     },
     "mung_bean_soup": {
       "zh": "綠豆湯",
@@ -847,7 +847,7 @@
     },
     "roasted_water_bamboo": {
       "zh": "烤茭白筍",
-      "prompt": "two roasted water bamboo shoots, charred husks peeled back showing golden white flesh"
+      "prompt": "grilled pale water bamboo shoots with dark char marks on a plate"
     },
     "loquat_juice": {
       "zh": "枇杷汁",
@@ -867,7 +867,7 @@
     },
     "lemongrass_tea": {
       "zh": "香茅茶",
-      "prompt": "white porcelain teacup with a blue dotted band, on a white saucer, full of pale green yellow lemongrass tea, steam rising"
+      "prompt": "white cup of pale green tea with a green lemongrass stalk"
     },
     "longan_tea": {
       "zh": "桂圓茶",
@@ -907,7 +907,7 @@
     },
     "lotus_seeds": {
       "zh": "蓮子",
-      "prompt": "small pile of round cream white lotus seeds"
+      "prompt": "five separate round cream lotus seeds spaced apart"
     }
   }
 }
