@@ -159,7 +159,7 @@
     },
     "pineapple_crown": {
       "zh": "鳳梨冠芽",
-      "prompt": "leafy green spiky pineapple top crown with a short cut yellow stub"
+      "prompt": "leafy green crown cut from the top of a pineapple, spiky leaves fanning upward, small brown cut base, no fruit"
     },
     "mandarin": {
       "zh": "柑橘",
@@ -847,7 +847,7 @@
     },
     "roasted_water_bamboo": {
       "zh": "烤茭白筍",
-      "prompt": "grilled pale water bamboo shoots with dark char marks on a plate"
+      "prompt": "two roasted water bamboo shoots, charred husks peeled back showing golden white flesh"
     },
     "loquat_juice": {
       "zh": "枇杷汁",
