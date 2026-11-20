@@ -257,6 +257,9 @@ def papaya(cx, cz, length, skin, s):
 LONGAN = [(92, 64, 34), (128, 92, 50), (162, 124, 74), (194, 160, 104), (224, 196, 146)]
 LOQUAT = [(150, 80, 14), (204, 118, 24), (236, 156, 40), (248, 190, 80), (254, 224, 140)]
 STARF = [(132, 118, 18), (188, 168, 28), (226, 204, 48), (244, 230, 98), (252, 246, 168)]
+MANDARIN = [(150, 48, 8), (204, 78, 14), (236, 108, 24), (248, 146, 52), (254, 192, 110)]  # redder than orange
+DARKG = [(30, 70, 26), (46, 98, 34), (66, 128, 44), (98, 158, 60), (150, 196, 100)]          # unripe citrus
+GREYG = [(98, 120, 64), (132, 152, 84), (164, 182, 108), (196, 208, 140), (226, 234, 186)]    # downy peach/loquat
 PAPAYA = [(160, 70, 16), (212, 108, 28), (240, 146, 44), (250, 182, 84), (254, 216, 140)]
 
 
@@ -269,7 +272,7 @@ def papaya_streaks(im):
 
 # tree -> (ripe palette, leaf palette, builder, [(x, z, stem length), ...], lychee-style bumpy skin)
 TREES = {
-    "mandarin": (ct.ORANGE, ct.G, citrus(4, 3), [(5, 5, 2), (11, 7, 4), (7, 11, 3)], False),
+    "mandarin": (MANDARIN, ct.G, citrus(4, 3), [(5, 5, 2), (11, 7, 4), (7, 11, 3)], False),
     "sweet_orange": (ct.ORANGE, ct.G, citrus(5), [(5, 6, 2), (11, 10, 4)], False),
     "lemon": (ct.LEMON, ct.G, lemon, [(5, 6, 2), (11, 10, 3)], False),
     "peach": (ct.PEACH, ct.GL, peach, [(5, 6, 2), (10, 11, 4)], False),
@@ -303,11 +306,56 @@ def swatch(im, u, v, ramp, bumpy=False):
             im.putpixel((u + x, v + y), ramp[i] + (255,))
 
 
+# 1.3.1: the skin of each fruit, so the ones of a similar colour and shape still read apart. Every box face
+# samples the top-left corner of its swatch (at most 5x5 texels), so the marks sit inside that corner.
+SKIN = {  # tree -> dict(pores, cheek, shoulder, speck=(ramp, level), gloss, edge, unripe ramp)
+    "mandarin": dict(pores=True, unripe=DARKG),
+    "sweet_orange": dict(pores=True, unripe=DARKG),
+    "lemon": dict(pores=True, unripe=DARKG),
+    "peach": dict(cheek=True, unripe=GREYG),
+    "pear": dict(speck=(ct.BROWN, 3)),
+    "persimmon": dict(gloss=True),
+    "mango": dict(shoulder=True),
+    "loquat": dict(speck=(LOQUAT, 4), unripe=GREYG),
+    "longan": dict(speck=(ct.BROWN, 2)),
+    "star_fruit": dict(edge=True),
+}
+
+
+def skin(im, u, v, tree, ripe):
+    """Species marks over a swatch. Pores: a sparse grid of darker dots (citrus). Cheek: the lower half goes
+    rosy red (peach). Shoulder: the top rows go red (mango). Speck: scattered dots of another colour (pear lenticels, downy
+    peach, loquat fuzz, longan). Gloss: a second hard highlight (persimmon). Edge: darker ridge lines."""
+    st = SKIN.get(tree, {})
+    for y in range(8):
+        for x in range(8):
+            px = im.getpixel((u + x, v + y))
+            if st.get("pores") and (x * 3 + y * 5) % 7 == 3 and x + y > 1:
+                im.putpixel((u + x, v + y), tuple(max(0, c - 26) for c in px[:3]) + (255,))
+            if ripe and st.get("cheek") and x + y >= 4 and not (x + y == 4 and x % 2):  # red cheek, lower side
+                im.putpixel((u + x, v + y), ct.RED[3 if x + y < 6 else 2] + (255,))
+            if ripe and st.get("shoulder") and y <= 1 and x + y > 1:  # red flush round the stalk end
+                im.putpixel((u + x, v + y), ct.RED[3 if y else 2] + (255,))
+            if st.get("speck") and ripe and ihash2(x, y, len(tree)) % 6 == 0 and x + y > 1:
+                im.putpixel((u + x, v + y), st["speck"][0][st["speck"][1]] + (255,))
+            if st.get("edge") and (x in (0, 4) or y == 4):
+                im.putpixel((u + x, v + y), tuple(max(0, c - 34) for c in px[:3]) + (255,))
+    if ripe and st.get("gloss"):
+        for x, y in ((1, 0), (0, 1), (2, 1)):
+            im.putpixel((u + x, v + y), (255, 236, 200, 255))
+
+
+def ihash2(x, y, s):
+    return (x * 73856093 ^ y * 19349663 ^ s * 83492791) & 0xffff
+
+
 def texture(tree):
     ripe, leaf, _, _, bumpy = TREES[tree]
     im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    swatch(im, 0, 0, ct.UNRIPE, bumpy)
+    swatch(im, 0, 0, SKIN.get(tree, {}).get("unripe", ct.UNRIPE), bumpy)
     swatch(im, 8, 0, ripe, bumpy)
+    skin(im, 0, 0, tree, False)
+    skin(im, 8, 0, tree, True)
     swatch(im, 0, 8, ct.BROWN)
     swatch(im, 8, 8, leaf)
     if tree in SKIN_EXTRA:
