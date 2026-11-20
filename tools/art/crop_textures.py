@@ -315,8 +315,12 @@ def spinach(c, s):
             3: [(172, 8, 4.6), (8, 8, 4.6), (150, 8.5, 4.8), (30, 8.5, 4.8), (126, 9, 4.8), (54, 9, 4.8),
                 (104, 9, 4.6), (76, 9, 4.6), (90, 7.5, 4.4)]}[s]
     for i, (a, l, w) in enumerate(spec):
-        leaf(c, 7.5, 15.6, a, l, w, GD, lvl=2 + i % 2, droop=1.0 if s > 1 else 0, shape='petiole',
-             rib=(GD, 4) if s > 1 else None)
+        leaf(c, 7.5, 15.6, a, l, w, G if i % 2 else GD, lvl=2 + i % 2, droop=1.0 if s > 1 else 0, shape='petiole',
+             rib=(PALE, 1) if s > 1 else None)
+    if s > 1:  # 1.3.1: the reddish crown spinach shows where the stalks meet
+        o = c.new()
+        for x, y in ((6, 15), (7, 15), (8, 15), (7, 14), (6, 14) if s == 3 else (7, 15), (9, 15) if s == 3 else (8, 15)):
+            c.put(x, y, PINK, 1, 'stem', o, True)
 
 
 LOBE = ['x.x', 'xxx', '.x.']
@@ -849,7 +853,8 @@ def cucumber(c, s):
             stamp(c, x, y, ['y.y', '.Y.', 'y.y'], fk)
     if s == 3:
         fk = fruit_key(CUKE, GL, {'y': (YFLW, 3, 'flower', True)})
-        cuke = ['.c.', 'hxd', 'lxd', 'xld', 'lxd', 'xld', '.xd', '.y.']
+        fk['w'] = (CUKE, 4, 'fruit', True)  # 1.3.1: the pale spines of a fresh cucumber
+        cuke = ['.c.', 'hxd', 'lxw', 'xld', 'wxd', 'xld', '.xd', '.y.']
         for x, y in ((2, 9), (12, 3), (6, 6), (10, 9)):
             stamp(c, x, y, cuke, fk)
 
@@ -970,15 +975,15 @@ LUFFA_LEAF = ['.x.x.', 'xxxxx', 'xxvxx', '.xvx.', '..x..']
 
 
 def bitter_melon(c, s):
-    vine(c, s, GL, BMEL_LEAF, G, GL)
+    vine(c, s, GL, BMEL_LEAF, GD, G)
     if s == 2:
         fk = {'y': (YFLW, 3, 'flower', True), 'Y': (YFLW, 1, 'flower', True)}
         for x, y in ((2, 12), (12, 9), (6, 5), (13, 3)):
             stamp(c, x, y, ['yy', 'Y.'], fk)
     if s == 3:  # warty, pale green, pointed at the tip
-        fk = fruit_key(BMEL, GL)
-        melon = ['.c.', 'hld', 'lxl', 'xlx', 'lxd', 'xld', '.x.', '.d.']
-        for x, y in ((2, 8), (12, 3), (6, 5), (10, 8)):
+        fk = fruit_key(BMEL, GL, {'w': (BMEL, 4, 'fruit', True)})  # 1.3.1: paler and warty, so it stands out
+        melon = ['..c..', '.hwl.', 'wlwlw', 'lwlwl', 'wlwlw', '.lwl.', '.wld.', '..l..', '..d..']
+        for x, y in ((1, 6), (11, 2), (6, 4)):
             stamp(c, x, y, melon, fk)
 
 
@@ -992,8 +997,9 @@ def luffa(c, s):
     if s == 3:  # long, smooth, dark green, still flowering
         k = fruit_key(LUFFA, GL, {'x': (LUFFA, 1, 'fruit', True), 'l': (LUFFA, 2, 'fruit', True),
                                   'd': (LUFFA, 0, 'fruit', True)})
-        gourd = ['.c', 'hx', 'hx', 'hx', 'lx', 'lx', 'lx', 'xd', 'xd', '.d']
-        for x, y in ((2, 4), (12, 2), (7, 6)):
+        k['r'] = (PALE, 2, 'fruit', True)  # 1.3.1: the pale ribs running down the gourd
+        gourd = ['.c.', 'hrx', 'hrx', 'rxr', 'lrx', 'rxr', 'lrx', 'rxr', 'xrd', 'rxr', 'xrd', '.d.']
+        for x, y in ((1, 3), (12, 1), (7, 4)):
             stamp(c, x, y, gourd, k)
         for x, y in ((10, 11), (4, 0)):
             stamp(c, x, y, flower, fk)
@@ -1028,12 +1034,38 @@ def bean(c, s, pods, ripe_from=12):
         stamp(c, x, y, BEAN_PODS, pk)
 
 
+# 1.3.1: the three bean crops looked the same when ripe. Soybean keeps its fuzzy pod clusters at the nodes;
+# adzuki stays green with long red pods hanging below the leaves; mung yellows and holds clusters of slim
+# black pods up above the leaves.
+ADZ_POD = ['s', 'h', 'x', 'x', 'x', 'x', 'd']
+MUNG_POD = ['d', 'x', 'x', 'x', 'h', 's']
+
+
 def adzuki_bean(c, s):
-    bean(c, s, ADZ)
+    if s < 3:
+        return bean(c, s, ADZ)
+    for a, l in ((160, 5), (20, 5), (130, 7.5), (50, 7.5), (104, 9.5), (76, 9.5), (90, 10.5)):
+        ex, ey = leaf(c, *B, a, l, 1, GD, shape='tube', mat='stem')
+        trifol(c, ex, ey, a, 3.8, GD)
+    pk = {'s': (GD, 1, 'stem', True), 'h': (ADZ, 4, 'fruit', True), 'x': (ADZ, 3, 'fruit', True),
+          'd': (ADZ, 1, 'fruit', True)}
+    for x, y in ((1, 9), (3, 8), (11, 9), (13, 8), (6, 9), (9, 8), (4, 4), (11, 3)):
+        stamp(c, x, y, ADZ_POD, pk)
 
 
 def mung_bean(c, s):
-    bean(c, s, MUNGP, 8)
+    if s < 3:
+        return bean(c, s, MUNGP, 8)
+    for a, l in ((165, 5), (15, 5), (135, 7), (45, 7)):
+        ex, ey = leaf(c, *B, a, l, 1, YG, shape='tube', mat='stem')
+        trifol(c, ex, ey, a, 3.6, YG)
+    yellow_tips(c, 0, *B, 4, 7)
+    for a, l in ((112, 9), (68, 9), (92, 11)):  # flower stalks standing above the leaves
+        ex, ey = leaf(c, *B, a, l, 1, YG, shape='tube', mat='stem')
+    pk = {'s': (YG, 1, 'stem', True), 'h': (MUNGP, 2, 'fruit', True), 'x': (BLUE, 0, 'fruit', True),
+          'd': (BLUE, 0, 'fruit', True)}
+    for x, y in ((2, 2), (4, 1), (5, 3), (9, 1), (11, 2), (12, 0), (7, 0), (6, 6), (10, 6)):
+        stamp(c, x, y, MUNG_POD, pk)
 
 
 # ---------------------------------------------------------------- 1.1: spices
@@ -1246,6 +1278,46 @@ def star_fruit_sapling(c):
                 leaf(c, x, y, 270, 2.0, 1.7, G, shape='oval')
 
 
+# tree -> how its leaves block reads from a few blocks away (1.3.1): colour, leaf form, gloss and new flush
+DOWN = (220, 235, 250, 265, 280, 295, 310, 320)  # hanging blades
+LEAF_STYLE = {
+    # small, dark, glossy and dense
+    'mandarin':     dict(ramp=GD, kind='blade', shape='oval', l=2.6, w=2.2, n=46, glints=14, holes=5, lvls=(2, 3, 3)),
+    # mid green, larger oval leaves with a pale midrib
+    'sweet_orange': dict(ramp=G, kind='blade', shape='oval', l=3.8, w=3.0, n=24, rib=4, glints=8, holes=7),
+    # yellow-green pointed leaves, purplish new growth
+    'lemon':        dict(ramp=GL, kind='blade', shape='lance', l=4.2, w=2.3, n=26, flush=(SPP, 3), glints=4),
+    # long narrow light leaves hanging down like willow
+    'peach':        dict(ramp=GL, kind='blade', shape='lance', l=7.0, w=1.5, n=30, angles=DOWN, droop=1.0,
+                         lvls=(2, 3, 3), holes=12, floor=0),
+    # round leaves on long stalks, pale undersides showing
+    'pear':         dict(ramp=G, kind='blade', shape='petiole', l=4.0, w=3.2, n=24, glints=6,
+                         flush=(PALE, 4), holes=8),
+    # big broad leaves, strong pale veins, a yellower green
+    'persimmon':    dict(ramp=PERSL, kind='blade', shape='oval', l=5.5, w=4.2, n=13, rib=4, rib_ramp=YG,
+                         lvls=(2, 3), holes=6),
+    # pinnate, dark glossy leaflets, bronze-red young flush
+    'lychee':       dict(ramp=GD, kind='pinnate', shape='lance', l=2.6, w=1.4, pairs=3, gap=2.0, spread=55, n=14,
+                         flush=(BRONZE, 3), glints=6, holes=7),
+    # pinnate, olive leaflets, wavy and blunt
+    'longan':       dict(ramp=LONGL, kind='pinnate', shape='oblong', l=2.4, w=1.6, pairs=3, gap=2.2, spread=65, n=14,
+                         flush=(YG, 3), holes=8),
+    # very long dark blades hanging in tiers, reddish new leaves
+    'mango':        dict(ramp=GD, kind='blade', shape='lance', l=8.0, w=2.0, n=20, angles=DOWN, droop=1.5, rib=1,
+                         flush=(BRONZE, 3), holes=6, floor=0),
+    # leaves in rosettes at the twig tips, glossy
+    'star_anise':   dict(ramp=GD, kind='whorl', shape='lance', l=3.4, w=1.8, whorl=5, n=9, rib=True, glints=8, holes=6, floor=0, lvls=(3, 3, 4)),
+    # oval leaves with pale veins, pinkish-red new flush
+    'cinnamon':     dict(ramp=G, kind='blade', shape='oval', l=4.2, w=2.6, n=22, rib=4, flush=(BRONZE, 3), holes=7),
+    # big stiff sage leaves with a strong pale rib and rusty felt
+    'loquat':       dict(ramp=GG, kind='blade', shape='oblong', l=6.5, w=3.0, n=14, rib=1, rib_ramp=PALE, felt=7,
+                         holes=5),
+    # many tiny leaflets in rows, light green
+    'star_fruit':   dict(ramp=GL, kind='pinnate', shape='oval', l=1.8, w=1.5, pairs=4, gap=1.6, spread=80, n=18,
+                         holes=12, lvls=(2, 3)),
+}
+
+
 def leaves_base(c, tree):
     rng = random.Random(zlib.crc32(tree.encode()))
     if tree == 'banana':
@@ -1272,15 +1344,46 @@ def leaves_base(c, tree):
                 c.erase(x, y)
                 holes += 1
         return rng
-    l, w, ramp, shape = TREES[tree]['leaf']
+    st = LEAF_STYLE[tree]
+    ramp, kind = st['ramp'], st['kind']
     for y in range(16):
         for x in range(16):
-            c.put(x, y, ramp, 1, 'leaf', 0)
-    for i in range(30):
-        leaf(c, rng.uniform(0, 16), rng.uniform(0, 16), rng.choice((20, 50, 130, 160, 200, 250, 290, 340)),
-             l * rng.uniform(.8, 1.1), w, ramp, lvl=rng.choice((2, 2, 3)), shape=shape)
+            c.put(x, y, ramp, st.get('floor', 1), 'leaf', 0)
+    angles = st.get('angles', (20, 50, 130, 160, 200, 250, 290, 340))
+    flush = st.get('flush')
+    for i in range(st['n']):
+        x, y, a = rng.uniform(0, 16), rng.uniform(0, 16), rng.choice(angles) + rng.uniform(-12, 12)
+        r = flush[0] if flush and i < flush[1] else ramp  # drawn first, so later leaves half cover it
+        lv = rng.choice(st.get('lvls', (2, 2, 3)))
+        if kind == 'pinnate':  # a rachis with pairs of leaflets, like lychee, longan and star fruit
+            o = c.new()
+            a0 = math.radians(a)
+            ux, uy = math.cos(a0), -math.sin(a0)
+            for k in range(st['pairs']):
+                px, py = x + ux * k * st['gap'], y + uy * k * st['gap']
+                for side in (-1, 1):
+                    leaf(c, px, py, a + side * st['spread'], st['l'], st['w'], r, lvl=lv, shape=st['shape'], obj=o,
+                         spine=False)
+            line(c, x, y, x + ux * (st['pairs'] - 1) * st['gap'], y + uy * (st['pairs'] - 1) * st['gap'],
+                 r, max(0, lv - 1), 'leaf', o)
+        elif kind == 'whorl':  # leaves in rosettes at the twig tips (star anise)
+            o = c.new()
+            for k in range(st['whorl']):
+                leaf(c, x, y, a + 360 * k / st['whorl'], st['l'], st['w'], r, lvl=lv, shape=st['shape'], obj=o,
+                     rib=(r, max(0, lv - 1)) if st.get('rib') else None)
+        else:  # single blades
+            leaf(c, x, y, a, st['l'] * rng.uniform(.85, 1.1), st['w'], r, lvl=lv, shape=st['shape'],
+                 droop=st.get('droop', 0), rib=(st.get('rib_ramp', r), st['rib']) if st.get('rib') is not None else None)
+    for k in range(st.get('glints', 0)):  # glossy leaves catch the light
+        x, y = rng.randrange(16), rng.randrange(16)
+        if c.get(x, y) and c.get(x, y)[1] >= 2:
+            c.put(x, y, c.get(x, y)[0], 4, 'leaf', c.new(), True)
+    for k in range(st.get('felt', 0)):  # rusty felted undersides peeking out (loquat)
+        x, y = rng.randrange(16), rng.randrange(16)
+        c.put(x, y, BRONZE, 2 + k % 2, 'leaf', c.new(), True)
+        c.put(x + 1, y, BRONZE, 2, 'leaf', c.obj, True)
     holes = 0
-    while holes < 9:
+    while holes < st.get('holes', 9):
         x, y = rng.randrange(16), rng.randrange(16)
         if c.get(x, y) and c.get(x, y)[1] <= 2:
             c.erase(x, y)
