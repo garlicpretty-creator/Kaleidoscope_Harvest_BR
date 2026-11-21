@@ -331,6 +331,28 @@ test("bone meal moves a sapling on one stage only", () => {
   equal(growth(overworld.getBlock(at(0))), 1, "one stage");
 });
 
+test("bone meal grows a sapling in a biome its tree does not like (it would not grow there by itself)", () => {
+  overworld.biome = "minecraft:snowy_plains";
+  let sapling = tick(plantSapling(), 20);
+  equal(growth(sapling), 0, "no growth of its own off-climate");
+  const p = player("minecraft:bone_meal", 5);
+  for (let i = 0; i < 4; i++) __interact(p, overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).typeId, r("fruitwood_log"), "four bone meal: a tree");
+  equal(p.hand.amount, 1, "four used");
+});
+
+test("bone meal is not used up when the tree cannot be placed", () => {
+  overworld.biome = "minecraft:swamp";
+  const p = player("minecraft:bone_meal", 5);
+  plantSapling();
+  for (let i = 0; i < 3; i++) __interact(p, overworld.getBlock(at(0)));
+  overworld.featureFails = true;
+  __interact(p, overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).typeId, r("mandarin_sapling"), "still a sapling");
+  equal(p.hand.amount, 2, "the failed try cost nothing");
+  overworld.featureFails = false;
+});
+
 test("blossoming leaves hang a small green fruit below them, only into air", () => {
   grownMandarin();
   let leaf = tick(overworld.getBlock(LEAF), 1);

@@ -49,11 +49,17 @@ export function growTree(block, tree) {
   return placed;
 }
 
-/** Moves a sapling on by `stages`; past its last stage it tries to become a tree. */
+/**
+ * Moves a sapling on by `stages`; past its last stage it tries to become a tree.
+ * False when it was at its last stage and the tree could not be placed (nothing changed).
+ */
 function advanceSapling(block, tree, stages) {
   const next = getState(block, "growth") + stages;
-  if (next < tree.saplingStages) setStates(block, { growth: next });
-  else growTree(block, tree);
+  if (next < tree.saplingStages) {
+    setStates(block, { growth: next });
+    return true;
+  }
+  return growTree(block, tree);
 }
 
 export function tickSapling(block, tree) {
@@ -132,12 +138,11 @@ function boneMeal(block, player, advance) {
   return true;
 }
 
+// ## Bone meal works on every sapling in any biome (owner, 2026-11-21: 所有果樹苗可以骨粉催熟);
+// ## only its own random-tick growth keeps the climate rule. A tree grown off-climate still
+// ## does not blossom outside a greenhouse (its leaves keep the rule).
 export function useSapling(block, tree, player) {
-  return boneMeal(block, player, () => {
-    if (growthMultiplier(block, tree.climate) <= 0) return false;
-    advanceSapling(block, tree, 1);
-    return true;
-  });
+  return boneMeal(block, player, () => advanceSapling(block, tree, 1));
 }
 
 /** Strips a piece of bark from a flushed cinnamon leaf; it goes back to bare and flushes again. */
