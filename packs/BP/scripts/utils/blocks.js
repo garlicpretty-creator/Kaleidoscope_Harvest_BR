@@ -1,8 +1,8 @@
 // Small helpers with no lifecycle of their own: block states, the player's
 // hand, dropping items, sounds and particles.
 
-import { EquipmentSlot, GameMode, ItemStack, MolangVariableMap } from "@minecraft/server";
-import { PARTICLE_VARIABLES } from "../data/feedback.js";
+import { EquipmentSlot, GameMode, ItemStack, MolangVariableMap, system } from "@minecraft/server";
+import { PARTICLE_VARIABLES, REFUSE } from "../data/feedback.js";
 import { state } from "../data/ns.js";
 
 // --- Randomness (tests replace it) ---------------------------------------------------
@@ -89,9 +89,10 @@ export function dropAt(block, typeId, count) {
   block.dimension.spawnItem(new ItemStack(typeId, count), centre(block.location));
 }
 
-export function playAt(block, sound) {
+export function playAt(block, sound, options) {
   try {
-    block.dimension.playSound(sound, centre(block.location));
+    if (options) block.dimension.playSound(sound, centre(block.location), options);
+    else block.dimension.playSound(sound, centre(block.location));
   } catch {
     // ## A missing sound id must never break a harvest.
   }
@@ -125,4 +126,42 @@ export function particleAt(block, particle) {
   } catch {
     // ## Same for particles: an unloaded chunk or a bad id is not worth an error.
   }
+}
+
+/** Plays `sound` `times` times, `gap` ticks apart (the first at once): one per bottle or fruit of a sneak-use. */
+export function playSequence(block, sound, times, gap) {
+  for (let i = 0; i < times; i++) {
+    if (i === 0) playAt(block, sound);
+    else system.runTimeout(() => playAt(block, sound), i * gap);
+  }
+}
+
+// --- Refusal ----------------------------------------------------------------------------------
+
+/** Block key → tick of its last refusal cue. */
+const lastRefusal = new Map();
+/** Test hook: forgets every refusal cue. */
+export function resetRefusals() {
+  lastRefusal.clear();
+}
+
+/**
+ * The one "no" of Harvest (data/feedback.js REFUSE): a low note and a small grey puff on the block,
+ * at most once per REFUSE.gapTicks per block. Always returns false, so handlers can `return refuse(block)`.
+ */
+export function refuse(block) {
+  const { x, y, z } = block.location;
+  const key = `${block.dimension.id}:${x},${y},${z}`;
+  const now = system.currentTick;
+  const prev = lastRefusal.get(key);
+  if (prev !== undefined && now - prev < REFUSE.gapTicks) return false;
+  lastRefusal.set(key, now);
+  if (lastRefusal.size > 64) lastRefusal.delete(lastRefusal.keys().next().value);
+  playAt(block, REFUSE.sound, { pitch: REFUSE.pitch, volume: REFUSE.volume });
+  try {
+    block.dimension.spawnParticle(REFUSE.particle, { x: x + 0.5, y: y + 0.9, z: z + 0.5 });
+  } catch {
+    // ## Feedback only.
+  }
+  return false;
 }

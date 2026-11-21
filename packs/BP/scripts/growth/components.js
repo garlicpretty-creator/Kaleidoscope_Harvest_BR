@@ -9,6 +9,7 @@ import { hangingFruitComponent, leavesComponent, saplingComponent } from "./tree
 import { juicerComponent } from "../stations/juicer.js";
 import { picklingJarComponent } from "../stations/picklingJar.js";
 import { startVisualSweep } from "../stations/visuals.js";
+import { startAutomation } from "../stations/automation.js";
 import { JUICER, PICKLING_JAR } from "../data/stations.js";
 
 export const COMPONENTS = {
@@ -26,4 +27,6 @@ export function registerComponents() {
     for (const [id, component] of Object.entries(COMPONENTS)) blockComponentRegistry.registerCustomComponent(id, component);
   });
   startVisualSweep([JUICER, PICKLING_JAR]);
+  // ## Hoppers and chests above and below the stations: a slow pass over a small tracked list.
+  startAutomation();
 }

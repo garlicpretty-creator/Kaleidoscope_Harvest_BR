@@ -6,14 +6,21 @@
 // them back to an empty hand. Breaking it drops the ingredients (a sealed batch is lost
 // with the ingredients returned, nothing gained).
 //
+// Convenience update (phase 1): sneaking with a stack of an ingredient puts in as many as
+// fit. A container above loads a whole recipe and seals it; a finished batch goes into a
+// container below (stations/automation.js). An ingredient on a full or sealed jar gives the
+// refusal cue.
+//
 // State kaleidoscope_harvest:contents  empty | fresh | fermenting | done — the colour in its mouth.
 
 import { RECIPES } from "../data/dishes.js";
 import { SOUND } from "../data/feedback.js";
 import { rid } from "../data/ns.js";
-import { PICKLING_JAR } from "../data/stations.js";
+import { PICKLING_JAR, SNEAK_USE } from "../data/stations.js";
 import { clearBlockData, getBlockData, now, setBlockData } from "../utils/blockStore.js";
-import { consumeMainhand, dropAt, getState, mainhand, playAt, setStates } from "../utils/blocks.js";
+import { consumeMainhand, dropAt, getState, isCreative, mainhand, playAt, playSequence, refuse, setStates } from "../utils/blocks.js";
+import { countIn, putInto, roomFor, takeFrom } from "../utils/containers.js";
+import { registerAutomated, track, untrack } from "./automation.js";
 import { removeVisual, syncVisual } from "./visuals.js";
 
 /** Copies the contents stage onto the display entity (the lid: open, sealed and rattling, hopping when done). */
@@ -52,17 +59,22 @@ export function refreshJar(block) {
 }
 
 export function useJar(block, player) {
+  track(block);
   const jar = refreshJar(block);
   const held = mainhand(player);
   const sealed = jar.sealedAt !== null;
 
   if (held) {
-    if (sealed || !ACCEPTED.has(held.typeId) || jar.items.length >= PICKLING_JAR.capacity) return false;
-    jar.items.push(held.typeId);
-    consumeMainhand(player);
+    if (!ACCEPTED.has(held.typeId)) return false;
+    const free = PICKLING_JAR.capacity - jar.items.length;
+    if (sealed || free <= 0) return refuse(block);
+    // ## Sneaking puts in as many as fit.
+    const n = !player.isSneaking ? 1 : Math.min(free, isCreative(player) ? free : held.amount);
+    for (let i = 0; i < n; i++) jar.items.push(held.typeId);
+    consumeMainhand(player, n);
     setBlockData(block, jar);
     setContents(block, "fresh");
-    playAt(block, SOUND.jarAdd);
+    playSequence(block, SOUND.jarAdd, n, SNEAK_USE.gapTicks);
     return true;
   }
 
@@ -94,13 +106,64 @@ export function brokeJar(block) {
   for (const item of getBlockData(block, emptyJar()).items) dropAt(block, item, 1);
   clearBlockData(block);
   removeVisual(block, PICKLING_JAR.visual);
+  untrack(block);
 }
+
+/** What `set` still needs on top of `items` (both lists of ids), or null when `items` holds something else. */
+function stillNeeded(set, items) {
+  const rest = [...set];
+  for (const item of items) {
+    const i = rest.indexOf(item);
+    if (i < 0) return null;
+    rest.splice(i, 1);
+  }
+  return rest;
+}
+
+/** Larger recipes first, so kimchi is not sealed as pickled napa cabbage halfway through. */
+const BY_SIZE = [...JAR_RECIPES].sort((a, b) => b.set.length - a.set.length);
+
+/**
+ * One automation pass (stations/automation.js). A finished batch goes into the container below
+ * (when it fits). An open jar takes from the container above the rest of the first recipe it can
+ * complete with what is already in it, and seals itself; it takes nothing it cannot finish.
+ */
+export function automateJar(block, above, below) {
+  const jar = refreshJar(block);
+  if (jar.sealedAt !== null) {
+    if (!below || getState(block, "contents") !== "done") return;
+    const recipe = JAR_RECIPES.find((r) => r.result === jar.recipe);
+    if (recipe && !roomFor(below, rid(recipe.result), recipe.count ?? 1)) return;
+    if (recipe) putInto(below, rid(recipe.result), recipe.count ?? 1);
+    clearBlockData(block);
+    setContents(block, "empty");
+    playAt(block, SOUND.jarOpen);
+    return;
+  }
+  if (!above) return;
+  for (const recipe of BY_SIZE) {
+    const rest = stillNeeded(recipe.set, jar.items);
+    if (!rest) continue;
+    const need = new Map();
+    for (const id of rest) need.set(id, (need.get(id) ?? 0) + 1);
+    if ([...need].some(([id, n]) => countIn(above, [id]) < n)) continue;
+    for (const [id, n] of need) takeFrom(above, [id], n);
+    setBlockData(block, { items: [...recipe.set], sealedAt: now(), recipe: recipe.result });
+    setContents(block, "fermenting");
+    if (rest.length) playAt(block, SOUND.jarAdd);
+    playAt(block, SOUND.jarSeal);
+    return;
+  }
+}
+registerAutomated(rid(PICKLING_JAR.id), automateJar);
 
 export const picklingJarComponent = {
   onPlace({ block }) {
+    track(block);
     syncJar(block);
   },
   onRandomTick({ block }) {
+    track(block);
     refreshJar(block);
     syncJar(block);
   },

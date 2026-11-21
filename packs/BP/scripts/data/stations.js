@@ -51,3 +51,9 @@ export const VISUAL_PROPS = {
 export const VISUAL_SWEEP_SECONDS = 5;
 export const SPLASH_PARTICLE = "splash";
 export const BUBBLE_PARTICLE = "jar_bubble";
+
+// ## Owner's convenience update, phase 1 (2026-11-21).
+/** Sneak-use: how much one use may do at most, and the ticks between the sounds of each unit. */
+export const SNEAK_USE = { max: 8, gapTicks: 4 };
+/** Hoppers and chests above and below the stations (stations/automation.js). */
+export const AUTOMATION = { seconds: 2, perPass: 16, maxTracked: 512 };

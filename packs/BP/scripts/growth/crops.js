@@ -14,7 +14,7 @@
 import { CROPS, cropBlockId } from "../data/crops.js";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid, state } from "../data/ns.js";
-import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
+import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, refuse, roll, rollRange, setStates } from "../utils/blocks.js";
 import { bright, growthMultiplier, hasWater, isFarmland, isSoil, isWaterBed } from "./environment.js";
 
 /** A crop that is picked (and grows back) rather than broken: repeatable, trellis and bush crops, and aquatic crops with `pick`. */
@@ -97,7 +97,8 @@ export function useCrop(block, crop, player) {
   const stage = getState(block, "growth");
 
   if (held?.typeId === "minecraft:bone_meal") {
-    if (stage >= crop.maxGrowth || getState(block, "off_climate")) return false;
+    // ## Ripe or off-climate: a low note and a grey puff, and the bone meal stays in hand.
+    if (stage >= crop.maxGrowth || getState(block, "off_climate")) return refuse(block);
     setStage(block, crop, stage + BONE_MEAL_STAGES);
     consumeMainhand(player);
     particleAt(block, PARTICLE.boneMeal);

@@ -11,6 +11,7 @@ const results = [];
 function test(name, body) {
   try {
     __reset();
+    resetRefusals();
     setRandom(() => 0);
     __setLootRandom(() => 0);
     body();
@@ -35,7 +36,7 @@ const PINGED = ["kaleidoscope_cookery:api_ping", "kaleidoscope_cookery:guidebook
 // ## Harvest's own api_ready goes out by itself a little later (api/harvestApi.js ANNOUNCE_TICKS).
 __advance(20);
 const ANNOUNCED = system.sentEvents.filter((e) => e.id === "kaleidoscope_harvest:api_ready").map((e) => JSON.parse(e.message));
-const { setRandom } = await import("../../packs/BP/scripts/utils/blocks.js");
+const { setRandom, resetRefusals } = await import("../../packs/BP/scripts/utils/blocks.js");
 const { CROPS } = await import("../../packs/BP/scripts/data/crops.js");
 const { TREES } = await import("../../packs/BP/scripts/data/trees.js");
 const { ITEMS } = await import("../../packs/BP/scripts/data/items.js");
@@ -1467,6 +1468,290 @@ test("1.1 partners: longan wine goes to Tavern; new heat, feed and bait rows nam
   assert(TAVERN_WINES.some((w) => w.id === "longan_wine"), "longan wine in the Tavern table");
   for (const id of ["mung_bean_soup", "longan_tea", "mapo_tofu"]) assert(HERBAL_HEAT.some((h) => h.id === id), `heat for ${id}`);
   for (const id of ["adzuki_bean", "mung_bean", "water_spinach", "corn_leaves"]) assert(RANCHING_FEEDS.some((f) => f.item === id), `feed ${id}`);
+});
+
+// --- Convenience update, phase 1: refusal cue, sneak-use, hoppers ---------------------------------------------
+const { __setContainer } = mc;
+const { REFUSE } = await import("../../packs/BP/scripts/data/feedback.js");
+const { SNEAK_USE, AUTOMATION } = await import("../../packs/BP/scripts/data/stations.js");
+const { trackedStations } = await import("../../packs/BP/scripts/stations/automation.js");
+const refusals = () => overworld.sounds.filter((s) => s.id === REFUSE.sound).length;
+const smoke = () => overworld.particles.filter((p) => p.id === REFUSE.particle).length;
+/** Runs the clock on past one automation pass. */
+const pass = (n = 1) => __advance(n * AUTOMATION.seconds * 20);
+/** Lets sounds a sneak-use of an earlier test scheduled play out. */
+const settle = () => {
+  __advance(SNEAK_USE.gapTicks * SNEAK_USE.max);
+  overworld.sounds = [];
+};
+/** Sneaks two mandarins into the juicer at `location`. */
+function fillJuicer(location) {
+  const f = player(r("mandarin"), 2);
+  f.isSneaking = true;
+  __interact(f, overworld.getBlock(location));
+}
+
+test("refusal: bone meal on a ripe or off-climate crop gives a low note and a grey puff, and is kept", () => {
+  const crop = plant("napa_cabbage_crop", 0, { [S("growth")]: 7 });
+  const p = player("minecraft:bone_meal", 3);
+  __interact(p, crop);
+  equal(refusals(), 1, "one low note");
+  equal(smoke(), 1, "one grey puff");
+  const cue = overworld.sounds.find((s) => s.id === REFUSE.sound);
+  equal(cue.options.pitch, REFUSE.pitch, "low pitch");
+  equal(p.hand.amount, 3, "bone meal kept on a ripe crop");
+  overworld.biome = "minecraft:desert";
+  const grey = tick(plant("napa_cabbage_crop", 3), 1);
+  equal(grey.permutation.getState(S("off_climate")), true, "off-climate");
+  __interact(p, grey);
+  equal(refusals(), 2, "refused off-climate too");
+  equal(growth(overworld.getBlock(at(3))), 0, "did not grow");
+  equal(p.hand.amount, 3, "bone meal kept off-climate");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("refusal: an empty hand or a random item on an unripe crop stays silent", () => {
+  const crop = plant("napa_cabbage_crop");
+  __interact(player(), crop);
+  __interact(player("minecraft:stick"), overworld.getBlock(at(0)));
+  equal(refusals(), 0, "no cue");
+  equal(smoke(), 0, "no puff");
+});
+
+test("refusal: one cue per block per gap while use is held down", () => {
+  const crop = plant("napa_cabbage_crop", 0, { [S("growth")]: 7 });
+  const p = player("minecraft:bone_meal", 3);
+  for (let i = 0; i < 4; i++) __interact(p, overworld.getBlock(at(0)));
+  equal(refusals(), 1, "held down: once");
+  __advance(REFUSE.gapTicks);
+  __interact(p, overworld.getBlock(at(0)));
+  equal(refusals(), 2, "again after the gap");
+  plant("napa_cabbage_crop", 2, { [S("growth")]: 7 });
+  __interact(p, overworld.getBlock(at(2)));
+  equal(refusals(), 3, "another block has its own gap");
+  void crop;
+});
+
+test("refusal: bone meal on off-climate leaves, off-climate fruit and a sapling with no room", () => {
+  grownMandarin();
+  overworld.biome = "minecraft:snowy_plains";
+  tick(overworld.getBlock(LEAF), 1);
+  const p = player("minecraft:bone_meal", 5);
+  __interact(p, overworld.getBlock(LEAF));
+  equal(refusals(), 1, "off-climate leaf refused");
+  equal(blossom(overworld.getBlock(LEAF)), false, "no blossom");
+  const underRing = at(-1, 64 + MANDARIN_TRUNK - 2);
+  __place(overworld, underRing, r("mandarin_fruit"));
+  __interact(p, overworld.getBlock(underRing));
+  equal(refusals(), 2, "off-climate fruit refused");
+  equal(growth(overworld.getBlock(underRing)), 0, "fruit unchanged");
+  equal(p.hand.amount, 5, "no bone meal used");
+  __interact(player(), overworld.getBlock(underRing));
+  equal(refusals(), 2, "an empty hand on an unripe fruit is silent");
+
+  overworld.biome = "minecraft:swamp";
+  plantSapling(10);
+  overworld.getBlock(at(10)).setPermutation(BlockPermutation.resolve(r("mandarin_sapling"), { [S("growth")]: 3 }));
+  overworld.featureFails = true;
+  __interact(p, overworld.getBlock(at(10)));
+  overworld.featureFails = false;
+  equal(refusals(), 3, "no room for the tree: refused");
+  equal(p.hand.amount, 5, "still no bone meal used");
+});
+
+test("refusal: another crop's seed on a trellis is refused; anything else is silent", () => {
+  __place(overworld, at(0, 63), "minecraft:farmland");
+  const trellis = __place(overworld, at(0), r("bamboo_trellis"));
+  const p = player(r("napa_cabbage_seeds"), 2);
+  __interact(p, trellis);
+  equal(refusals(), 1, "refused");
+  equal(p.hand.amount, 2, "seed kept");
+  __place(overworld, at(2, 63), "minecraft:farmland");
+  __interact(player("minecraft:stick"), __place(overworld, at(2), r("bamboo_trellis")));
+  equal(refusals(), 1, "a stick is silent");
+});
+
+test("refusal: a full juicer, a second milk bucket and a bottle with nothing to pour", () => {
+  const juicer = __place(overworld, at(0), r("juicer"));
+  __interact(player("minecraft:glass_bottle"), juicer);
+  equal(refusals(), 1, "bottle on an empty juicer");
+  const p = player(r("mandarin"), 3);
+  __interact(p, overworld.getBlock(at(0)));
+  __interact(p, overworld.getBlock(at(0)));
+  __advance(REFUSE.gapTicks);
+  __interact(p, overworld.getBlock(at(0)));
+  equal(refusals(), 2, "fruit on a full juicer");
+  equal(p.hand.amount, 1, "the third mandarin kept");
+  __interact(player(), overworld.getBlock(at(0)));
+  __interact(player("minecraft:milk_bucket"), overworld.getBlock(at(0)));
+  __advance(REFUSE.gapTicks);
+  const milk = player("minecraft:milk_bucket");
+  __interact(milk, overworld.getBlock(at(0)));
+  equal(refusals(), 3, "a second milk bucket");
+  equal(milk.hand.typeId, "minecraft:milk_bucket", "the milk is kept");
+});
+
+test("refusal: an ingredient on a sealed or full jar; other items stay silent", () => {
+  __place(overworld, at(0), r("pickling_jar"));
+  const p = player(r("napa_cabbage"), 8);
+  __interact(p, overworld.getBlock(at(0)));
+  __interact(p, overworld.getBlock(at(0)));
+  __interact(player(), overworld.getBlock(at(0))); // sealed
+  __interact(p, overworld.getBlock(at(0)));
+  equal(refusals(), 1, "sealed jar refuses");
+  equal(p.hand.amount, 6, "ingredient kept");
+  __interact(player("minecraft:stick"), overworld.getBlock(at(0)));
+  __interact(player(), overworld.getBlock(at(0))); // still fermenting: empty hand stays silent
+  equal(refusals(), 1, "silent");
+  __place(overworld, at(3), r("pickling_jar"));
+  p.isSneaking = true;
+  __interact(p, overworld.getBlock(at(3)));
+  p.isSneaking = false;
+  __interact(p, overworld.getBlock(at(3)));
+  equal(refusals(), 2, "full jar refuses");
+});
+
+test("sneak-use: a stack of fruit fills the juicer; a stack of an ingredient fills the jar", () => {
+  settle();
+  __place(overworld, at(0), r("juicer"));
+  const fruit = player(r("mandarin"), 5);
+  fruit.isSneaking = true;
+  __interact(fruit, overworld.getBlock(at(0)));
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 2, "two at once");
+  equal(fruit.hand.amount, 3, "two used");
+  equal(overworld.sounds.filter((s) => s.id === "block.composter.fill").length, 1, "first fill sound at once");
+  __advance(SNEAK_USE.gapTicks);
+  equal(overworld.sounds.filter((s) => s.id === "block.composter.fill").length, 2, "then the second");
+  const one = player(r("mandarin"), 1);
+  one.isSneaking = true;
+  __place(overworld, at(2), r("juicer"));
+  __interact(one, overworld.getBlock(at(2)));
+  equal(overworld.getBlock(at(2)).permutation.getState(S("fruit")), 1, "only what the stack has");
+  equal(one.hand, undefined, "hand empty");
+
+  __place(overworld, at(4), r("pickling_jar"));
+  const cabbage = player(r("napa_cabbage"), 6);
+  cabbage.isSneaking = true;
+  __interact(cabbage, overworld.getBlock(at(4)));
+  equal(cabbage.hand.amount, 2, "four in at once");
+  __interact(player(), overworld.getBlock(at(4)));
+  equal(overworld.dropped(r("napa_cabbage")), 4, "four napa cabbage match nothing: all back");
+});
+
+test("sneak-use: bottles pour one after another, refilled with the same fruit from the inventory", () => {
+  settle();
+  __place(overworld, at(0), r("juicer"));
+  fillJuicer(at(0));
+  const p = player("minecraft:glass_bottle", 12);
+  p.inventory.addItem(new ItemStack(r("mandarin"), 20));
+  p.isSneaking = true;
+  __interact(p, overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("mandarin_juice")), SNEAK_USE.max, "eight at most");
+  equal(p.hand.amount, 12 - SNEAK_USE.max, "a bottle each");
+  equal(p.inventory.count(r("mandarin")), 20 - 2 * (SNEAK_USE.max - 1), "two fruit per refill");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 0, "juicer empty after");
+  const pours = () => overworld.sounds.filter((s) => s.id === "bucket.fill.water").length;
+  equal(pours(), 1, "first pour sound at once");
+  __advance(SNEAK_USE.gapTicks * SNEAK_USE.max);
+  equal(pours(), SNEAK_USE.max, "one sound per bottle, in sequence");
+
+  // Fruit runs out: three mandarins in the inventory refill once.
+  __place(overworld, at(3), r("juicer"));
+  fillJuicer(at(3));
+  const q = player("minecraft:glass_bottle", 10);
+  q.inventory.addItem(new ItemStack(r("mandarin"), 3));
+  q.isSneaking = true;
+  __interact(q, overworld.getBlock(at(3)));
+  equal(overworld.dropped(r("mandarin_juice")), SNEAK_USE.max + 2, "two more");
+  equal(q.inventory.count(r("mandarin")), 1, "one mandarin left");
+  equal(q.hand.amount, 8, "two bottles used");
+
+  // Without sneaking a bottle pours once and the inventory is left alone.
+  __place(overworld, at(6), r("juicer"));
+  fillJuicer(at(6));
+  const s = player("minecraft:glass_bottle", 5);
+  s.inventory.addItem(new ItemStack(r("mandarin"), 4));
+  __interact(s, overworld.getBlock(at(6)));
+  equal(s.hand.amount, 4, "one bottle");
+  equal(s.inventory.count(r("mandarin")), 4, "no refill");
+});
+
+test("hoppers: a juicer takes fruit and bottles from above and puts juice below", () => {
+  const juicer = __placeByPlayer(overworld, at(0), r("juicer"));
+  const above = __setContainer(overworld, at(0, 65));
+  const below = __setContainer(overworld, at(0, 63), 27, "minecraft:chest");
+  above.addItem(new ItemStack(r("mandarin"), 3));
+  above.addItem(new ItemStack(r("grape"), 1));
+  above.addItem(new ItemStack("minecraft:glass_bottle", 2));
+  pass();
+  equal(below.count(r("mandarin_juice")), 1, "mandarin juice below");
+  equal(above.count(r("mandarin")), 1, "two mandarins taken");
+  equal(above.count("minecraft:glass_bottle"), 1, "one bottle taken");
+  pass();
+  equal(below.count(r("mixed_juice")), 1, "the last mandarin and the grape: mixed juice");
+  equal(above.count("minecraft:glass_bottle"), 0, "second bottle taken");
+  pass();
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 0, "nothing left to load");
+  void juicer;
+});
+
+test("hoppers: a juicer with no container below loads fruit but keeps the bottles above", () => {
+  __placeByPlayer(overworld, at(0), r("juicer"));
+  const above = __setContainer(overworld, at(0, 65));
+  above.addItem(new ItemStack(r("mandarin"), 2));
+  above.addItem(new ItemStack("minecraft:glass_bottle", 1));
+  pass();
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fruit")), 2, "loaded");
+  equal(above.count("minecraft:glass_bottle"), 1, "bottle stays: the juice would have nowhere to go");
+  const below = __setContainer(overworld, at(0, 63));
+  pass();
+  equal(below.count(r("mandarin_juice")), 1, "a container below: poured");
+});
+
+test("hoppers: a pickling jar loads a whole recipe from above, seals, and unloads below when done", () => {
+  __placeByPlayer(overworld, at(0), r("pickling_jar"));
+  const above = __setContainer(overworld, at(0, 65));
+  const below = __setContainer(overworld, at(0, 63));
+  above.addItem(new ItemStack(r("napa_cabbage"), 1));
+  pass();
+  equal(contents(overworld.getBlock(at(0))), "empty", "one cabbage finishes nothing: nothing taken");
+  equal(above.count(r("napa_cabbage")), 1, "still above");
+  above.addItem(new ItemStack(r("napa_cabbage"), 1));
+  pass();
+  equal(contents(overworld.getBlock(at(0))), "fermenting", "sealed");
+  equal(above.count(r("napa_cabbage")), 0, "both taken");
+  __skipTime(24000);
+  pass();
+  equal(below.count(r("pickled_napa_cabbage")), 2, "result below");
+  equal(contents(overworld.getBlock(at(0))), "empty", "open and empty again");
+});
+
+test("hoppers: a jar holding a hand-put ingredient only takes what completes it", () => {
+  __placeByPlayer(overworld, at(0), r("pickling_jar"));
+  __interact(player(r("daikon")), overworld.getBlock(at(0)));
+  const above = __setContainer(overworld, at(0, 65));
+  above.addItem(new ItemStack(r("napa_cabbage"), 2));
+  pass();
+  equal(above.count(r("napa_cabbage")), 2, "cabbage does not go with daikon");
+  above.addItem(new ItemStack("minecraft:sugar", 1));
+  pass();
+  equal(contents(overworld.getBlock(at(0))), "fermenting", "daikon and sugar sealed");
+  equal(above.count("minecraft:sugar"), 0, "sugar taken");
+});
+
+test("hoppers: stations are tracked by place, use and random tick, and dropped when gone", () => {
+  __placeByPlayer(overworld, at(0), r("juicer"));
+  __place(overworld, at(3), r("pickling_jar")); // a jar from an old world: no onPlace
+  equal(trackedStations().length, 1, "placed juicer tracked");
+  __randomTick(overworld.getBlock(at(3)));
+  equal(trackedStations().length, 2, "old jar joins on its random tick");
+  __randomTick(overworld.getBlock(at(3)));
+  equal(trackedStations().length, 2, "no duplicates");
+  __break(player(), overworld.getBlock(at(0)));
+  equal(trackedStations().length, 1, "broken juicer untracked");
+  overworld.getBlock(at(3)).setType("minecraft:air"); // blown up: no break event
+  pass();
+  equal(trackedStations().length, 0, "a pass drops a station that is gone");
 });
 
 // --- Report ------------------------------------------------------------------------------------------------------

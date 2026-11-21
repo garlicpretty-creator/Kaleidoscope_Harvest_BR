@@ -33,3 +33,16 @@ export const PARTICLE_VARIABLES = {
 
 /** Chance, per random tick, that a ripe crop or hanging fruit gives off a particle. */
 export const RIPE_PARTICLE_CHANCE = 0.35;
+
+// ## Refusal (owner, 2026-11-21: 便利更新): bone meal on a ripe or off-climate plant, a full
+// ## juicer or jar, a bottle with nothing to pour… answer with a low note and a grey puff on
+// ## the block, never text (same "missing" cue as Fishing's util/hint.js). Only when the
+// ## player held the thing for the job; an empty hand stays silent. The held item is kept.
+export const REFUSE = {
+  sound: "note.bass",
+  pitch: 0.7,
+  volume: 0.6,
+  particle: "minecraft:basic_smoke_particle",
+  /** Holding use repeats the interaction: one cue per block per this many ticks. */
+  gapTicks: 10,
+};

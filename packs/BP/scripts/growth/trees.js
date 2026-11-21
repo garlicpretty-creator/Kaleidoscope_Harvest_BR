@@ -14,7 +14,7 @@ import { BlockPermutation } from "@minecraft/server";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid } from "../data/ns.js";
 import { FRUIT_STAGES, LEAF_LOG_RANGE, TREES, TRUNKS, fruitBlockId, leavesBlockId, saplingBlockId, treeFeatureId } from "../data/trees.js";
-import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, roll, rollRange, setStates } from "../utils/blocks.js";
+import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, refuse, roll, rollRange, setStates } from "../utils/blocks.js";
 import { bright, growthMultiplier } from "./environment.js";
 
 const RIPE = FRUIT_STAGES.length - 1;
@@ -128,10 +128,14 @@ export function tickLeaves(block, tree) {
   if (roll() < tree.fruitChance * multiplier) setFruit(block, tree);
 }
 
-/** Bone meal on a sapling, a leaf or a fruit: one step only (企劃書：避免一鍵成林). */
+/**
+ * Bone meal on a sapling, a leaf or a fruit: one step only (企劃書：避免一鍵成林). When it can do
+ * nothing (off-climate leaves or fruit, no room for the tree or the fruit) the player gets the
+ * refusal cue and keeps the bone meal.
+ */
 function boneMeal(block, player, advance) {
   if (mainhand(player)?.typeId !== "minecraft:bone_meal") return false;
-  if (!advance()) return false;
+  if (!advance()) return refuse(block);
   consumeMainhand(player);
   particleAt(block, PARTICLE.boneMeal);
   playAt(block, SOUND.boneMeal);

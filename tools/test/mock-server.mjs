@@ -85,6 +85,59 @@ export class ItemStack {
   clone() {
     return new ItemStack(this.typeId, this.amount);
   }
+  get maxAmount() {
+    return 64;
+  }
+}
+
+/** A block's or a player's inventory (hoppers, chests, the player's 36 slots). */
+export class Container {
+  constructor(size) {
+    this.size = size;
+    this.slots = new Array(size).fill(undefined);
+  }
+  getItem(i) {
+    return this.slots[i]?.clone();
+  }
+  setItem(i, stack) {
+    this.slots[i] = stack ? stack.clone() : undefined;
+  }
+  /** Like the game: tops up stacks of the same item, then empty slots; returns what did not fit. */
+  addItem(stack) {
+    let left = stack.amount;
+    for (let i = 0; i < this.size && left > 0; i++) {
+      const s = this.slots[i];
+      if (s && s.typeId === stack.typeId && s.amount < s.maxAmount) {
+        const n = Math.min(left, s.maxAmount - s.amount);
+        s.amount += n;
+        left -= n;
+      }
+    }
+    for (let i = 0; i < this.size && left > 0; i++) {
+      if (!this.slots[i]) {
+        const n = Math.min(left, stack.maxAmount);
+        this.slots[i] = new ItemStack(stack.typeId, n);
+        left -= n;
+      }
+    }
+    return left > 0 ? new ItemStack(stack.typeId, left) : undefined;
+  }
+  get emptySlotsCount() {
+    return this.slots.filter((s) => !s).length;
+  }
+  /** Test helper: how many of an item it holds. */
+  count(typeId) {
+    return this.slots.filter((s) => s?.typeId === typeId).reduce((sum, s) => sum + s.amount, 0);
+  }
+}
+
+/** Test hook: gives the block at `location` a container (a hopper, a chest) of `size` slots. */
+export function __setContainer(dimension, location, size = 5, typeId = "minecraft:hopper") {
+  const block = dimension.getBlock(location);
+  block.setPermutation(new BlockPermutation(typeId));
+  const container = new Container(size);
+  dimension.containers.set(block.key, container);
+  return container;
 }
 
 // --- Blocks ------------------------------------------------------------------------------
@@ -208,6 +261,11 @@ export class Block {
   hasTag(tag) {
     return Object.hasOwn(__componentsOf(this.permutation), `tag:${tag}`);
   }
+  getComponent(id) {
+    if (id !== "minecraft:inventory") return undefined;
+    const container = this.isAir ? undefined : this.dimension.containers.get(this.key);
+    return container ? { container } : undefined;
+  }
   offset(dx, dy, dz) {
     return this.dimension.getBlock({ x: this.x + dx, y: this.y + dy, z: this.z + dz });
   }
@@ -251,6 +309,7 @@ class Dimension {
     this.sounds = [];
     this.particles = [];
     this.placedFeatures = [];
+    this.containers = new Map();
     this.biome = "minecraft:plains";
     /** Test hook: placeFeature fails (as when the game finds no room) while this is true. */
     this.featureFails = false;
@@ -264,8 +323,8 @@ class Dimension {
   spawnItem(stack, location) {
     this.items.push({ typeId: stack.typeId, amount: stack.amount, location: { ...location } });
   }
-  playSound(id, location) {
-    this.sounds.push({ id, location });
+  playSound(id, location, options) {
+    this.sounds.push({ id, location, ...(options ? { options: { ...options } } : {}) });
   }
   spawnEntity(typeId, location) {
     const entity = new Entity(this, typeId, location);
@@ -354,6 +413,9 @@ export class Player {
     this.dimension = dimension;
     this.gameMode = GameMode.Survival;
     this.hand = undefined;
+    this.isSneaking = false;
+    /** The rest of the inventory (the held stack is `hand`). */
+    this.inventory = new Container(36);
     const player = this;
     this.equippable = {
       getEquipment: (slot) => (slot === EquipmentSlot.Mainhand ? player.hand?.clone() : undefined),
@@ -366,6 +428,7 @@ export class Player {
     return this.gameMode;
   }
   getComponent(id) {
+    if (id === "minecraft:inventory") return { container: this.inventory };
     return id === "minecraft:equippable" ? this.equippable : undefined;
   }
 }
@@ -481,6 +544,7 @@ export function __reset() {
     dimension.featureFails = false;
     dimension.placedFeatures = [];
     dimension.waterlogged = new Set();
+    dimension.containers = new Map();
   }
   world.messages = [];
   system.sentEvents = [];
