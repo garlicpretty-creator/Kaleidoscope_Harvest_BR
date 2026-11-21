@@ -63,6 +63,25 @@ export function consumeMainhand(player, n = 1) {
   }
 }
 
+/**
+ * One point of wear on the held tool (minecraft:durability), never in creative. Returns "broke" when
+ * that was its last point (the tool is gone), "worn" otherwise, undefined for a tool without durability.
+ */
+export function wearMainhand(player) {
+  if (isCreative(player)) return "worn";
+  const equippable = player.getComponent("minecraft:equippable");
+  const stack = equippable?.getEquipment(EquipmentSlot.Mainhand);
+  const durability = stack?.getComponent("minecraft:durability");
+  if (!durability) return undefined;
+  if (durability.damage + 1 >= durability.maxDurability) {
+    equippable.setEquipment(EquipmentSlot.Mainhand, undefined);
+    return "broke";
+  }
+  durability.damage += 1;
+  equippable.setEquipment(EquipmentSlot.Mainhand, stack);
+  return "worn";
+}
+
 /** Uses up one of the held stack and gives `typeId` in its place (a milk bucket → an empty bucket). */
 export function replaceMainhand(player, typeId) {
   if (isCreative(player)) return;

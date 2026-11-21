@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "harvest_basket",
+    "normal": "harvest_basket_normal",
+    "metalness_emissive_roughness": "harvest_basket_mer"
+  }
+}

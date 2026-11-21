@@ -76,7 +76,7 @@ test("every custom component named in the block JSON is registered at startup", 
     const def = JSON.parse(readFileSync(`packs/BP/blocks/${file}`, "utf8"))["minecraft:block"];
     for (const key of Object.keys(def.components)) if (key.startsWith(`${NS}:`)) assert(COMPONENTS[key], `${file}: ${key} is not registered`);
   }
-  equal(Object.keys(COMPONENTS).length, 7, "component count");
+  equal(Object.keys(COMPONENTS).length, 8, "component count");
 });
 
 // --- Climate --------------------------------------------------------------------------------
@@ -1004,7 +1004,7 @@ test("the guidebook chapter goes out as begin / chunks / end and reads back as J
 test("every item and placeable block has a guidebook entry", () => {
   const ids = new Set(guideEntries().map((row) => row.id));
   for (const item of ITEMS) assert(ids.has(item.id), `no entry for ${item.id}`);
-  for (const id of ["bamboo_trellis", "mandarin_sapling", "fruitwood_log", "banana_trunk"]) assert(ids.has(id), `no entry for ${id}`);
+  for (const id of ["bamboo_trellis", "mandarin_sapling", "fruitwood_log", "fruitwood_planks", "banana_trunk", "fruit_picking_pole", "harvest_basket", "produce_crate"]) assert(ids.has(id), `no entry for ${id}`);
   for (const crop of CROPS) assert(ids.has(crop.seed), `no entry for ${crop.seed}`);
 });
 
@@ -1752,6 +1752,232 @@ test("hoppers: stations are tracked by place, use and random tick, and dropped w
   overworld.getBlock(at(3)).setType("minecraft:air"); // blown up: no break event
   pass();
   equal(trackedStations().length, 0, "a pass drops a station that is gone");
+});
+
+// --- Phase 3: fruit-picking pole, harvest basket, produce crate (data/gear.js) ------------------------------------
+
+const { PICKING_POLE, HARVEST_BASKET, PRODUCE_CRATE, crateLevel } = await import("../../packs/BP/scripts/data/gear.js");
+const { SOUND } = await import("../../packs/BP/scripts/data/feedback.js");
+const { basketHolders, resetBasket } = await import("../../packs/BP/scripts/growth/basket.js");
+const { crateContents, CRATE_CAPACITY } = await import("../../packs/BP/scripts/stations/crate.js");
+
+const POLE = r(PICKING_POLE.id);
+const BASKET = r(HARVEST_BASKET.id);
+const CRATE = r(PRODUCE_CRATE.id);
+const MANDARIN = TREES.find((t) => t.id === "mandarin");
+const CINNAMON = TREES.find((t) => t.id === "cinnamon");
+const SCALLION = CROPS.find((c) => c.id === "scallion");
+const FRUIT_Y = 64 + MANDARIN_TRUNK - 2;
+const ripeFruit = (x, z) => __place(overworld, at(x, FRUIT_Y, z), r("mandarin_fruit"), { [S("growth")]: 2 });
+const leafBits = () => overworld.particles.filter((p) => p.id === r(PICKING_POLE.particle)).length;
+const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
+
+test("pole: every ripe fruit within 3 blocks comes down, unripe and far ones stay; one point of wear", () => {
+  grownMandarin();
+  ripeFruit(1, 0);
+  ripeFruit(-1, -1);
+  __place(overworld, at(1, FRUIT_Y, 1), r("mandarin_fruit"), { [S("growth")]: 1 });
+  __place(overworld, at(6, FRUIT_Y + 1), r("mandarin_leaves"));
+  __place(overworld, at(6, FRUIT_Y), r("mandarin_fruit"), { [S("growth")]: 2 }); // 5 blocks away
+  const p = player(POLE);
+  __interact(p, overworld.getBlock(LEAF));
+  equal(overworld.dropped(r("mandarin")), 2 * MANDARIN.pick[0], "two ripe fruits, each as picked by hand");
+  equal(overworld.getBlock(at(1, FRUIT_Y)).typeId, "minecraft:air", "picked fruit gone");
+  equal(overworld.getBlock(at(-1, FRUIT_Y, -1)).typeId, "minecraft:air", "second fruit gone");
+  equal(overworld.getBlock(at(1, FRUIT_Y, 1)).typeId, r("mandarin_fruit"), "unripe fruit stays");
+  equal(overworld.getBlock(at(6, FRUIT_Y)).typeId, r("mandarin_fruit"), "fruit out of reach stays");
+  equal(p.hand.getComponent("minecraft:durability").damage, 1, "one point of wear");
+  assert(overworld.sounds.some((s) => s.id === SOUND.rustle), "rustle");
+  assert(leafBits() >= 3, "leaf bits at the leaf and each fruit");
+  equal(world.messages.length, 0, "no chat text");
+  __interact(p, overworld.getBlock(LEAF));
+  equal(refusals(), 1, "nothing ripe left: the refusal cue");
+  equal(p.hand.getComponent("minecraft:durability").damage, 1, "not worn when nothing was picked");
+});
+
+test("pole: used on a hanging fruit too; creative does not wear it; the last point breaks it", () => {
+  grownMandarin();
+  ripeFruit(1, 0);
+  ripeFruit(0, 1);
+  const c = player(POLE);
+  c.gameMode = GameMode.Creative;
+  __interact(c, overworld.getBlock(at(1, FRUIT_Y)));
+  equal(overworld.dropped(r("mandarin")), 2 * MANDARIN.pick[0], "both picked from a fruit");
+  equal(c.hand.getComponent("minecraft:durability").damage, 0, "creative: no wear");
+  ripeFruit(1, 0);
+  const p = player(POLE);
+  p.hand.durability.damage = PICKING_POLE.durability - 1;
+  __interact(p, overworld.getBlock(LEAF));
+  equal(p.hand, undefined, "worn out: the pole is gone");
+  assert(overworld.sounds.some((s) => s.id === SOUND.toolBreak), "break sound");
+});
+
+test("pole: flushed cinnamon leaves round it give their bark; a hand still picks one fruit", () => {
+  for (const x of [0, 2]) __place(overworld, at(x, 70), r("cinnamon_leaves"), { [S("blossom")]: true });
+  __place(overworld, at(9, 70), r("cinnamon_leaves"), { [S("blossom")]: true });
+  __interact(player(POLE), overworld.getBlock(at(0, 70)));
+  equal(overworld.dropped(r("cinnamon_bark")), 2 * CINNAMON.pick[0], "two leaves stripped");
+  equal(blossom(overworld.getBlock(at(2, 70))), false, "back to bare");
+  equal(blossom(overworld.getBlock(at(9, 70))), true, "out of reach");
+  grownMandarin();
+  ripeFruit(1, 0);
+  ripeFruit(-1, 0);
+  __interact(player(), overworld.getBlock(at(1, FRUIT_Y)));
+  equal(overworld.dropped(r("mandarin")), MANDARIN.pick[0], "a hand picks only the fruit it touches");
+});
+
+test("basket: walking past ripe scallions picks them into the inventory, from the off hand", () => {
+  resetBasket();
+  for (const x of [0, 1, 3]) plant("scallion_crop", x, { [S("growth")]: SCALLION.maxGrowth });
+  plant("napa_cabbage_crop", -1, { [S("growth")]: 7 }); // broken, not picked
+  const p = new Player(overworld, { x: 0.5, y: 63.9375, z: 0.5 });
+  p.offhand = new ItemStack(BASKET);
+  __advance(HARVEST_BASKET.rosterTicks);
+  equal(basketHolders().length, 1, "the roster found the off-hand basket");
+  __advance(HARVEST_BASKET.ticks);
+  equal(p.inventory.count(r("scallion")), 2 * SCALLION.pick[0], "both scallions within a block");
+  equal(growth(overworld.getBlock(at(0))), SCALLION.harvestResetAge, "picked crops drop back");
+  equal(growth(overworld.getBlock(at(3))), SCALLION.maxGrowth, "two blocks away: not picked");
+  equal(growth(overworld.getBlock(at(-1))), 7, "napa cabbage is broken by hand, not picked");
+  equal(overworld.dropped(r("scallion")), 0, "nothing on the ground");
+  // ## Standing still: no second look, even when something ripens beside the player.
+  overworld.getBlock(at(1)).setPermutation(overworld.getBlock(at(1)).permutation.withState(S("growth"), SCALLION.maxGrowth));
+  __advance(HARVEST_BASKET.ticks * 3);
+  equal(growth(overworld.getBlock(at(1))), SCALLION.maxGrowth, "standing still picks nothing");
+  p.location = { x: 2.5, y: 63.9375, z: 0.5 };
+  __advance(HARVEST_BASKET.ticks);
+  equal(growth(overworld.getBlock(at(3))), SCALLION.harvestResetAge, "walking on picks the next one");
+  equal(growth(overworld.getBlock(at(1))), SCALLION.harvestResetAge, "and the one that ripened");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("basket: main hand works, events add a holder at once, putting it away stops the looks", () => {
+  resetBasket();
+  const STRAWBERRY = CROPS.find((c) => c.id === "strawberry");
+  plant("strawberry_crop", 0, { [S("growth")]: STRAWBERRY.maxGrowth });
+  const idle = new Player(overworld, { x: 0.5, y: 64, z: 0.5 });
+  const p = new Player(overworld, { x: 0.5, y: 64, z: 0.5 });
+  p.hand = new ItemStack(BASKET);
+  world.afterEvents.playerHotbarSelectedSlotChange.fire({ player: p });
+  world.afterEvents.playerHotbarSelectedSlotChange.fire({ player: idle });
+  equal(basketHolders().length, 1, "only the player holding one");
+  __advance(HARVEST_BASKET.ticks);
+  assert(p.inventory.count(r("strawberry")) >= 1, "picked from the main hand");
+  equal(idle.inventory.count(r("strawberry")), 0, "the other player got nothing");
+  p.hand = undefined;
+  __advance(HARVEST_BASKET.ticks);
+  equal(basketHolders().length, 0, "put away: dropped from the holders");
+  p.hand = new ItemStack(BASKET);
+  for (let i = 0; i < 36; i++) p.inventory.setItem(i, new ItemStack("minecraft:dirt", 64)); // a full inventory
+  world.afterEvents.playerInventoryItemChange.fire({ player: p });
+  plant("strawberry_crop", 1, { [S("growth")]: STRAWBERRY.maxGrowth });
+  p.location = { x: 1.5, y: 64, z: 0.5 };
+  __advance(HARVEST_BASKET.ticks);
+  assert(overworld.dropped(r("strawberry")) >= 1, "a full inventory: the produce drops");
+});
+
+test("crate: a stack goes in, another kind is refused, empty hand takes a stack, sneaking takes all", () => {
+  const crate = __placeByPlayer(overworld, at(0), CRATE);
+  equal(trackedStations().length, 1, "tracked for hoppers on place");
+  const p = player(r("mandarin"), 40);
+  __interact(p, crate);
+  equal(p.hand, undefined, "the whole stack went in");
+  equal(crateContents(overworld.getBlock(at(0))).count, 40, "40 inside");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fill")), 1, "looks a third full");
+  equal(overworld.sounds.at(-1).id, SOUND.crateIn, "sound");
+  const g = player(r("grape"), 10);
+  __interact(g, overworld.getBlock(at(0)));
+  equal(refusals(), 1, "another kind: refusal cue");
+  equal(g.hand.amount, 10, "grapes kept");
+  __interact(player("minecraft:stick"), overworld.getBlock(at(0)));
+  equal(refusals(), 1, "a non-produce item is silent");
+  const e = player();
+  __interact(e, overworld.getBlock(at(0)));
+  equal(e.hand.typeId, r("mandarin"), "a stack into the empty hand");
+  equal(e.hand.amount, 40, "all 40 (less than a stack)");
+  equal(crateContents(overworld.getBlock(at(0))).count, 0, "empty");
+  equal(overworld.getBlock(at(0)).permutation.getState(S("fill")), 0, "looks empty");
+  for (let i = 0; i < 3; i++) __interact(player(r("pear"), 64), overworld.getBlock(at(0)));
+  const s = player();
+  s.isSneaking = true;
+  __interact(s, overworld.getBlock(at(0)));
+  equal(s.inventory.count(r("pear")), 192, "sneaking took everything");
+  equal(crateContents(overworld.getBlock(at(0))).item, undefined, "empty again: any kind may go in");
+  equal(world.messages.length, 0, "no chat text");
+});
+
+test("crate: nine stacks at most, the fill looks follow, breaking drops what it holds", () => {
+  __placeByPlayer(overworld, at(0), CRATE);
+  equal(CRATE_CAPACITY, 9 * 64, "nine stacks");
+  const levels = [];
+  for (let i = 0; i < 9; i++) {
+    __interact(player(r("corn"), 64), overworld.getBlock(at(0)));
+    levels.push(overworld.getBlock(at(0)).permutation.getState(S("fill")));
+  }
+  equal(levels.join(), "1,1,1,2,2,2,3,3,3", "three looks by thirds");
+  const extra = player(r("corn"), 5);
+  __interact(extra, overworld.getBlock(at(0)));
+  equal(extra.hand.amount, 5, "full: kept");
+  equal(refusals(), 1, "full: refusal cue");
+  equal(crateLevel(1), 1, "one item shows a little pile");
+  __break(player(), overworld.getBlock(at(0)));
+  equal(overworld.dropped(r("corn")), CRATE_CAPACITY, "everything drops");
+  assert(overworld.items.filter((i) => i.typeId === r("corn")).every((i) => i.amount <= 64), "in stacks");
+  equal(overworld.dropped(CRATE), 1, "the crate drops itself");
+  equal(trackedStations().length, 0, "untracked");
+});
+
+test("crate: a hopper above feeds it, a container below takes from it", () => {
+  __placeByPlayer(overworld, at(0), CRATE);
+  const above = __setContainer(overworld, at(0, 65));
+  above.addItem(new ItemStack("minecraft:dirt", 3));
+  above.addItem(new ItemStack(r("lemon"), 20));
+  above.addItem(new ItemStack(r("peach"), 5));
+  pass();
+  equal(crateContents(overworld.getBlock(at(0))).item, r("lemon"), "the first produce above");
+  equal(crateContents(overworld.getBlock(at(0))).count, PRODUCE_CRATE.perPass, "one pass worth");
+  pass();
+  equal(crateContents(overworld.getBlock(at(0))).count, 20, "the rest of the lemons");
+  equal(above.count(r("peach")), 5, "another kind stays above");
+  equal(above.count("minecraft:dirt"), 3, "non-produce stays above");
+  const below = __setContainer(overworld, at(0, 63), 27, "minecraft:chest");
+  pass();
+  equal(below.count(r("lemon")), PRODUCE_CRATE.perPass, "out into the chest below");
+  pass();
+  equal(below.count(r("lemon")), 20, "all of it");
+  equal(crateContents(overworld.getBlock(at(0))).count, 0, "the crate emptied");
+  pass(2);
+  equal(below.count(r("peach")), 5, "empty again: the peaches came through too");
+});
+
+test("phase 3 files: items, block, models, recipes, catalog and particle line up", () => {
+  const pole = readJson("packs/BP/items/fruit_picking_pole.json")["minecraft:item"].components;
+  equal(pole["minecraft:durability"].max_durability, PICKING_POLE.durability, "pole durability");
+  equal(pole["minecraft:max_stack_size"], 1, "pole does not stack");
+  equal(pole["minecraft:repairable"].repair_items[0].items[0], r("fruitwood_planks"), "mended with fruitwood planks");
+  const basket = readJson("packs/BP/items/harvest_basket.json")["minecraft:item"].components;
+  equal(basket["minecraft:allow_off_hand"], true, "basket goes in the off hand");
+  const crate = readJson("packs/BP/blocks/produce_crate.json")["minecraft:block"];
+  equal(JSON.stringify(crate.description.states[S("fill")]), JSON.stringify({ values: { min: 0, max: 3 } }), "fill 0–3");
+  for (let n = 0; n <= 3; n++) {
+    const geo = readJson(`packs/RP/models/blocks/produce_crate_${n}.geo.json`)["minecraft:geometry"][0];
+    const cubes = geo.bones.reduce((sum, b) => sum + b.cubes.length, 0);
+    assert(cubes >= 5 && cubes <= 8, `produce_crate_${n}: ${cubes} cubes, low-poly`);
+  }
+  equal(crate.components["minecraft:destructible_by_explosion"], false, "contents safe from explosions");
+  const catalog = JSON.stringify(readJson("packs/BP/item_catalog/crafting_item_catalog.json"));
+  for (const id of ["fruitwood_planks", PICKING_POLE.id, HARVEST_BASKET.id, PRODUCE_CRATE.id]) assert(catalog.includes(`"${r(id)}"`), `${id} in the creative catalog`);
+  // ## No two Harvest shaped recipes share a grid (the series' grids were checked by hand, see tools/generate.mjs).
+  const grids = new Map();
+  for (const file of readdirSync("packs/BP/recipes")) {
+    const shaped = readJson(`packs/BP/recipes/${file}`)["minecraft:recipe_shaped"];
+    if (!shaped) continue;
+    const key = shaped.pattern.map((row) => [...row].map((c) => (c === " " ? "." : JSON.stringify(shaped.key[c]))).join(",")).join("/");
+    assert(!grids.has(key), `${file} has the same grid as ${grids.get(key)}`);
+    grids.set(key, file);
+  }
+  for (const id of [PICKING_POLE.id, HARVEST_BASKET.id, PRODUCE_CRATE.id]) assert([...grids.values()].includes(`${id}.json`), `${id} has a recipe`);
+  assert(readdirSync("packs/RP/particles").includes(`${PICKING_POLE.particle}.json`), "leaf particle written");
 });
 
 // --- Report ------------------------------------------------------------------------------------------------------

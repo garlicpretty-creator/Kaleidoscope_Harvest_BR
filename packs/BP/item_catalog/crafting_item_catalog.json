@@ -243,6 +243,25 @@
               "kaleidoscope_harvest:juicer",
               "kaleidoscope_harvest:pickling_jar"
             ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:fruit_picking_pole",
+              "name": "kaleidoscope_cookery:itemGroup.name.tools"
+            },
+            "items": [
+              "kaleidoscope_harvest:fruit_picking_pole",
+              "kaleidoscope_harvest:harvest_basket"
+            ]
+          },
+          {
+            "group_identifier": {
+              "icon": "kaleidoscope_harvest:produce_crate",
+              "name": "kaleidoscope_cookery:itemGroup.name.storage_utility"
+            },
+            "items": [
+              "kaleidoscope_harvest:produce_crate"
+            ]
           }
         ]
       },
@@ -257,6 +276,7 @@
             "items": [
               "kaleidoscope_harvest:fruitwood_log",
               "kaleidoscope_harvest:banana_trunk",
+              "kaleidoscope_harvest:fruitwood_planks",
               "kaleidoscope_harvest:mandarin_sapling",
               "kaleidoscope_harvest:mandarin_leaves",
               "kaleidoscope_harvest:sweet_orange_sapling",

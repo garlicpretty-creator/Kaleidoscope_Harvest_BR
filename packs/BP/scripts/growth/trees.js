@@ -16,6 +16,7 @@ import { rid } from "../data/ns.js";
 import { FRUIT_STAGES, LEAF_LOG_RANGE, TREES, TRUNKS, fruitBlockId, leavesBlockId, saplingBlockId, treeFeatureId } from "../data/trees.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, refuse, roll, rollRange, setStates } from "../utils/blocks.js";
 import { bright, growthMultiplier } from "./environment.js";
+import { holdsPole, usePole } from "./pole.js";
 
 const RIPE = FRUIT_STAGES.length - 1;
 const TRUNK_IDS = new Set(TRUNKS.map((t) => rid(t.id)));
@@ -150,7 +151,7 @@ export function useSapling(block, tree, player) {
 }
 
 /** Strips a piece of bark from a flushed cinnamon leaf; it goes back to bare and flushes again. */
-function stripBark(block, tree) {
+export function stripBark(block, tree) {
   dropAt(block, rid(tree.fruit), rollRange(tree.pick));
   setStates(block, { blossom: false });
   playAt(block, SOUND.strip);
@@ -197,16 +198,22 @@ export function tickFruit(block, tree) {
   setStates(block, { growth: stage + 1 });
 }
 
+/** True for a hanging fruit at its last stage. */
+export const isRipeFruit = (block) => getState(block, "growth") >= RIPE;
+
+/** Picks a ripe fruit: the fruit drops and the block goes (the leaf above blossoms and fruits again). */
+export function pickFruit(block, tree) {
+  dropAt(block, rid(tree.fruit), rollRange(tree.pick));
+  playAt(block, SOUND.pick);
+  particleAt(block, PARTICLE.pick);
+  block.setType("minecraft:air");
+  return true;
+}
+
 /** Picking a ripe fruit gives the fruit and removes the block; bone meal moves a green one on a stage. */
 export function useFruit(block, tree, player) {
   const stage = getState(block, "growth");
-  if (stage >= RIPE) {
-    dropAt(block, rid(tree.fruit), rollRange(tree.pick));
-    playAt(block, SOUND.pick);
-    particleAt(block, PARTICLE.pick);
-    block.setType("minecraft:air");
-    return true;
-  }
+  if (stage >= RIPE) return pickFruit(block, tree);
   return boneMeal(block, player, () => {
     if (growthMultiplier(block, tree.climate) <= 0) return false;
     setStates(block, { growth: stage + 1 });
@@ -234,7 +241,10 @@ export const leavesComponent = {
   },
   onPlayerInteract({ block, player }) {
     const tree = treeOfLeaves(block.typeId);
-    if (tree && player) useLeaves(block, tree, player);
+    if (!tree || !player) return;
+    // ## The fruit-picking pole (growth/pole.js) answers for the whole tree round it.
+    if (holdsPole(player)) usePole(block, player);
+    else useLeaves(block, tree, player);
   },
   onPlayerBreak({ block, brokenBlockPermutation }) {
     const tree = treeOfLeaves(brokenBlockPermutation.type.id);
@@ -249,6 +259,8 @@ export const hangingFruitComponent = {
   },
   onPlayerInteract({ block, player }) {
     const tree = treeOfFruit(block.typeId);
-    if (tree && player) useFruit(block, tree, player);
+    if (!tree || !player) return;
+    if (holdsPole(player)) usePole(block, player);
+    else useFruit(block, tree, player);
   },
 };

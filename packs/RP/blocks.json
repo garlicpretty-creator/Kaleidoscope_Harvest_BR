@@ -353,5 +353,8 @@
   },
   "kaleidoscope_harvest:pickling_jar": {
     "sound": "stone"
+  },
+  "kaleidoscope_harvest:produce_crate": {
+    "sound": "wood"
   }
 }

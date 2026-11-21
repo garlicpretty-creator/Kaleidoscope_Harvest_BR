@@ -15,6 +15,7 @@ import { CROPS, cropBlockId } from "../data/crops.js";
 import { PARTICLE, RIPE_PARTICLE_CHANCE, SOUND } from "../data/feedback.js";
 import { rid, state } from "../data/ns.js";
 import { consumeMainhand, destroyBlock, dropAt, getState, mainhand, particleAt, playAt, refuse, roll, rollRange, setStates } from "../utils/blocks.js";
+import { putInto } from "../utils/containers.js";
 import { bright, growthMultiplier, hasWater, isFarmland, isSoil, isWaterBed } from "./environment.js";
 
 /** A crop that is picked (and grows back) rather than broken: repeatable, trellis and bush crops, and aquatic crops with `pick`. */
@@ -36,6 +37,21 @@ export const cropOfBlock = (typeId) => CROP_BY_BLOCK.get(typeId);
 
 const isUpper = (block, crop) => crop.form === "tall" && getState(block, "upper") === true;
 const ripe = (block, crop) => getState(block, "growth") >= crop.maxGrowth;
+/** A ripe crop that is picked (not broken) and is not the upper half of a tall one. */
+export const ripeForPicking = (block, crop) => isPicked(crop) && !isUpper(block, crop) && ripe(block, crop);
+
+/**
+ * Picks a ripe picked crop: its produce, and it drops back to harvestResetAge. With `into` (a
+ * container, the harvest basket's player) the produce goes there and only what does not fit drops.
+ */
+export function pickCrop(block, crop, into) {
+  const id = rid(crop.produce);
+  const count = rollRange(crop.pick);
+  dropAt(block, id, into ? putInto(into, id, count) : count);
+  setStates(block, { growth: crop.harvestResetAge });
+  playAt(block, SOUND.pick);
+  return true;
+}
 
 /** The block above a tall crop's lower block when it is that crop's upper block. */
 function upperOf(block) {
@@ -106,12 +122,8 @@ export function useCrop(block, crop, player) {
     return true;
   }
 
-  const picked = isPicked(crop);
-  if (!picked || stage < crop.maxGrowth) return false;
-  dropAt(block, rid(crop.produce), rollRange(crop.pick));
-  setStates(block, { growth: crop.harvestResetAge });
-  playAt(block, SOUND.pick);
-  return true;
+  if (!isPicked(crop) || stage < crop.maxGrowth) return false;
+  return pickCrop(block, crop);
 }
 
 /** A player broke a crop: the other half of a tall crop goes too; a hoe digs up more of an underground crop. */

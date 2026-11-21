@@ -1135,6 +1135,9 @@
     "kh_station_contents_done": {
       "textures": "textures/kaleidoscope_harvest/blocks/stations/contents_done"
     },
+    "kh_station_produce_crate": {
+      "textures": "textures/kaleidoscope_harvest/blocks/stations/produce_crate"
+    },
     "kh_food_cabbage_pork_stew": {
       "textures": "textures/kaleidoscope_harvest/blocks/food/cabbage_pork_stew"
     },

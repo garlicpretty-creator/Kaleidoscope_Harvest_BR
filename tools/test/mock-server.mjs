@@ -22,10 +22,14 @@ const ITEM_TAGS = new Map([
   ["minecraft:iron_hoe", ["minecraft:is_hoe"]],
   ["minecraft:iron_axe", ["minecraft:is_axe"]],
 ]);
+/** Items with minecraft:durability: id → max durability (the pole). */
+const ITEM_DURABILITY = new Map();
 for (const file of readdirSync(join(BP, "items"))) {
   const item = JSON.parse(readFileSync(join(BP, "items", file), "utf8"))["minecraft:item"];
   const tags = item.components?.["minecraft:tags"]?.tags;
   if (tags) ITEM_TAGS.set(item.description.identifier, tags);
+  const durability = item.components?.["minecraft:durability"]?.max_durability;
+  if (durability) ITEM_DURABILITY.set(item.description.identifier, durability);
 }
 
 // --- Events ----------------------------------------------------------------------------
@@ -75,6 +79,12 @@ export class ItemStack {
   constructor(typeId, amount = 1) {
     this.typeId = typeId.includes(":") ? typeId : `minecraft:${typeId}`;
     this.amount = amount;
+    const max = ITEM_DURABILITY.get(this.typeId);
+    /** Like the game's ItemDurabilityComponent: damage counts up to maxDurability. */
+    this.durability = max ? { damage: 0, maxDurability: max } : undefined;
+  }
+  getComponent(id) {
+    return id === "minecraft:durability" ? this.durability : undefined;
   }
   hasTag(tag) {
     return (ITEM_TAGS.get(this.typeId) ?? []).includes(tag);
@@ -83,10 +93,12 @@ export class ItemStack {
     return ITEM_TAGS.get(this.typeId) ?? [];
   }
   clone() {
-    return new ItemStack(this.typeId, this.amount);
+    const copy = new ItemStack(this.typeId, this.amount);
+    if (this.durability) copy.durability = { ...this.durability };
+    return copy;
   }
   get maxAmount() {
-    return 64;
+    return this.durability ? 1 : 64;
   }
 }
 
@@ -391,8 +403,13 @@ export function __skipTime(ticks) {
   absoluteTime += ticks;
 }
 
+/** Every Player made since the last __reset (world.getAllPlayers). */
+let players = [];
+
 export const world = {
   getDimension: (id) => DIMENSIONS[id.replace("minecraft:", "")],
+  getAllPlayers: () => players.filter((p) => p.isValid),
+  afterEvents: { playerHotbarSelectedSlotChange: new Signal(), playerInventoryItemChange: new Signal(), playerLeave: new Signal() },
   getAbsoluteTime: () => absoluteTime,
   getDynamicProperty: (key) => dynamicProperties.get(key),
   setDynamicProperty(key, value) {
@@ -408,21 +425,29 @@ export const world = {
 
 // --- Players ------------------------------------------------------------------------------
 
+let lastPlayerId = 0;
 export class Player {
-  constructor(dimension) {
+  constructor(dimension, location = { x: 0.5, y: 64, z: 0.5 }) {
     this.dimension = dimension;
+    this.id = String(++lastPlayerId);
+    this.isValid = true;
+    this.location = { ...location };
     this.gameMode = GameMode.Survival;
     this.hand = undefined;
+    /** The off hand (EquipmentSlot.Offhand). */
+    this.offhand = undefined;
     this.isSneaking = false;
     /** The rest of the inventory (the held stack is `hand`). */
     this.inventory = new Container(36);
     const player = this;
     this.equippable = {
-      getEquipment: (slot) => (slot === EquipmentSlot.Mainhand ? player.hand?.clone() : undefined),
+      getEquipment: (slot) => (slot === EquipmentSlot.Mainhand ? player.hand?.clone() : slot === EquipmentSlot.Offhand ? player.offhand?.clone() : undefined),
       setEquipment: (slot, stack) => {
         if (slot === EquipmentSlot.Mainhand) player.hand = stack ? stack.clone() : undefined;
+        if (slot === EquipmentSlot.Offhand) player.offhand = stack ? stack.clone() : undefined;
       },
     };
+    players.push(this);
   }
   getGameMode() {
     return this.gameMode;
@@ -547,6 +572,7 @@ export function __reset() {
     dimension.containers = new Map();
   }
   world.messages = [];
+  players = [];
   system.sentEvents = [];
   dynamicProperties.clear();
   extraItemTypes.clear();

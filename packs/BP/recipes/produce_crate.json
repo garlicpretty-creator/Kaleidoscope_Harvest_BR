@@ -1,0 +1,33 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:produce_crate"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "F F",
+      "FSF",
+      "FFF"
+    ],
+    "key": {
+      "F": {
+        "item": "kaleidoscope_harvest:fruitwood_planks"
+      },
+      "S": {
+        "item": "minecraft:stick"
+      }
+    },
+    "result": {
+      "item": "kaleidoscope_harvest:produce_crate",
+      "count": 1
+    },
+    "unlock": [
+      {
+        "item": "kaleidoscope_harvest:fruitwood_planks"
+      }
+    ]
+  }
+}

@@ -13,6 +13,7 @@ import { FISHING_BAITS, FISHING_POND_FEEDS, HERBAL_ADJUVANTS, HERBAL_HEAT, RANCH
 import { ITEMS, ITEM_BY_ID } from "./items.js";
 import { NAMESPACE, rid } from "./ns.js";
 import { JUICER, PICKLING_JAR } from "./stations.js";
+import { HARVEST_BASKET, PICKING_POLE, PRODUCE_CRATE } from "./gear.js";
 import { VILLAGE_HOUSES, villageItems } from "./village.js";
 import { BANANA_TRUNK, FRUITWOOD_LOG, FRUITWOOD_PLANKS, TREES, saplingBlockId } from "./trees.js";
 import { VERSION } from "./version.js";
@@ -236,6 +237,30 @@ export function guideEntries() {
     ], { block: true })
   );
 
+  // ## Phase 3 (data/gear.js).
+  rows.push(
+    entry(PICKING_POLE.id, "stations", [
+      [`拿著摘果竿點果樹的葉子或垂著的果實，周圍 ${PICKING_POLE.radius} 格內所有熟果一次摘下，和用手一顆顆摘一樣；肉桂紅褐色的嫩葉也一起剝下樹皮。`, `Use the pole on a fruit tree's leaves or a hanging fruit: every ripe fruit within ${PICKING_POLE.radius} blocks comes down at once, as if picked one by one by hand; flushed cinnamon leaves give their bark too.`],
+      [`每用一次耗損一點耐久，共 ${PICKING_POLE.durability} 次；沒有熟果可摘時不會耗損。可在鐵砧上用果木木板修理。`, `Each use wears it by one point, ${PICKING_POLE.durability} uses in all; it is not worn when nothing is ripe. Mend it on an anvil with Fruitwood Planks.`],
+      ["用兩根木棒和一塊果木木板在工作台合成，木板放在斜對角的頂端。", "Crafted from two sticks and a Fruitwood Plank at the crafting table, the plank at the top of the diagonal."],
+    ])
+  );
+  rows.push(
+    entry(HARVEST_BASKET.id, "stations", [
+      ["拿在主手或副手，走過田裡時，腳邊一格內熟了的可重複採收作物（蔥、草莓、藤架作物、藍莓等）會自動摘進背包；背包滿了就掉在地上。", "Hold it in either hand and walk through the field: ripe crops that are picked rather than broken (scallions, strawberries, trellis vines, blueberries…) within one block of your feet are picked into your inventory; when it is full they drop."],
+      ["站著不動時不會摘；要一次收成的作物（白菜、玉米等）照常要打下。", "Standing still picks nothing; crops harvested by breaking (cabbage, corn…) are still broken by hand."],
+      ["用竹子、線和一塊果木木板在工作台合成。", "Crafted from bamboo, string and a Fruitwood Plank at the crafting table."],
+    ])
+  );
+  rows.push(
+    entry(PRODUCE_CRATE.id, "stations", [
+      [`裝一種豐收的蔬果，最多 ${PRODUCE_CRATE.stacks} 組。拿一組蔬果點它放進去；箱裡已是別種蔬果或裝滿時放不進去。`, `Holds one kind of Harvest produce, up to ${PRODUCE_CRATE.stacks} stacks. Use a stack on it to put it in; another kind, or a full crate, will not go in.`],
+      ["空手點它拿出一組，蹲下空手點它全部拿進背包。箱子越滿，裡面堆得越高；打掉箱子時內容物會掉出來。", "An empty hand takes out one stack; sneaking with an empty hand takes all you can carry. The fuller it is, the higher the pile inside; breaking it drops what it holds."],
+      ["上方的漏斗或箱子會把蔬果送進來，下方的漏斗或箱子會把蔬果接走。也可以只當擺設。", "A hopper or chest above feeds it, and one below takes from it. It also works as decoration."],
+      ["用七塊果木木板和一根木棒在工作台合成。", "Crafted from seven Fruitwood Planks and a stick at the crafting table."],
+    ], { block: true })
+  );
+
   for (const item of ITEMS.filter((i) => ["ingredient", "dish", "drink"].includes(i.kind))) {
     const row = recipeMaking(item.id);
     const lines = [madeLine(row, item.id)];
@@ -299,7 +324,7 @@ export function nameOf(id) {
   if (bare === FRUITWOOD_LOG.id) return [FRUITWOOD_LOG.zh, FRUITWOOD_LOG.en];
   if (bare === BANANA_TRUNK.id) return [BANANA_TRUNK.zh, BANANA_TRUNK.en];
   if (bare === FRUITWOOD_PLANKS.id) return [FRUITWOOD_PLANKS.zh, FRUITWOOD_PLANKS.en];
-  for (const station of [JUICER, PICKLING_JAR]) if (bare === station.id) return [station.zh, station.en];
+  for (const station of [JUICER, PICKLING_JAR, PICKING_POLE, HARVEST_BASKET, PRODUCE_CRATE]) if (bare === station.id) return [station.zh, station.en];
   const tree = TREES.find((t) => saplingBlockId(t) === bare);
   if (tree) return [`${tree.zh}樹苗`, `${tree.en} Sapling`];
   throw new Error(`guidebook: no name for ${id}`);

@@ -727,6 +727,15 @@
     },
     "kh_pickling_jar": {
       "textures": "textures/kaleidoscope_harvest/items/pickling_jar"
+    },
+    "kh_fruit_picking_pole": {
+      "textures": "textures/kaleidoscope_harvest/items/fruit_picking_pole"
+    },
+    "kh_harvest_basket": {
+      "textures": "textures/kaleidoscope_harvest/items/harvest_basket"
+    },
+    "kh_produce_crate": {
+      "textures": "textures/kaleidoscope_harvest/items/produce_crate"
     }
   }
 }

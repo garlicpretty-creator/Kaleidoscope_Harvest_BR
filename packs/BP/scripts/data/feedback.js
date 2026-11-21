@@ -16,6 +16,11 @@ export const SOUND = {
   jarSeal: "block.barrel.close",
   jarOpen: "block.barrel.open",
   jarDone: "block.composter.ready",
+  // ## Phase 3 (data/gear.js): the pole shakes the leaves, the crate takes and gives, a worn pole snaps.
+  rustle: "dig.grass",
+  crateIn: "use.wood",
+  crateOut: "random.pop",
+  toolBreak: "random.break",
 };
 
 export const PARTICLE = {

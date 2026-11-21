@@ -1,0 +1,33 @@
+{
+  "format_version": "1.20.10",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:fruit_picking_pole"
+    },
+    "tags": [
+      "crafting_table"
+    ],
+    "pattern": [
+      "  F",
+      " S ",
+      "S  "
+    ],
+    "key": {
+      "F": {
+        "item": "kaleidoscope_harvest:fruitwood_planks"
+      },
+      "S": {
+        "item": "minecraft:stick"
+      }
+    },
+    "unlock": [
+      {
+        "item": "kaleidoscope_harvest:fruitwood_planks"
+      }
+    ],
+    "result": {
+      "item": "kaleidoscope_harvest:fruit_picking_pole",
+      "count": 1
+    }
+  }
+}

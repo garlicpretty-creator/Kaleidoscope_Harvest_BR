@@ -1,0 +1,105 @@
+{
+  "format_version": "1.21.100",
+  "minecraft:block": {
+    "description": {
+      "identifier": "kaleidoscope_harvest:produce_crate",
+      "menu_category": {
+        "category": "equipment",
+        "group": "kaleidoscope_cookery:itemGroup.name.storage_utility"
+      },
+      "states": {
+        "kaleidoscope_harvest:fill": {
+          "values": {
+            "min": 0,
+            "max": 3
+          }
+        }
+      }
+    },
+    "components": {
+      "minecraft:display_name": "tile.kaleidoscope_harvest:produce_crate.name",
+      "minecraft:geometry": "geometry.kaleidoscope_harvest.produce_crate_0",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "kh_station_produce_crate",
+          "render_method": "alpha_test_single_sided"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -7,
+          0,
+          -7
+        ],
+        "size": [
+          14,
+          10,
+          14
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -7,
+          0,
+          -7
+        ],
+        "size": [
+          14,
+          10,
+          14
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5,
+        "item_specific_speeds": [
+          {
+            "item": {
+              "tags": "q.any_tag('minecraft:is_axe')"
+            },
+            "destroy_speed": 0.4
+          }
+        ]
+      },
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:movable": {
+        "movement_type": "immovable"
+      },
+      "minecraft:flammable": {
+        "catch_chance_modifier": 5,
+        "destroy_chance_modifier": 0
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#9c7048",
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      },
+      "kaleidoscope_harvest:produce_crate": {}
+    },
+    "permutations": [
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:fill') == 1",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.produce_crate_1"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:fill') == 2",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.produce_crate_2"
+        }
+      },
+      {
+        "condition": "q.block_state('kaleidoscope_harvest:fill') == 3",
+        "components": {
+          "minecraft:geometry": "geometry.kaleidoscope_harvest.produce_crate_3"
+        }
+      }
+    ]
+  }
+}

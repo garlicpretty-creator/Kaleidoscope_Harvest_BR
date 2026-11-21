@@ -9,6 +9,7 @@ Writes, under packs/RP:
   textures/kaleidoscope_harvest/blocks/stations/juicer.png, pickling_jar.png
   textures/kaleidoscope_harvest/blocks/stations/contents_<state>.png, juice_empty.png  (the jar's mouth per state)
   textures/kaleidoscope_harvest/entity/juicer_visual.png, pickling_jar_visual.png
+  models/blocks/produce_crate_<0..3>.geo.json, textures/.../stations/produce_crate.png  (果菜箱, one model per fill look)
 The bamboo trellis is still drawn by tools/art/station_models.py.
 """
 import json
@@ -252,6 +253,85 @@ def contents(kind):
     return img
 
 
+# ============================================================================================ produce crate (果菜箱)
+CRATE_WOOD = R((168, 120, 74))
+CRATE_DARK = R((112, 76, 46))
+# generic produce, so one crate model serves every kind: cabbage green, tomato red, mandarin orange, lemon yellow,
+# eggplant purple, a pale root
+PRODUCE = [R(c, 0.6, 1.25) for c in ((96, 160, 64), (200, 52, 44), (238, 138, 40), (236, 206, 70), (112, 60, 120), (224, 206, 170))]
+PRODUCE_MIX = [PRODUCE[i] for i in (0, 0, 1, 1, 2, 2, 3, 4, 0, 1, 2, 5)]
+CRATE_TOPS = {1: 4, 2: 7, 3: 9}  # height of the pile per fill look; 3 is heaped above the rim
+
+
+def crate_boxes(level):
+    """Four slatted walls and a floor (5 boxes); a pile of produce for levels 1-3, heaped at 3."""
+    wall = {"*": "crate_wall", "top": "crate_rim"}
+    boxes = [Box(-7, 0, -7, 7, 10, -6, wall), Box(-7, 0, 6, 7, 10, 7, wall),
+             Box(-7, 0, -6, -6, 10, 6, wall), Box(6, 0, -6, 7, 10, 6, wall),
+             Box(-6, 0, -6, 6, 1, 6, {"*": "crate_wall", "top": "crate_floor"})]
+    if level:
+        boxes.append(Box(-6, 1, -6, 6, CRATE_TOPS[level], 6, "produce"))
+    if level == 3:
+        boxes.append(Box(-4, 9, -4, 4, 11, 4, "produce"))
+    return boxes
+
+
+@painter
+def crate_wall(t):
+    """Three slats a side with dark gaps, darker corner posts outside, nail heads; the inside is in shadow."""
+    plane = abs(t.z) if t.face in ("north", "south") else abs(t.x)
+    inside = t.side and plane < 6.99
+    if not t.side:
+        return CRATE_DARK[2]
+    gap = int(t.y) in (3, 6) or t.y < 0.5
+    if inside:
+        return CRATE_DARK[0] if gap else (CRATE_DARK[1] if nz(t, 41) < 0.3 else CRATE_DARK[2])
+    if t.u in (0, t.w - 1):
+        return CRATE_DARK[2] if not gap else CRATE_DARK[1]          # corner posts
+    if gap:
+        return CRATE_DARK[0]
+    if t.u in (1, t.w - 2) and int(t.y) in (1, 4, 8):
+        return STEEL[1]                                               # nails into the posts
+    k = nz(t, 42)
+    return CRATE_WOOD[1] if k < 0.12 else (CRATE_WOOD[3] if k > 0.88 else CRATE_WOOD[2])
+
+
+@painter
+def crate_rim(t):
+    return CRATE_WOOD[4] if (wx(t) + wz(t)) % 7 else CRATE_WOOD[3]
+
+
+@painter
+def crate_floor(t):
+    if (wz(t) - 58) % 4 == 0:
+        return CRATE_DARK[0]
+    return CRATE_DARK[1] if nz(t, 43) < 0.2 else CRATE_DARK[2]
+
+
+@painter
+def produce(t):
+    """Round produce four texels across, rows offset like a stacked pile: dark gaps at the corners, lit top-left,
+    shaded bottom-right; mostly greens, reds and oranges."""
+    if t.side:
+        row, col = int(math.floor(t.y * 1 + 64)) // 4, wx(t) + wz(t)
+        lu, lv = col % 4, 3 - int(math.floor(t.y + 64)) % 4
+    else:
+        row = wz(t) // 4
+        col = wx(t) + (row % 2) * 2
+        lu, lv = col % 4, wz(t) % 4
+    cell = col // 4
+    if lu in (0, 3) and lv in (0, 3):
+        return CRATE_DARK[0]                                          # the gaps between round things
+    r = PRODUCE_MIX[int(noise(cell, row, 45) * len(PRODUCE_MIX))]
+    if (lu, lv) == (1, 1):
+        return r[4]
+    if lu == 3 or lv == 3:
+        return r[1]
+    if lu == 0 or lv == 0:
+        return r[3]
+    return r[2]
+
+
 # ============================================================================================ write
 def save_geo(path, geo, locators=None):
     if locators:
@@ -293,6 +373,16 @@ def main():
                                                     "rim": rim, "rim_top": rim_top, "contents": foot}, BLOCK_GEO, BLOCK_TEX)
     problems += build("pickling_jar_visual", lid_boxes(), {"lid": lid, "knob": knob}, ENTITY_GEO, ENTITY_TEX,
                       pivots={"lid": (0, 12, 3.5)}, locators={"seal": {"moat": [0, 10.75, 0]}})
+    # the crate: one texture shared by the four fill looks, a geometry each
+    crate_paint = {"crate_wall": crate_wall, "crate_rim": crate_rim, "crate_floor": crate_floor, "produce": produce}
+    looks = [crate_boxes(n) for n in range(4)]
+    painted = Painted(looks)
+    for n, boxes in enumerate(looks):
+        problems += audit(boxes, f"produce_crate_{n}")
+        save_geo(os.path.join(BLOCK_GEO, f"produce_crate_{n}.geo.json"), painted.geometry(f"geometry.kaleidoscope_harvest.produce_crate_{n}", boxes))
+        print(f"produce_crate_{n}: %d boxes / %d faces" % count_faces(boxes))
+    painted.image(crate_paint).save(os.path.join(BLOCK_TEX, "produce_crate.png"))
+    print(f"produce_crate texture {painted.width}x{painted.height}")
     for kind in ("fresh", "fermenting", "done"):
         contents(kind).save(os.path.join(BLOCK_TEX, f"contents_{kind}.png"))
     contents("empty").save(os.path.join(BLOCK_TEX, "juice_empty.png"))

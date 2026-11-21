@@ -637,6 +637,18 @@
       "zh": "竹藤架",
       "prompt": "small square trellis of green bamboo poles tied in a grid"
     },
+    "fruit_picking_pole": {
+      "zh": "摘果竿",
+      "prompt": "long thin wooden pole held diagonally with a small wooden fruit picker claw cup at the top end"
+    },
+    "harvest_basket": {
+      "zh": "採收籃",
+      "prompt": "woven green bamboo harvest basket with a wooden bottom and a rope handle, a few red and green vegetables inside"
+    },
+    "produce_crate": {
+      "zh": "果菜箱",
+      "prompt": "open wooden slatted crate with dark gaps between the boards, filled with mixed green, red and orange vegetables and fruit"
+    },
     "onion_seeds": {
       "zh": "洋蔥種子",
       "code": "tools/art/seed_icons.py"

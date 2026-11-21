@@ -30,6 +30,7 @@ const { JUICER, PICKLING_JAR, VISUAL_PROPS, SPLASH_PARTICLE, BUBBLE_PARTICLE } =
 const { VILLAGE_CHANCE, VILLAGE_HOUSES, villageItems } = await load("village.js");
 const { PLACED_FOODS, MAX_CUPS, placedFood } = await load("placedFood.js");
 const { toSimplified } = await load("zh_cn.js");
+const { PICKING_POLE, HARVEST_BASKET, PRODUCE_CRATE } = await load("gear.js");
 
 const NS = NAMESPACE;
 const BLOCK_FORMAT = "1.21.100"; // minecraft:movable needs 1.21.100+
@@ -43,6 +44,9 @@ const GROUP = {
   ingredients: "kaleidoscope_cookery:itemGroup.name.ingredients",
   drinks: "kaleidoscope_cookery:itemGroup.name.tea_drinks",
   stations: "kaleidoscope_cookery:itemGroup.name.cooking_stations",
+  // ## Phase 3 (data/gear.js): Cookery's tool and storage groups, as Herbal and Ranching use them.
+  tools: "kaleidoscope_cookery:itemGroup.name.tools",
+  storage: "kaleidoscope_cookery:itemGroup.name.storage_utility",
 };
 const GROUP_NAMES = {
   [GROUP.crops]: ["豐收：作物", "Harvest: Crops"],
@@ -80,7 +84,7 @@ const terrain = {};
 const itemTextures = {};
 const blockSounds = {};
 const names = {}; // lang key → [zh, en]
-const catalog = { crops: [], trees: [], foods: [], drinks: [], ingredients: [], stations: [] };
+const catalog = { crops: [], trees: [], foods: [], drinks: [], ingredients: [], stations: [], tools: [], storage: [] };
 
 const blockTex = (name) => `textures/blocks/${NS}/${name}`;
 const itemTex = (name) => `textures/${NS}/items/${name}`;
@@ -485,10 +489,12 @@ for (const trunk of TRUNKS) {
     },
   });
   blockSounds[rid(planks.id)] = { sound: "wood" };
+  catalog.trees.push(rid(planks.id));
   writeJson(join(BP, "items", `${planks.id}.json`), {
     format_version: ITEM_FORMAT,
     "minecraft:item": {
-      description: { identifier: rid(planks.id), menu_category: { category: "construction", group: "minecraft:itemGroup.name.planks" } },
+      // ## With the fruitwood log in Harvest's own trees group (owner, phase 3: it was missing from the catalog).
+      description: { identifier: rid(planks.id), menu_category: { category: "nature", group: GROUP.trees } },
       components: {
         "minecraft:icon": `kh_${planks.id}`,
         "minecraft:display_name": { value: `item.${rid(planks.id)}.name` },
@@ -774,6 +780,94 @@ station(PICKLING_JAR, {
   sound: "stone",
 });
 
+// --- Phase 3 gear (data/gear.js): fruit-picking pole, harvest basket, produce crate ---------------------------
+//
+// ## Recipes checked against every shaped grid of the series (Cookery 1.6.6, Ranching, Herbal, Fishing Voyage,
+// ## Baking) and vanilla; fruitwood planks carry minecraft:planks, so grids that take any planks count too.
+
+const FRUITWOOD = { item: rid(FRUITWOOD_PLANKS.id) };
+function gearItem(def, components, recipe) {
+  names[`item.${rid(def.id)}.name`] = [def.zh, def.en];
+  addIcon(def.id);
+  catalog.tools.push(rid(def.id));
+  writeJson(join(BP, "items", `${def.id}.json`), {
+    format_version: ITEM_FORMAT,
+    "minecraft:item": {
+      description: { identifier: rid(def.id), menu_category: { category: "equipment", group: GROUP.tools } },
+      components: {
+        "minecraft:icon": `kh_${def.id}`,
+        "minecraft:display_name": { value: `item.${rid(def.id)}.name` },
+        "minecraft:max_stack_size": 1,
+        "minecraft:hand_equipped": true,
+        ...components,
+      },
+    },
+  });
+  writeJson(join(BP, "recipes", `${def.id}.json`), {
+    format_version: "1.20.10",
+    "minecraft:recipe_shaped": { description: { identifier: rid(def.id) }, tags: ["crafting_table"], ...recipe, result: { item: rid(def.id), count: 1 } },
+  });
+}
+// 摘果竿: a long stick with a fruitwood picking head. Wears one point per use; fruitwood planks mend it.
+gearItem(
+  PICKING_POLE,
+  {
+    "minecraft:durability": { max_durability: PICKING_POLE.durability },
+    "minecraft:repairable": { repair_items: [{ items: [rid(FRUITWOOD_PLANKS.id)], repair_amount: PICKING_POLE.repairAmount }] },
+  },
+  { pattern: ["  F", " S ", "S  "], key: { F: FRUITWOOD, S: { item: "minecraft:stick" } }, unlock: [FRUITWOOD] }
+);
+// 採收籃: woven bamboo on a fruitwood bottom with a string handle; it may be held in the off hand.
+gearItem(
+  HARVEST_BASKET,
+  { "minecraft:allow_off_hand": true },
+  { pattern: [" T ", "B B", "BFB"], key: { T: { item: "minecraft:string" }, B: { item: "minecraft:bamboo" }, F: FRUITWOOD }, unlock: [FRUITWOOD] }
+);
+
+// 果菜箱: one geometry per fill look (tools/art/stations.py: produce_crate_0 … _3), one texture.
+{
+  const crate = PRODUCE_CRATE;
+  const levels = Array.from({ length: crate.levels + 1 }, (_, n) => n);
+  names[`tile.${rid(crate.id)}.name`] = [crate.zh, crate.en];
+  // ## The block item shows the model; this icon is for the guidebook.
+  addIcon(crate.id);
+  terrain[`kh_station_${crate.id}`] = { textures: stationTex(crate.id) };
+  catalog.storage.push(rid(crate.id));
+  const box = { origin: [-7, 0, -7], size: [14, 10, 14] };
+  block(crate.id, {
+    menu: { category: "equipment", group: GROUP.storage },
+    states: { [state("fill")]: intRange(crate.levels) },
+    components: {
+      "minecraft:geometry": `geometry.${NS}.${crate.id}_0`,
+      "minecraft:material_instances": { "*": opaque(crate.id) },
+      "minecraft:collision_box": box,
+      "minecraft:selection_box": box,
+      "minecraft:destructible_by_mining": { seconds_to_destroy: 1.5, item_specific_speeds: [{ item: { tags: "q.any_tag('minecraft:is_axe')" }, destroy_speed: 0.4 }] },
+      // ## The contents live in a dynamic property: an explosion or a piston would lose them.
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:movable": { movement_type: "immovable" },
+      "minecraft:flammable": { catch_chance_modifier: 5, destroy_chance_modifier: 0 },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#9c7048",
+      "minecraft:placement_filter": { conditions: [{ allowed_faces: ["up"] }] },
+      [`${NS}:${crate.id}`]: {},
+    },
+    permutations: levels.slice(1).map((n) => ({ condition: `${S("fill")} == ${n}`, components: { "minecraft:geometry": `geometry.${NS}.${crate.id}_${n}` } })),
+  });
+  blockSounds[rid(crate.id)] = { sound: "wood" };
+  writeJson(join(BP, "recipes", `${crate.id}.json`), {
+    format_version: "1.20.10",
+    "minecraft:recipe_shaped": {
+      description: { identifier: rid(crate.id) },
+      tags: ["crafting_table"],
+      pattern: ["F F", "FSF", "FFF"],
+      key: { F: FRUITWOOD, S: { item: "minecraft:stick" } },
+      result: { item: rid(crate.id), count: 1 },
+      unlock: [FRUITWOOD],
+    },
+  });
+}
+
 // --- Placeable food (docs/superpowers/specs/2026-11-17-placeable-food-design.md) ---------------------------------
 //
 // Cookery's own components do the eating: food_bite (a bite per use; the last stage is the empty container,
@@ -1038,6 +1132,20 @@ particle(BUBBLE_PARTICLE, {
   "minecraft:particle_appearance_lighting": {},
 });
 
+// Leaf bits shaken off a fruit tree by the fruit-picking pole: green specks that flutter down (the sheet's small dot).
+particle(PICKING_POLE.particle, {
+  "minecraft:emitter_rate_instant": { num_particles: "math.random_integer(6, 10)" },
+  "minecraft:emitter_lifetime_once": { active_time: 0.1 },
+  "minecraft:emitter_shape_box": { half_dimensions: [0.5, 0.4, 0.5], direction: ["math.random(-0.3, 0.3)", 0.2, "math.random(-0.3, 0.3)"] },
+  "minecraft:particle_lifetime_expression": { max_lifetime: "math.random(0.8, 1.4)" },
+  "minecraft:particle_initial_speed": "math.random(0.4, 1.0)",
+  "minecraft:particle_motion_dynamic": { linear_acceleration: [0, -1.6, 0], linear_drag_coefficient: 2.5 },
+  "minecraft:particle_initial_spin": { rotation: "math.random(0, 360)", rotation_rate: "math.random(-180, 180)" },
+  "minecraft:particle_appearance_billboard": { size: ["0.06 + variable.particle_random_1 * 0.04", "0.06 + variable.particle_random_1 * 0.04"], facing_camera_mode: "rotate_xyz", uv: { texture_width: 128, texture_height: 128, uv: [24, 0], uv_size: [8, 8] } },
+  "minecraft:particle_appearance_tinting": { color: ["0.28 + variable.particle_random_2 * 0.18", "0.5 + variable.particle_random_2 * 0.2", "0.18", 1] },
+  "minecraft:particle_appearance_lighting": {},
+});
+
 // --- Village house chests: vanilla tables plus one Harvest pool (data/village.js) --------------------
 
 const VANILLA = join(root, "tools", "vanilla", "loot_tables", "chests", "village");
@@ -1075,7 +1183,7 @@ writeJson(join(BP, "item_catalog", "crafting_item_catalog.json"), {
         // ## Cookery's own groups, joined the way Herbal and Fishing Voyage join them: listed here under Equipment,
         // ## with the first item of each as the icon should Cookery be missing.
         category_name: "equipment",
-        groups: ["ingredients", "foods", "drinks", "stations"]
+        groups: ["ingredients", "foods", "drinks", "stations", "tools", "storage"]
           .filter((g) => catalog[g].length)
           .map((g) => ({ group_identifier: { icon: catalog[g][0], name: GROUP[g] }, items: catalog[g] })),
       },

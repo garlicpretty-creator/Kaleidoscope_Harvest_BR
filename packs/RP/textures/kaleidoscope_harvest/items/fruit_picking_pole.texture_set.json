@@ -1,0 +1,8 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "fruit_picking_pole",
+    "normal": "fruit_picking_pole_normal",
+    "metalness_emissive_roughness": "fruit_picking_pole_mer"
+  }
+}
