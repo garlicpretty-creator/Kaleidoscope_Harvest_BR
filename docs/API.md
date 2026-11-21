@@ -24,7 +24,7 @@ Other add-ons talk to Harvest through script events in the `kaleidoscope_harvest
 | 方向 | 事件 | 內容 |
 | --- | --- | --- |
 | → 豐收 | `kaleidoscope_harvest:api_ping` | 任意字串（建議放你的 `source`） |
-| ← 豐收 | `kaleidoscope_harvest:api_ready` | `{"api":1,"source":"kaleidoscope_harvest","version":"1.3.2","capabilities":["catalog","catalog_foods"]}` |
+| ← 豐收 | `kaleidoscope_harvest:api_ready` | `{"api":1,"source":"kaleidoscope_harvest","version":"1.4.0","capabilities":["catalog","catalog_foods"]}` |
 
 豐收在世界載入後 20 tick 會主動廣播一次 `api_ready`；比較晚載入的附加包自己送 `api_ping` 會得到同樣的回覆。
 
